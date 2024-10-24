@@ -1,28 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prayer Requests</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
 <body>
-    <h1>Prayer Requests</h1>
-    <div id="requests"></div>
-    <h2>Submit a New Prayer Request</h2>
-    <form id="newRequestForm">
-        <input type="text" id="firstName" placeholder="First Name" required>
-        <input type="text" id="lastName" placeholder="Last Name" required>
-        <input type="date" id="dateOfRequest" required>
-        <select id="typeOfRequest">
-            <option value="health">Health</option>
-            <option value="employment">Employment</option>
-            <option value="spiritual">Spiritual</option>
-            <option value="praise">Praise</option>
-            <option value="family">Family Concerns</option>
-            <option value="other">Other</option>
-        </select>
-        <textarea id="initialRequest" placeholder="Initial Request" required></textarea>
-        <button type="submit" id="createNewRequest">Submit</button>
-    </form>
+    <header>
+        <h1>Prayer Requests</h1>
+    </header>
+    <main>
+        <section aria-labelledby="requests-heading">
+            <h2 id="requests-heading">Current Prayer Requests</h2>
+            <div id="requests" role="list"></div>
+        </section>
+        <section aria-labelledby="new-request-heading">
+            <h2 id="new-request-heading">Submit a New Prayer Request</h2>
+            <form id="newRequestForm" aria-describedby="form-instructions">
+                <p id="form-instructions">Please fill out the form below to submit a new prayer request.</p>
+                <div>
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" placeholder="First Name" required>
+                </div>
+                <div>
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" placeholder="Last Name" required>
+                </div>
+                <div>
+                    <label for="dateOfRequest">Date of Request</label>
+                    <input type="date" id="dateOfRequest" name="dateOfRequest" required>
+                </div>
+                <div>
+                    <label for="typeOfRequest">Type of Request</label>
+                    <select id="typeOfRequest" name="typeOfRequest" required>
+                        <option value="health">Health</option>
+                        <option value="employment">Employment</option>
+                        <option value="spiritual">Spiritual</option>
+                        <option value="praise">Praise</option>
+                        <option value="family">Family Concerns</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="initialRequest">Initial Request</label>
+                    <textarea id="initialRequest" name="initialRequest" placeholder="Initial Request" required></textarea>
+                </div>
+                <button type="submit" id="createNewRequest">Submit</button>
+            </form>
+        </section>
+    </main>
     <script src="js/script.js"></script>
 </body>
 </html>

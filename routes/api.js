@@ -4,19 +4,12 @@ const router = express.Router();
 
 // Example route to get all prayer requests
 router.get('/prayer-requests', async (req, res) => {
-    // Logic to fetch prayer requests from the database
-    res.json([
-        {
-            Id: 1,
-            FirstName: "John",
-            LastName: "Doe",
-            DateOfRequest: "2024-10-24",
-            TypeOfRequest: "health",
-            InitialRequest: "Please pray for my health.",
-            UpdateToRequest: null,
-            DateOfUpdate: null
-        }
-    ]);
+    try {
+        const response = await axios.get('https://eicocprayerfunc.azurewebsites.net/api/GetAllPrayerRequests');
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
 // Route to create a new prayer request

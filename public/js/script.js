@@ -1,66 +1,29 @@
-document.getElementById('newRequestForm').addEventListener('submit', async (e) => {
-    e.preventDefault(); // Prevent the default form submission
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('/prayer-requests')
+        .then(response => response.json())
+        .then(data => {
+            const requestsDiv = document.getElementById('requests');
+            // Sort data by DateOfUpdate or DateOfRequest, newest first
+            data.sort((a, b) => {
+                const dateA = new Date(a.DateOfUpdate || a.DateOfRequest);
+                const dateB = new Date(b.DateOfUpdate || b.DateOfRequest);
+                return dateB - dateA;
+            });
 
-    // Get form values
-    const firstName = document.getElementById('firstName').value;
-    const lastName = document.getElementById('lastName').value;
-    const dateOfRequest = document.getElementById('dateOfRequest').value;
-    const typeOfRequest = document.getElementById('typeOfRequest').value;
-    const initialRequest = document.getElementById('initialRequest').value;
-
-    // Log the values to ensure they are being captured correctly
-    console.log({
-        FirstName: firstName,
-        LastName: lastName,
-        DateOfRequest: dateOfRequest,
-        TypeOfRequest: typeOfRequest,
-        InitialRequest: initialRequest
-    });
-
-    // Send the data to the server
-    const response = await fetch('/api/prayer-requests', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            FirstName: firstName,
-            LastName: lastName,
-            DateOfRequest: dateOfRequest,
-            TypeOfRequest: typeOfRequest,
-            InitialRequest: initialRequest
+            // Group by date and display
+            let currentDate = '';
+            data.forEach(request => {
+                const requestDate = new Date(request.DateOfUpdate || request.DateOfRequest).toLocaleDateString();
+                if (requestDate !== currentDate) {
+                    currentDate = requestDate;
+                    const dateHeader = document.createElement('h3');
+                    dateHeader.textContent = currentDate;
+                    requestsDiv.appendChild(dateHeader);
+                }
+                const requestElement = document.createElement('div');
+                requestElement.textContent = `${request.FirstName} ${request.LastName} - ${request.TypeOfRequest}: ${request.InitialRequest}`;
+                requestsDiv.appendChild(requestElement);
+            });
         })
-    });
-
-    // Check if the request was successful
-    if (response.ok) {
-        console.log('Prayer request submitted successfully');
-        fetchRequests(); // Refresh the list of prayer requests
-    } else {
-        console.error('Failed to submit prayer request');
-    }
+        .catch(error => console.error('Error fetching prayer requests:', error));
 });
-
-// Function to fetch and display prayer requests
-async function fetchRequests() {
-    const response = await fetch('/api/prayer-requests');
-    const requests = await response.json();
-    const container = document.getElementById('requests');
-    container.innerHTML = '';
-    requests.forEach(request => {
-        const div = document.createElement('div');
-        div.className = 'request';
-        div.innerHTML = `
-            <p><strong>${request.FirstName} ${request.LastName}</strong></p>
-            <p>Type: ${request.TypeOfRequest}</p>
-            <p>Request: ${request.InitialRequest}</p>
-            ${request.UpdateToRequest ? `<p>Update: ${request.UpdateToRequest}</p>` : ''}
-            <p>Date of Request: ${request.DateOfRequest}</p>
-            ${request.DateOfUpdate ? `<p>Date of Update: ${request.DateOfUpdate}</p>` : ''}
-        `;
-        container.appendChild(div);
-    });
-}
-
-// Fetch requests when the page loads
-document.addEventListener('DOMContentLoaded', fetchRequests);
