@@ -1,3 +1,47 @@
+document.getElementById('newRequestForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); // Prevent the default form submission
+
+    // Get form values
+    const firstName = document.getElementById('firstName').value;
+    const lastName = document.getElementById('lastName').value;
+    const dateOfRequest = document.getElementById('dateOfRequest').value;
+    const typeOfRequest = document.getElementById('typeOfRequest').value;
+    const initialRequest = document.getElementById('initialRequest').value;
+
+    // Log the values to ensure they are being captured correctly
+    console.log({
+        FirstName: firstName,
+        LastName: lastName,
+        DateOfRequest: dateOfRequest,
+        TypeOfRequest: typeOfRequest,
+        InitialRequest: initialRequest
+    });
+
+    // Send the data to the server
+    const response = await fetch('/api/prayer-requests', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            FirstName: firstName,
+            LastName: lastName,
+            DateOfRequest: dateOfRequest,
+            TypeOfRequest: typeOfRequest,
+            InitialRequest: initialRequest
+        })
+    });
+
+    // Check if the request was successful
+    if (response.ok) {
+        console.log('Prayer request submitted successfully');
+        fetchRequests(); // Refresh the list of prayer requests
+    } else {
+        console.error('Failed to submit prayer request');
+    }
+});
+
+// Function to fetch and display prayer requests
 async function fetchRequests() {
     const response = await fetch('/api/prayer-requests');
     const requests = await response.json();
@@ -18,29 +62,5 @@ async function fetchRequests() {
     });
 }
 
-document.getElementById('newRequestForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const firstName = document.getElementById('firstName').value;
-    const lastName = document.getElementById('lastName').value;
-    const dateOfRequest = document.getElementById('dateOfRequest').value;
-    const typeOfRequest = document.getElementById('typeOfRequest').value;
-    const initialRequest = document.getElementById('initialRequest').value;
-
-    await fetch('/api/prayer-requests', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            FirstName: firstName,
-            LastName: lastName,
-            DateOfRequest: dateOfRequest,
-            TypeOfRequest: typeOfRequest,
-            InitialRequest: initialRequest
-        })
-    });
-
-    fetchRequests();
-});
-
+// Fetch requests when the page loads
 document.addEventListener('DOMContentLoaded', fetchRequests);
