@@ -12,6 +12,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // API routes
 app.use('/api', apiRoutes);
 
+// Route for the root URL
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
