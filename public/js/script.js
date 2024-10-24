@@ -47,7 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({
+                firstName: data.firstName,
+                lastName: data.lastName,
+                dateOfRequest: data.dateOfRequest,
+                typeOfRequest: data.typeOfRequest,
+                initialRequest: data.initialRequest
+            })
         })
         .then(response => response.json())
         .then(newRequest => {
