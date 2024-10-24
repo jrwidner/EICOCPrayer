@@ -31,12 +31,16 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Error fetching prayer requests:', error));
 
     // Handle form submission
-    const form = document.getElementById('newRequestForm');
-    form.addEventListener('submit', (event) => {
+    const submitButton = document.getElementById('createNewRequest');
+    submitButton.addEventListener('click', (event) => {
         event.preventDefault(); // Prevent the default form submission
 
+        const form = document.getElementById('newRequestForm');
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
+
+        // Log the form data to check its contents
+        console.log('Form data:', data);
 
         fetch('/api/create-prayer-request', {
             method: 'POST',
@@ -50,9 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('New request added:', newRequest);
             // Optionally, you can update the UI to include the new request
             const requestsDiv = document.getElementById('requests');
-            const requestDate = new Date(newRequest.DateOfUpdate || newRequest.DateOfRequest).toLocaleDateString();
+            const requestDate = new Date(newRequest.dateOfRequest).toLocaleDateString();
             const requestElement = document.createElement('div');
-            requestElement.textContent = `${newRequest.FirstName} ${newRequest.LastName} - ${newRequest.TypeOfRequest}: ${newRequest.InitialRequest}`;
+            requestElement.textContent = `${newRequest.firstName} ${newRequest.lastName} - ${newRequest.typeOfRequest}: ${newRequest.initialRequest}`;
             requestsDiv.appendChild(requestElement);
         })
         .catch(error => console.error('Error adding new prayer request:', error));
