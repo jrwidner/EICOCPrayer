@@ -1,8 +1,8 @@
 const { TableClient, AzureNamedKeyCredential } = require("@azure/data-tables");
 const { Document, Packer, Paragraph, TextRun } = require("docx");
 
-const account = "your-storage-account-name";
-const accountKey = "your-storage-account-key";
+const account = "eicocprayer";
+const accountKey = "IKd3TKmZDutZOSggUAaCzP1ERdk8feogKtBNGgiwGgTszfLqlvztOSzq5EolgV7wv5ECQKPGNtKo+AStHLAexw==";
 const tableName = "PrayerRequests";
 
 const credential = new AzureNamedKeyCredential(account, accountKey);
