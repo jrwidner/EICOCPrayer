@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prayer Requests</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<body>
+    <h1>Prayer Requests</h1>
+    <div id="requests"></div>
+    <h2>Submit a New Prayer Request</h2>
+    <form id="newRequestForm">
+        <input type="text" id="firstName" placeholder="First Name" required>
+        <input type="text" id="lastName" placeholder="Last Name" required>
+        <input type="date" id="dateOfRequest" required>
+        <select id="typeOfRequest">
+            <option value="health">Health</option>
+            <option value="employment">Employment</option>
+            <option value="spiritual">Spiritual</option>
+            <option value="praise">Praise</option>
+            <option value="family">Family Concerns</option>
+            <option value="other">Other</option>
+        </select>
+        <textarea id="initialRequest" placeholder="Initial Request" required></textarea>
+        <button type="submit">Submit</button>
+    </form>
+    <script src="js/script.js"></script>
+</body>
+</html>
