@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('/prayer-requests')
+    fetch('/api/prayer-requests')
         .then(response => response.json())
         .then(data => {
+            console.log('Fetched data:', data); // Log fetched data
             const requestsDiv = document.getElementById('requests');
+            
             // Sort data by DateOfUpdate or DateOfRequest, newest first
             data.sort((a, b) => {
                 const dateA = new Date(a.DateOfUpdate || a.DateOfRequest);

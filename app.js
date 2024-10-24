@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
+const apiRoutes = require('./routes/api'); // Adjust the path as necessary
 const app = express();
-const apiRoutes = require('./routes/api');
 
 // Middleware to parse JSON bodies
 app.use(express.json());
