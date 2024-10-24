@@ -8,30 +8,39 @@ const credential = new AzureNamedKeyCredential(account, accountKey);
 const client = new TableClient(`https://${account}.table.core.windows.net`, tableName, credential);
 
 module.exports = async function (context, req) {
-    if (req.method === 'POST') {
-        const { id, update } = req.body;
-        const dateOfUpdate = new Date().toISOString();
+    try {
+        if (req.method === 'POST') {
+            const { id, update } = req.body;
+            const dateOfUpdate = new Date().toISOString();
 
-        try {
-            const entity = await client.getEntity("PrayerRequests", id);
-            entity.update = update;
-            entity.dateOfUpdate = dateOfUpdate;
+            try {
+                const entity = await client.getEntity("PrayerRequests", id);
+                entity.update = update;
+                entity.dateOfUpdate = dateOfUpdate;
 
-            await client.updateEntity(entity, "Merge");
+                await client.updateEntity(entity, "Merge");
+                context.res = {
+                    status: 200,
+                    body: "Prayer request updated successfully."
+                };
+            } catch (error) {
+                context.log.error("Error updating entity:", error.message);
+                context.res = {
+                    status: 404,
+                    body: "Prayer request not found."
+                };
+            }
+        } else {
             context.res = {
-                status: 200,
-                body: "Prayer request updated successfully."
-            };
-        } catch (error) {
-            context.res = {
-                status: 404,
-                body: "Prayer request not found."
+                status: 405,
+                body: "Method not allowed."
             };
         }
-    } else {
+    } catch (error) {
+        context.log.error("Error processing request:", error.message);
         context.res = {
-            status: 405,
-            body: "Method not allowed."
+            status: 500,
+            body: "Internal server error."
         };
     }
 };

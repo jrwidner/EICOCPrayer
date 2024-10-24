@@ -20,18 +20,21 @@ async function loadRequests() {
 
     requests.forEach(request => {
         const requestDiv = document.createElement('div');
+        requestDiv.classList.add('request-item');
         requestDiv.innerHTML = `
-            <p>Date of Request: ${request.dateOfRequest}</p>
-            <p>Name: ${request.name}</p>
-            <p>Type of Prayer Request: ${request.type}</p>
-            <p>Description: ${request.description}</p>
-            <p>Date of Update: ${request.dateOfUpdate}</p>
-            <p>Update: ${request.update}</p>
+            <p><strong>Date of Request:</strong> ${request.dateOfRequest}</p>
+            <p><strong>Name:</strong> ${request.name}</p>
+            <p><strong>Type of Prayer Request:</strong> ${request.type}</p>
+            <p><strong>Description:</strong> ${request.description}</p>
+            <p><strong>Date of Update:</strong> ${request.dateOfUpdate}</p>
+            <p><strong>Update:</strong> ${request.update}</p>
             <button onclick="editRequest('${request.rowKey}')">Edit</button>
             <div id="editForm-${request.rowKey}" class="hidden">
                 <form onsubmit="submitEdit(event, '${request.rowKey}')">
-                    <label for="update-${request.rowKey}">Update (if any):</label>
-                    <textarea id="update-${request.rowKey}" name="update">${request.update}</textarea><br>
+                    <div class="form-group">
+                        <label for="update-${request.rowKey}">Update (if any):</label>
+                        <textarea id="update-${request.rowKey}" name="update">${request.update}</textarea>
+                    </div>
                     <button type="submit">Save</button>
                 </form>
             </div>
