@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Fetch and display existing prayer requests
     fetch('/api/prayer-requests')
         .then(response => response.json())
         .then(data => {
@@ -28,4 +29,32 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         })
         .catch(error => console.error('Error fetching prayer requests:', error));
+
+    // Handle form submission
+    const form = document.getElementById('newRequestForm');
+    form.addEventListener('submit', (event) => {
+        event.preventDefault(); // Prevent the default form submission
+
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        fetch('/api/create-prayer-request', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(newRequest => {
+            console.log('New request added:', newRequest);
+            // Optionally, you can update the UI to include the new request
+            const requestsDiv = document.getElementById('requests');
+            const requestDate = new Date(newRequest.DateOfUpdate || newRequest.DateOfRequest).toLocaleDateString();
+            const requestElement = document.createElement('div');
+            requestElement.textContent = `${newRequest.FirstName} ${newRequest.LastName} - ${newRequest.TypeOfRequest}: ${newRequest.InitialRequest}`;
+            requestsDiv.appendChild(requestElement);
+        })
+        .catch(error => console.error('Error adding new prayer request:', error));
+    });
 });
