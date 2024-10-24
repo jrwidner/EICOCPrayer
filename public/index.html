@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prayer Requests</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Prayer Requests</h1>
+    <form id="prayerForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
+        <label for="type">Type of Prayer Request:</label>
+        <input type="text" id="type" name="type" required><br>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required></textarea><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>Existing Requests</h2>
+    <div id="requests"></div>
+
+    <button id="exportButton">Export to Word</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
