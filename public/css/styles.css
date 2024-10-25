@@ -14,6 +14,7 @@ main {
     display: flex;
     justify-content: space-between;
     padding: 1rem;
+    align-items: flex-start; /* Align items at the top */
 }
 
 section {
@@ -50,11 +51,18 @@ aside {
     color: darkblue;
 }
 
-/* Request styling */
-.request {
-    white-space: pre-wrap; /* Ensures long text wraps */
-    word-wrap: break-word; /* Breaks long words */
-    margin-bottom: 1em; /* Adds space between requests */
+/* Table styling */
+#requests-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#requests-table td {
+    padding: 0;
+    border: none;
+}
+
+.request-row {
     display: flex;
     align-items: center;
 }

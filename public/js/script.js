@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const spinner = document.getElementById('spinner');
-    const requestsDiv = document.getElementById('requests');
+    const requestsTable = document.getElementById('requests-table');
     const typeOfRequestSelect = document.getElementById('typeOfRequest');
 
     // Function to capitalize the first letter of each word
@@ -51,37 +51,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (requestDate !== currentDate) {
                     currentDate = requestDate;
                     currentType = ''; // Reset current type when date changes
-                    const dateHeader = document.createElement('h3');
-                    dateHeader.textContent = currentDate;
-                    dateHeader.classList.add('date-header');
-                    requestsDiv.appendChild(dateHeader);
+                    const dateHeader = document.createElement('tr');
+                    dateHeader.innerHTML = `<td colspan="2"><h3 class="date-header">${currentDate}</h3></td>`;
+                    requestsTable.appendChild(dateHeader);
                 }
                 const capitalizedType = capitalizeWords(request.TypeOfRequest);
                 if (capitalizedType !== currentType) {
                     currentType = capitalizedType;
-                    const typeHeader = document.createElement('h4');
-                    typeHeader.textContent = currentType;
-                    requestsDiv.appendChild(typeHeader);
+                    const typeHeader = document.createElement('tr');
+                    typeHeader.innerHTML = `<td colspan="2"><h4>${currentType}</h4></td>`;
+                    requestsTable.appendChild(typeHeader);
                 }
-                const requestElement = document.createElement('div');
-                requestElement.classList.add('request');
+                const requestRow = document.createElement('tr');
+                requestRow.classList.add('request-row');
                 let updateText = '';
                 if (request.UpdateToRequest) {
                     const updateDate = new Date(request.DateOfUpdate).toLocaleDateString();
                     updateText = `<em> Updated:${updateDate} ${request.UpdateToRequest}</em>`;
                 }
-                requestElement.innerHTML = `
-                    <input type="checkbox" name="updateRequest" value="${request.Id}" class="update-checkbox" aria-label="Select to update request from ${request.FirstName} ${request.LastName}">
-                    <div class="request-text">
+                requestRow.innerHTML = `
+                    <td><input type="checkbox" name="updateRequest" value="${request.Id}" class="update-checkbox" aria-label="Select to update request from ${request.FirstName} ${request.LastName}"></td>
+                    <td class="request-text">
                         ${request.FirstName} ${request.LastName}: ${request.InitialRequest}${updateText}
-                    </div>
-                    <form class="update-form" id="updateForm-${request.Id}" aria-label="Update form for request from ${request.FirstName} ${request.LastName}">
-                        <input type="hidden" name="updateId" value="${request.Id}">
-                        <textarea name="updateToRequest" placeholder="Update Request" required aria-required="true"></textarea>
-                        <button type="submit">Update</button>
-                    </form>
+                    </td>
                 `;
-                requestsDiv.appendChild(requestElement);
+                requestsTable.appendChild(requestRow);
+
+                const updateFormRow = document.createElement('tr');
+                updateFormRow.innerHTML = `
+                    <td colspan="2">
+                        <form class="update-form" id="updateForm-${request.Id}" aria-label="Update form for request from ${request.FirstName} ${request.LastName}">
+                            <input type="hidden" name="updateId" value="${request.Id}">
+                            <textarea name="updateToRequest" placeholder="Update Request" required aria-required="true"></textarea>
+                            <button type="submit">Update</button>
+                        </form>
+                    </td>
+                `;
+                requestsTable.appendChild(updateFormRow);
             });
 
             // Add event listeners to checkboxes

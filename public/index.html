@@ -4,49 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prayer Requests</title>
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <h1>Prayer Requests</h1>
     </header>
     <main>
-        <section aria-labelledby="requests-heading">
-            <div id="spinner" class="spinner" role="status" aria-live="polite"></div>
-            <div id="requests" role="list">
-                <!-- Records will be dynamically inserted here -->
-            </div>
+        <section id="requests-section">
+            <div id="spinner" class="spinner"></div>
+            <table id="requests-table" role="presentation"></table>
         </section>
-        <aside aria-labelledby="new-request-heading">
-            <h2 id="new-request-heading">Submit a New Prayer Request</h2>
-            <form id="newRequestForm" aria-describedby="form-instructions">
-                <p id="form-instructions">Please fill out the form below to submit a new prayer request.</p>
+        <aside>
+            <form id="newRequestForm">
                 <div>
                     <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" name="firstName" placeholder="First Name" required aria-required="true">
+                    <input type="text" id="firstName" name="firstName" required>
                 </div>
                 <div>
                     <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" name="lastName" placeholder="Last Name" required aria-required="true">
-                </div>
-                <div>
-                    <label for="dateOfRequest">Date of Request</label>
-                    <input type="date" id="dateOfRequest" name="dateOfRequest" required aria-required="true">
-                </div>
-                <div>
-                    <label for="typeOfRequest">Type of Request</label>
-                    <select id="typeOfRequest" name="typeOfRequest" required aria-required="true">
-                        <!-- Options will be dynamically populated -->
-                    </select>
+                    <input type="text" id="lastName" name="lastName" required>
                 </div>
                 <div>
                     <label for="initialRequest">Initial Request</label>
-                    <textarea id="initialRequest" name="initialRequest" placeholder="Initial Request" required aria-required="true"></textarea>
+                    <textarea id="initialRequest" name="initialRequest" required></textarea>
                 </div>
-                <button type="submit" id="createNewRequest">Submit</button>
+                <div>
+                    <label for="typeOfRequest">Type of Request</label>
+                    <select id="typeOfRequest" name="typeOfRequest" required></select>
+                </div>
+                <button type="submit" id="createNewRequest">Create New Request</button>
             </form>
         </aside>
     </main>
-    <script src="js/script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
