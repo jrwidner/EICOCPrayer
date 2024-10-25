@@ -24,7 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     requestsDiv.appendChild(dateHeader);
                 }
                 const requestElement = document.createElement('div');
-                requestElement.textContent = `${request.FirstName} ${request.LastName} - ${request.TypeOfRequest}: ${request.InitialRequest}`;
+                requestElement.innerHTML = `
+                    <strong>${request.FirstName} ${request.LastName}</strong> - ${request.TypeOfRequest}: ${request.InitialRequest}
+                `;
                 requestsDiv.appendChild(requestElement);
             });
         })
@@ -62,7 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const requestsDiv = document.getElementById('requests');
             const requestDate = new Date(newRequest.dateOfRequest).toLocaleDateString();
             const requestElement = document.createElement('div');
-            requestElement.textContent = `${newRequest.firstName} ${newRequest.lastName} - ${newRequest.typeOfRequest}: ${newRequest.initialRequest}`;
+            requestElement.innerHTML = `
+                <strong>${newRequest.firstName} ${newRequest.lastName}</strong> - ${newRequest.typeOfRequest}: ${newRequest.initialRequest}
+            `;
             requestsDiv.appendChild(requestElement);
         })
         .catch(error => console.error('Error adding new prayer request:', error));
