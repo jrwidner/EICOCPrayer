@@ -128,8 +128,17 @@ form button:hover {
     background-color: #0056b3;
 }
 
-@media print {
-    input[type="checkbox"] {
-        display: none;
-    }
+button {
+    width: 120px;
+    height: 45px;
+    font-size: 16px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 10px 0;
+}
+
+button:hover {
+    background-color: #0056b3;
 }
