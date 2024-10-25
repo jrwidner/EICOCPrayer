@@ -6,11 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Fetched data:', data); // Log fetched data
             const requestsDiv = document.getElementById('requests');
             
-            // Sort data by DateOfUpdate or DateOfRequest, newest first
+            // Sort data by DateOfUpdate or DateOfRequest, newest first, then by TypeOfRequest
             data.sort((a, b) => {
                 const dateA = new Date(a.DateOfUpdate || a.DateOfRequest);
                 const dateB = new Date(b.DateOfUpdate || b.DateOfRequest);
-                return dateB - dateA;
+                if (dateB - dateA !== 0) {
+                    return dateB - dateA;
+                }
+                return a.TypeOfRequest.localeCompare(b.TypeOfRequest);
             });
 
             // Group by date and display
