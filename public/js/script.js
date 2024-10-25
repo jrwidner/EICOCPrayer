@@ -44,50 +44,60 @@ document.addEventListener('DOMContentLoaded', () => {
                 return a.TypeOfRequest.localeCompare(b.TypeOfRequest);
             });
 
-            // Group by date and type of request, then display
-            let currentDate = '';
-            let currentType = '';
-            data.forEach(request => {
-                const requestDate = new Date(request.DateOfUpdate || request.DateOfRequest).toLocaleDateString();
-                if (requestDate !== currentDate) {
-                    currentDate = requestDate;
-                    currentType = ''; // Reset current type when date changes
-                    const dateHeader = document.createElement('tr');
-                    dateHeader.innerHTML = `<td colspan="3"><b class="date-header">${currentDate}</b></td>`;
-                    requestsTable.appendChild(dateHeader);
-                }
-                const capitalizedType = capitalizeWords(request.TypeOfRequest);
-                if (capitalizedType !== currentType) {
-                    currentType = capitalizedType;
-                }
-                const requestRow = document.createElement('tr');
-                requestRow.classList.add('request-row');
-                let updateText = '';
-                if (request.UpdateToRequest) {
-                    const updateDate = new Date(request.DateOfUpdate).toLocaleDateString();
-                    updateText = `<em> Updated:${updateDate} ${request.UpdateToRequest}</em>`;
-                }
-                requestRow.innerHTML = `
-                    <td><input type="checkbox" name="updateRequest" value="${request.Id}" class="update-checkbox" aria-label="Select to update request from ${request.FirstName} ${request.LastName}"></td>
-                    <td><p class="request-type">${request.TypeOfRequest} - </p></td>
-                    <td class="request-text">
-                        ${request.FirstName} ${request.LastName}: ${request.InitialRequest}${updateText}
-                    </td>
-                `;
-                requestsTable.appendChild(requestRow);
+ // Add this CSS to your stylesheet or within a <style> tag
+const style = document.createElement('style');
+style.innerHTML = `
+    .nowrap {
+        white-space: nowrap;
+    }
+`;
+document.head.appendChild(style);
 
-                const updateFormRow = document.createElement('tr');
-                updateFormRow.innerHTML = `
-                    <td colspan="3">
-                        <form class="update-form" id="updateForm-${request.Id}" aria-label="Update form for request from ${request.FirstName} ${request.LastName}">
-                            <input type="hidden" name="updateId" value="${request.Id}">
-                            <textarea name="updateToRequest" placeholder="Update Request" required aria-required="true"></textarea>
-                            <button type="submit">Update</button>
-                        </form>
-                    </td>
-                `;
-                requestsTable.appendChild(updateFormRow);
-            });
+// Group by date and type of request, then display
+let currentDate = '';
+let currentType = '';
+data.forEach(request => {
+    const requestDate = new Date(request.DateOfUpdate || request.DateOfRequest).toLocaleDateString();
+    if (requestDate !== currentDate) {
+        currentDate = requestDate;
+        currentType = ''; // Reset current type when date changes
+        const dateHeader = document.createElement('tr');
+        dateHeader.innerHTML = `<td colspan="3"><b class="date-header">${currentDate}</b></td>`;
+        requestsTable.appendChild(dateHeader);
+    }
+    const capitalizedType = capitalizeWords(request.TypeOfRequest);
+    if (capitalizedType !== currentType) {
+        currentType = capitalizedType;
+    }
+    const requestRow = document.createElement('tr');
+    requestRow.classList.add('request-row');
+    let updateText = '';
+    if (request.UpdateToRequest) {
+        const updateDate = new Date(request.DateOfUpdate).toLocaleDateString();
+        updateText = `<em> Updated:${updateDate} ${request.UpdateToRequest}</em>`;
+    }
+    requestRow.innerHTML = `
+        <td><input type="checkbox" name="updateRequest" value="${request.Id}" class="update-checkbox" aria-label="Select to update request from ${request.FirstName} ${request.LastName}"></td>
+        <td class="request-type nowrap">${request.TypeOfRequest} - </td>
+        <td class="request-text">
+            ${request.FirstName} ${request.LastName}: ${request.InitialRequest}${updateText}
+        </td>
+    `;
+    requestsTable.appendChild(requestRow);
+
+    const updateFormRow = document.createElement('tr');
+    updateFormRow.innerHTML = `
+        <td colspan="3">
+            <form class="update-form" id="updateForm-${request.Id}" aria-label="Update form for request from ${request.FirstName} ${request.LastName}">
+                <input type="hidden" name="updateId" value="${request.Id}">
+                <textarea name="updateToRequest" placeholder="Update Request" required aria-required="true"></textarea>
+                <button type="submit">Update</button>
+            </form>
+        </td>
+    `;
+    requestsTable.appendChild(updateFormRow);
+});
+
 
             // Add event listeners to checkboxes
             document.querySelectorAll('.update-checkbox').forEach(checkbox => {
