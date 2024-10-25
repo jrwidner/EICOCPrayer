@@ -22,4 +22,14 @@ router.post('/create-prayer-request', async (req, res) => {
     }
 });
 
+// Route to update an existing prayer request
+router.put('/update-prayer-request/:id', async (req, res) => {
+    try {
+        const response = await axios.post(`https://eicocprayerfunc.azurewebsites.net/api/UpdatePrayerRequest`, req.body);
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 module.exports = router;
