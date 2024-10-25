@@ -26,8 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('/api/prayer-requests')
         .then(response => response.json())
         .then(data => {
-            console.log('Fetched data:', data); // Log fetched data
-
             // Hide spinner after data is fetched
             spinner.style.display = 'none';
 
@@ -70,10 +68,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 let updateText = '';
                 if (request.UpdateToRequest) {
                     const updateDate = new Date(request.DateOfUpdate).toLocaleDateString();
-                    updateText = `<em>${updateDate}: ${request.UpdateToRequest}</em>`;
+                    updateText = `<em> Updated:${updateDate} ${request.UpdateToRequest}</em>`;
                 }
                 requestElement.innerHTML = `
-                    <input type="radio" name="updateRequest" value="${request.Id}" class="update-radio" aria-label="Select to update request from ${request.FirstName} ${request.LastName}">
+                    <input type="checkbox" name="updateRequest" value="${request.Id}" class="update-checkbox" aria-label="Select to update request from ${request.FirstName} ${request.LastName}">
                     <div class="request-text">
                         ${request.FirstName} ${request.LastName}: ${request.InitialRequest}${updateText}
                     </div>
@@ -86,14 +84,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 requestsDiv.appendChild(requestElement);
             });
 
-            // Add event listeners to radio buttons
-            document.querySelectorAll('.update-radio').forEach(radio => {
-                radio.addEventListener('change', (event) => {
-                    document.querySelectorAll('.update-form').forEach(form => {
-                        form.style.display = 'none';
-                    });
-                    const selectedForm = document.getElementById(`updateForm-${event.target.value}`);
-                    selectedForm.style.display = 'block';
+            // Add event listeners to checkboxes
+            document.querySelectorAll('.update-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', (event) => {
+                    if (event.target.checked) {
+                        document.querySelectorAll('.update-checkbox').forEach(otherCheckbox => {
+                            if (otherCheckbox !== event.target) {
+                                otherCheckbox.checked = false;
+                                const otherForm = document.getElementById(`updateForm-${otherCheckbox.value}`);
+                                if (otherForm) {
+                                    otherForm.style.display = 'none';
+                                }
+                            }
+                        });
+                        const selectedForm = document.getElementById(`updateForm-${event.target.value}`);
+                        selectedForm.style.display = 'block';
+                    } else {
+                        const selectedForm = document.getElementById(`updateForm-${event.target.value}`);
+                        selectedForm.style.display = 'none';
+                    }
                 });
             });
         })
@@ -112,9 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
 
-        // Log the form data to check its contents
-        console.log('Form data:', data);
-
         fetch('/api/create-prayer-request', {
             method: 'POST',
             headers: {
@@ -124,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(response => response.json())
         .then(newRequest => {
-            console.log('New request added:', newRequest);
             // Clear the form
             form.reset();
             // Reload the page to display the new record
@@ -143,9 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = Object.fromEntries(formData.entries());
             const dateOfUpdate = new Date().toISOString().split('T')[0];
 
-            // Log the form data to check its contents
-            console.log('Update form data:', data);
-
             fetch(`/api/update-prayer-request/${data.updateId}`, {
                 method: 'PUT',
                 headers: {
@@ -159,7 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(response => response.json())
             .then(updatedRequest => {
-                console.log('Request updated:', updatedRequest);
                 // Clear the form
                 form.reset();
                 // Reload the page to display the updated record

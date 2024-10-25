@@ -61,11 +61,12 @@ aside {
 
 .request-text {
     flex-grow: 1;
-    margin-left: 2px; /* Reduced margin for tighter spacing */
+    margin-left: 5px; /* Space between checkbox and text */
 }
 
-.update-radio {
-    margin-right: 2px; /* Reduced margin for tighter spacing */
+.update-checkbox {
+    margin-right: 0px; /* Reduced margin for tighter spacing */
+    margin-left: 0px;
 }
 
 /* Update form styling */
