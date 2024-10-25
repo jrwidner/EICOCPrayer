@@ -67,14 +67,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 const requestElement = document.createElement('div');
                 requestElement.classList.add('request');
+                let updateText = '';
+                if (request.UpdateToRequest) {
+                    const updateDate = new Date(request.DateOfUpdate).toLocaleDateString();
+                    updateText = `<br><em>${updateDate}: ${request.UpdateToRequest}</em>`;
+                }
                 requestElement.innerHTML = `
+                    <input type="radio" name="updateRequest" value="${request.Id}" class="update-radio" aria-label="Select to update request from ${request.FirstName} ${request.LastName}">
                     <div class="request-text">
-                        ${request.FirstName} ${request.LastName}: ${request.InitialRequest}
+                        ${request.FirstName} ${request.LastName}: ${request.InitialRequest}${updateText}
                     </div>
-                    <input type="radio" name="updateRequest" value="${request.Id}" class="update-radio">
-                    <form class="update-form" id="updateForm-${request.Id}">
+                    <form class="update-form" id="updateForm-${request.Id}" aria-label="Update form for request from ${request.FirstName} ${request.LastName}">
                         <input type="hidden" name="updateId" value="${request.Id}">
-                        <textarea name="updateToRequest" placeholder="Update Request" required></textarea>
+                        <textarea name="updateToRequest" placeholder="Update Request" required aria-required="true"></textarea>
                         <button type="submit">Update</button>
                     </form>
                 `;
@@ -115,13 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                firstName: data.firstName,
-                lastName: data.lastName,
-                dateOfRequest: data.dateOfRequest,
-                typeOfRequest: data.typeOfRequest,
-                initialRequest: data.initialRequest
-            })
+            body: JSON.stringify(data)
         })
         .then(response => response.json())
         .then(newRequest => {

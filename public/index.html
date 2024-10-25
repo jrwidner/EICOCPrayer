@@ -35,21 +35,31 @@
             margin-bottom: 1em; /* Adds space between requests */
             display: flex;
             align-items: center;
-            justify-content: space-between;
         }
 
         .request-text {
             flex-grow: 1;
+            margin-left: 10px;
         }
 
         .update-radio {
-            margin-left: 10px;
+            margin-right: 10px;
         }
 
         /* Update form styling */
         .update-form {
             display: none;
             margin-top: 1em;
+        }
+
+        /* New request form styling */
+        aside {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 300px;
+            padding: 20px;
+            border-left: 1px solid #ccc;
         }
     </style>
 </head>
@@ -59,7 +69,8 @@
     </header>
     <main>
         <section aria-labelledby="requests-heading">
-            <div id="spinner" class="spinner"></div>
+            <h2 id="requests-heading">Current Prayer Requests</h2>
+            <div id="spinner" class="spinner" role="status" aria-live="polite"></div>
             <div id="requests" role="list">
                 <!-- Records will be dynamically inserted here -->
             </div>
