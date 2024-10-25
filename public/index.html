@@ -6,9 +6,53 @@
     <title>Prayer Requests</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <style>
-        @media print {
-            input[type="checkbox"] {
-                display: none;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        header, main, aside {
+            padding: 1rem;
+        }
+        header h1 {
+            font-size: 1.5rem;
+        }
+        p {
+            font-size: 1rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 0.5rem;
+            text-align: left;
+        }
+        input, select, textarea, button {
+            width: 100%;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        @media (min-width: 600px) {
+            header, main, aside {
+                padding: 2rem;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+            p {
+                font-size: 1.25rem;
             }
         }
     </style>
@@ -19,13 +63,14 @@
         <p>To update a prayer request, select the checkbox to the left of the request</p>
     </header>
     <main>
+        <button id="printButton">Print Prayer Records</button>
         <section aria-labelledby="requests-heading">
-            <div id="spinner" class="spinner" role="status" aria-live="polite"></div>
+            <h2 id="requests-heading">Prayer Requests List</h2>
+            <div id="spinner" class="spinner" role="status" aria-live="polite">Loading...</div>
             <table id="requests-table" role="presentation">
                 <!-- Records will be dynamically inserted here -->
             </table>
         </section>
-        <button id="printButton">Print Prayer Records</button>
         <aside aria-labelledby="new-request-heading">
             <h2 id="new-request-heading">Submit a New Prayer Request</h2>
             <form id="newRequestForm" aria-describedby="form-instructions">

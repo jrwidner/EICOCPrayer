@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const spinner = document.getElementById('spinner');
     const requestsTable = document.getElementById('requests-table');
     const typeOfRequestSelect = document.getElementById('typeOfRequest');
+    const printButton = document.getElementById('printButton');
 
     // Function to capitalize the first letter of each word
     function capitalizeWords(str) {
@@ -179,9 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.print();
     }
 
-    // Add print button to the DOM
-    const printButton = document.createElement('button');
-    printButton.textContent = 'Print Prayer Records';
-    printButton.onclick = printPrayerRecords;
-    document.body.appendChild(printButton);
+    // Add event listener to the print button
+    printButton.addEventListener('click', printPrayerRecords);
 });
