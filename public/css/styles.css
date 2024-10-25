@@ -61,17 +61,17 @@ aside {
 
 .request-text {
     flex-grow: 1;
-    margin-left: 10px;
+    margin-left: 2px; /* Reduced margin for tighter spacing */
 }
 
 .update-radio {
-    margin-right: 10px;
+    margin-right: 2px; /* Reduced margin for tighter spacing */
 }
 
 /* Update form styling */
 .update-form {
     display: none;
-    margin-top: 1em;
+    margin-left: 5px; /* Space between record and update form */
 }
 
 form div {

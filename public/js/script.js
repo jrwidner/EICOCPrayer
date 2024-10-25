@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let updateText = '';
                 if (request.UpdateToRequest) {
                     const updateDate = new Date(request.DateOfUpdate).toLocaleDateString();
-                    updateText = `<br><em>${updateDate}: ${request.UpdateToRequest}</em>`;
+                    updateText = `<em>${updateDate}: ${request.UpdateToRequest}</em>`;
                 }
                 requestElement.innerHTML = `
                     <input type="radio" name="updateRequest" value="${request.Id}" class="update-radio" aria-label="Select to update request from ${request.FirstName} ${request.LastName}">
