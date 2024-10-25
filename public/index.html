@@ -22,6 +22,18 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Date styling */
+        .date-header {
+            color: darkblue;
+        }
+
+        /* Request styling */
+        .request {
+            white-space: pre-wrap; /* Ensures long text wraps */
+            word-wrap: break-word; /* Breaks long words */
+            margin-bottom: 1em; /* Adds space between requests */
+        }
     </style>
 </head>
 <body>
@@ -30,7 +42,6 @@
     </header>
     <main>
         <section aria-labelledby="requests-heading">
-            <h2 id="requests-heading">Current Prayer Requests</h2>
             <div id="spinner" class="spinner"></div>
             <div id="requests" role="list">
                 <!-- Records will be dynamically inserted here -->

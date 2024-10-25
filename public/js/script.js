@@ -1,10 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
     const spinner = document.getElementById('spinner');
     const requestsDiv = document.getElementById('requests');
+    const typeOfRequestSelect = document.getElementById('typeOfRequest');
 
     // Function to capitalize the first letter of each word
     function capitalizeWords(str) {
         return str.replace(/\b\w/g, char => char.toUpperCase());
+    }
+
+    // Function to update the prayer types dropdown
+    function updatePrayerTypes(types) {
+        typeOfRequestSelect.innerHTML = ''; // Clear existing options
+        types.forEach(type => {
+            const option = document.createElement('option');
+            option.value = type.toLowerCase();
+            option.textContent = capitalizeWords(type);
+            typeOfRequestSelect.appendChild(option);
+        });
     }
 
     // Show spinner before fetching data
@@ -18,6 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Hide spinner after data is fetched
             spinner.style.display = 'none';
+
+            // Extract unique prayer types
+            const prayerTypes = [...new Set(data.map(request => request.TypeOfRequest.toLowerCase()))];
+            updatePrayerTypes(prayerTypes);
 
             // Sort data by DateOfUpdate or DateOfRequest, newest first, then by TypeOfRequest
             data.sort((a, b) => {
@@ -39,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     currentType = ''; // Reset current type when date changes
                     const dateHeader = document.createElement('h3');
                     dateHeader.textContent = currentDate;
+                    dateHeader.classList.add('date-header');
                     requestsDiv.appendChild(dateHeader);
                 }
                 const capitalizedType = capitalizeWords(request.TypeOfRequest);
@@ -50,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 const requestElement = document.createElement('div');
                 requestElement.textContent = `${request.FirstName} ${request.LastName}: ${request.InitialRequest}`;
+                requestElement.classList.add('request');
                 requestsDiv.appendChild(requestElement);
             });
         })
