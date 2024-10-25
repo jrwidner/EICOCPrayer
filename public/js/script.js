@@ -68,8 +68,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const requestElement = document.createElement('div');
                 requestElement.classList.add('request');
                 requestElement.innerHTML = `
+                    <div class="request-text">
+                        ${request.FirstName} ${request.LastName}: ${request.InitialRequest}
+                    </div>
                     <input type="radio" name="updateRequest" value="${request.Id}" class="update-radio">
-                    ${request.FirstName} ${request.LastName}: ${request.InitialRequest}
                     <form class="update-form" id="updateForm-${request.Id}">
                         <input type="hidden" name="updateId" value="${request.Id}">
                         <textarea name="updateToRequest" placeholder="Update Request" required></textarea>
@@ -142,14 +144,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = Object.fromEntries(formData.entries());
             const dateOfUpdate = new Date().toISOString().split('T')[0];
 
+            // Log the form data to check its contents
+            console.log('Update form data:', data);
+
             fetch(`/api/update-prayer-request/${data.updateId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    updateToRequest: data.updateToRequest,
-                    dateOfUpdate: dateOfUpdate
+                    Id: data.updateId,
+                    UpdateToRequest: data.updateToRequest,
+                    DateOfUpdate: dateOfUpdate
                 })
             })
             .then(response => response.json())
