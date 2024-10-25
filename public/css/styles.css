@@ -72,7 +72,7 @@ aside {
 /* Update form styling */
 .update-form {
     display: none;
-    margin-left: 5px; /* Space between record and update form */
+    margin-top: 5px; /* Space between record and update form */
 }
 
 form div {
