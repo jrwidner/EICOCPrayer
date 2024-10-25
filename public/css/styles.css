@@ -55,6 +55,7 @@ aside {
 /* type styling */
 .request-type {
     color: #006400; /* Dark Green */
+    margin-left: 5px;
 }
 
 /* Table styling */
@@ -127,3 +128,8 @@ form button:hover {
     background-color: #0056b3;
 }
 
+@media print {
+    input[type="checkbox"] {
+        display: none;
+    }
+}

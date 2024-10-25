@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prayer Requests</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <style>
+        @media print {
+            input[type="checkbox"] {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -18,6 +25,7 @@
                 <!-- Records will be dynamically inserted here -->
             </table>
         </section>
+        <button id="printButton">Print Prayer Records</button>
         <aside aria-labelledby="new-request-heading">
             <h2 id="new-request-heading">Submit a New Prayer Request</h2>
             <form id="newRequestForm" aria-describedby="form-instructions">
