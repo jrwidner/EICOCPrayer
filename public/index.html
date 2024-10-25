@@ -55,6 +55,14 @@
                 font-size: 1.25rem;
             }
         }
+        @media print {
+            #newRequestForm, #new-request-heading {
+                display: none;
+            }
+            input[type="checkbox"] {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -63,11 +71,12 @@
         <p>To update a prayer request, select the checkbox to the left of the request</p>
     </header>
     <main>
-        <button id="printButton">Print Prayer Records</button>
+        
         <section aria-labelledby="requests-heading">
             <h2 id="requests-heading">Prayer Requests List</h2>
             <div id="spinner" class="spinner" role="status" aria-live="polite">Loading...</div>
             <table id="requests-table" role="presentation">
+                <tr><td colspan="3" align="left"><button id="printButton">Print Prayer Records</button></td></tr>
                 <!-- Records will be dynamically inserted here -->
             </table>
         </section>
