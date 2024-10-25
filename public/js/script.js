@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Function to capitalize the first letter of each word
+    function capitalizeWords(str) {
+        return str.replace(/\b\w/g, char => char.toUpperCase());
+    }
+
     // Fetch and display existing prayer requests
     fetch('/api/prayer-requests')
         .then(response => response.json())
@@ -28,8 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     dateHeader.textContent = currentDate;
                     requestsDiv.appendChild(dateHeader);
                 }
-                if (request.TypeOfRequest !== currentType) {
-                    currentType = request.TypeOfRequest;
+                const capitalizedType = capitalizeWords(request.TypeOfRequest);
+                if (capitalizedType !== currentType) {
+                    currentType = capitalizedType;
                     const typeHeader = document.createElement('h4');
                     typeHeader.textContent = currentType;
                     requestsDiv.appendChild(typeHeader);
@@ -72,9 +78,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Optionally, you can update the UI to include the new request
             const requestsDiv = document.getElementById('requests');
             const requestDate = new Date(newRequest.dateOfRequest).toLocaleDateString();
+            const capitalizedType = capitalizeWords(newRequest.typeOfRequest);
             const requestElement = document.createElement('div');
             requestElement.innerHTML = `
-                <strong>${newRequest.firstName} ${newRequest.lastName}</strong> - ${newRequest.typeOfRequest}: ${newRequest.initialRequest}
+                <strong>${newRequest.firstName} ${newRequest.lastName}</strong> - ${capitalizedType}: ${newRequest.initialRequest}
             `;
             requestsDiv.appendChild(requestElement);
         })
