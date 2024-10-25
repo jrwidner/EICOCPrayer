@@ -13,7 +13,9 @@
     <main>
         <section aria-labelledby="requests-heading">
             <h2 id="requests-heading">Current Prayer Requests</h2>
-            <div id="requests" role="list"></div>
+            <div id="requests" role="list">
+                <!-- Records will be dynamically inserted here -->
+            </div>
         </section>
         <aside aria-labelledby="new-request-heading">
             <h2 id="new-request-heading">Submit a New Prayer Request</h2>
@@ -21,19 +23,19 @@
                 <p id="form-instructions">Please fill out the form below to submit a new prayer request.</p>
                 <div>
                     <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" name="firstName" placeholder="First Name" required>
+                    <input type="text" id="firstName" name="firstName" placeholder="First Name" required aria-required="true">
                 </div>
                 <div>
                     <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" name="lastName" placeholder="Last Name" required>
+                    <input type="text" id="lastName" name="lastName" placeholder="Last Name" required aria-required="true">
                 </div>
                 <div>
                     <label for="dateOfRequest">Date of Request</label>
-                    <input type="date" id="dateOfRequest" name="dateOfRequest" required>
+                    <input type="date" id="dateOfRequest" name="dateOfRequest" required aria-required="true">
                 </div>
                 <div>
                     <label for="typeOfRequest">Type of Request</label>
-                    <select id="typeOfRequest" name="typeOfRequest" required>
+                    <select id="typeOfRequest" name="typeOfRequest" required aria-required="true">
                         <option value="health">Health</option>
                         <option value="employment">Employment</option>
                         <option value="spiritual">Spiritual</option>
@@ -44,7 +46,7 @@
                 </div>
                 <div>
                     <label for="initialRequest">Initial Request</label>
-                    <textarea id="initialRequest" name="initialRequest" placeholder="Initial Request" required></textarea>
+                    <textarea id="initialRequest" name="initialRequest" placeholder="Initial Request" required aria-required="true"></textarea>
                 </div>
                 <button type="submit" id="createNewRequest">Submit</button>
             </form>
