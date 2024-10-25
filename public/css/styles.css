@@ -49,6 +49,8 @@ aside {
 /* Date styling */
 .date-header {
     color: darkblue;
+    background-color: #e0e0e0; /* Slightly darker grey */
+    font-weight: bold;
 }
 
 /* type styling */
@@ -67,9 +69,17 @@ aside {
     border: none;
 }
 
-.request-row {
+/* Define the alternating row colors */
+.request-row:nth-child(even) {
     display: flex;
     align-items: center;
+    background-color: #f9f9f9; /* Light grey */
+}
+
+.request-row:nth-child(odd) {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff; /* White */
 }
 
 .request-text {
@@ -79,7 +89,7 @@ aside {
 
 .update-checkbox {
     margin-right: 0px; /* Reduced margin for tighter spacing */
-    margin-left: 0px;
+    margin-left: 5px;
 }
 
 /* Update form styling */
@@ -117,3 +127,4 @@ form button {
 form button:hover {
     background-color: #0056b3;
 }
+
