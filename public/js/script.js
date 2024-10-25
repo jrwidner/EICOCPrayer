@@ -2,8 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const spinner = document.getElementById('spinner');
     const requestsDiv = document.getElementById('requests');
     const typeOfRequestSelect = document.getElementById('typeOfRequest');
-    const selectRequest = document.getElementById('selectRequest');
-    const updateRequestForm = document.getElementById('updateRequestForm');
 
     // Function to capitalize the first letter of each word
     function capitalizeWords(str) {
@@ -18,17 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
             option.value = type.toLowerCase();
             option.textContent = capitalizeWords(type);
             typeOfRequestSelect.appendChild(option);
-        });
-    }
-
-    // Function to update the select request dropdown
-    function updateSelectRequest(requests) {
-        selectRequest.innerHTML = ''; // Clear existing options
-        requests.forEach(request => {
-            const option = document.createElement('option');
-            option.value = request.Id; // Assuming each request has a unique Id
-            option.textContent = `${request.FirstName} ${request.LastName} - ${request.TypeOfRequest}`;
-            selectRequest.appendChild(option);
         });
     }
 
@@ -47,9 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Extract unique prayer types
             const prayerTypes = [...new Set(data.map(request => request.TypeOfRequest.toLowerCase()))];
             updatePrayerTypes(prayerTypes);
-
-            // Update select request dropdown
-            updateSelectRequest(data);
 
             // Sort data by DateOfUpdate or DateOfRequest, newest first, then by TypeOfRequest
             data.sort((a, b) => {
@@ -82,9 +66,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     requestsDiv.appendChild(typeHeader);
                 }
                 const requestElement = document.createElement('div');
-                requestElement.textContent = `${request.FirstName} ${request.LastName}: ${request.InitialRequest}`;
                 requestElement.classList.add('request');
+                requestElement.innerHTML = `
+                    <input type="radio" name="updateRequest" value="${request.Id}" class="update-radio">
+                    ${request.FirstName} ${request.LastName}: ${request.InitialRequest}
+                    <form class="update-form" id="updateForm-${request.Id}">
+                        <input type="hidden" name="updateId" value="${request.Id}">
+                        <textarea name="updateToRequest" placeholder="Update Request" required></textarea>
+                        <button type="submit">Update</button>
+                    </form>
+                `;
                 requestsDiv.appendChild(requestElement);
+            });
+
+            // Add event listeners to radio buttons
+            document.querySelectorAll('.update-radio').forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    document.querySelectorAll('.update-form').forEach(form => {
+                        form.style.display = 'none';
+                    });
+                    const selectedForm = document.getElementById(`updateForm-${event.target.value}`);
+                    selectedForm.style.display = 'block';
+                });
             });
         })
         .catch(error => {
@@ -129,49 +132,35 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Error adding new prayer request:', error));
     });
 
-    // Handle selection of a request to update
-    selectRequest.addEventListener('change', (event) => {
-        const selectedId = event.target.value;
-        fetch(`/api/prayer-requests/${selectedId}`)
-            .then(response => response.json())
-            .then(request => {
-                document.getElementById('updateId').value = request.Id;
-                document.getElementById('updateFirstName').value = request.FirstName;
-                document.getElementById('updateLastName').value = request.LastName;
-                document.getElementById('updateDateOfRequest').value = new Date(request.DateOfRequest).toISOString().split('T')[0];
-                document.getElementById('updateTypeOfRequest').value = request.TypeOfRequest;
-                document.getElementById('updateInitialRequest').value = request.InitialRequest;
-            })
-            .catch(error => console.error('Error fetching prayer request:', error));
-    });
-
     // Handle form submission for updating a request
-    const updateButton = document.getElementById('updateRequest');
-    updateButton.addEventListener('click', (event) => {
-        event.preventDefault(); // Prevent the default form submission
+    document.addEventListener('submit', (event) => {
+        if (event.target.classList.contains('update-form')) {
+            event.preventDefault(); // Prevent the default form submission
 
-        const selectedId = document.getElementById('updateId').value;
-        const updateToRequest = document.getElementById('updateToRequest').value;
-        const dateOfUpdate = new Date().toISOString().split('T')[0];
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            const dateOfUpdate = new Date().toISOString().split('T')[0];
 
-        fetch(`/api/update-prayer-request/${selectedId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                updateToRequest: updateToRequest,
-                dateOfUpdate: dateOfUpdate
+            fetch(`/api/update-prayer-request/${data.updateId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    updateToRequest: data.updateToRequest,
+                    dateOfUpdate: dateOfUpdate
+                })
             })
-        })
-        .then(response => response.json())
-        .then(updatedRequest => {
-            console.log('Request updated:', updatedRequest);
-            // Clear the form
-            updateRequestForm.reset();
-            // Reload the page to display the updated record
-            location.reload();
-        })
-        .catch(error => console.error('Error updating prayer request:', error));
+            .then(response => response.json())
+            .then(updatedRequest => {
+                console.log('Request updated:', updatedRequest);
+                // Clear the form
+                form.reset();
+                // Reload the page to display the updated record
+                location.reload();
+            })
+            .catch(error => console.error('Error updating prayer request:', error));
+        }
     });
 });

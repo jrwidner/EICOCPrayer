@@ -34,6 +34,12 @@
             word-wrap: break-word; /* Breaks long words */
             margin-bottom: 1em; /* Adds space between requests */
         }
+
+        /* Update form styling */
+        .update-form {
+            display: none;
+            margin-top: 1em;
+        }
     </style>
 </head>
 <body>
@@ -74,44 +80,6 @@
                     <textarea id="initialRequest" name="initialRequest" placeholder="Initial Request" required aria-required="true"></textarea>
                 </div>
                 <button type="submit" id="createNewRequest">Submit</button>
-            </form>
-        </aside>
-        <aside aria-labelledby="update-request-heading">
-            <h2 id="update-request-heading">Update an Existing Prayer Request</h2>
-            <form id="updateRequestForm" aria-describedby="update-form-instructions">
-                <p id="update-form-instructions">Select a prayer request to update.</p>
-                <div>
-                    <label for="selectRequest">Select Request</label>
-                    <select id="selectRequest" name="selectRequest" required aria-required="true">
-                        <!-- Options will be dynamically populated -->
-                    </select>
-                </div>
-                <input type="hidden" id="updateId" name="updateId">
-                <div>
-                    <label for="updateFirstName">First Name</label>
-                    <input type="text" id="updateFirstName" name="updateFirstName" readonly>
-                </div>
-                <div>
-                    <label for="updateLastName">Last Name</label>
-                    <input type="text" id="updateLastName" name="updateLastName" readonly>
-                </div>
-                <div>
-                    <label for="updateDateOfRequest">Date of Request</label>
-                    <input type="date" id="updateDateOfRequest" name="updateDateOfRequest" readonly>
-                </div>
-                <div>
-                    <label for="updateTypeOfRequest">Type of Request</label>
-                    <input type="text" id="updateTypeOfRequest" name="updateTypeOfRequest" readonly>
-                </div>
-                <div>
-                    <label for="updateInitialRequest">Initial Request</label>
-                    <textarea id="updateInitialRequest" name="updateInitialRequest" readonly></textarea>
-                </div>
-                <div>
-                    <label for="updateToRequest">Update To Request</label>
-                    <textarea id="updateToRequest" name="updateToRequest" required aria-required="true"></textarea>
-                </div>
-                <button type="submit" id="updateRequest">Update</button>
             </form>
         </aside>
     </main>
