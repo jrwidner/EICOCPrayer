@@ -16,20 +16,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 return a.TypeOfRequest.localeCompare(b.TypeOfRequest);
             });
 
-            // Group by date and display
+            // Group by date and type of request, then display
             let currentDate = '';
+            let currentType = '';
             data.forEach(request => {
                 const requestDate = new Date(request.DateOfUpdate || request.DateOfRequest).toLocaleDateString();
                 if (requestDate !== currentDate) {
                     currentDate = requestDate;
+                    currentType = ''; // Reset current type when date changes
                     const dateHeader = document.createElement('h3');
                     dateHeader.textContent = currentDate;
                     requestsDiv.appendChild(dateHeader);
                 }
+                if (request.TypeOfRequest !== currentType) {
+                    currentType = request.TypeOfRequest;
+                    const typeHeader = document.createElement('h4');
+                    typeHeader.textContent = currentType;
+                    requestsDiv.appendChild(typeHeader);
+                }
                 const requestElement = document.createElement('div');
-                requestElement.innerHTML = `
-                    <strong>${request.FirstName} ${request.LastName}</strong> - ${request.TypeOfRequest}: ${request.InitialRequest}
-                `;
+                requestElement.textContent = `${request.FirstName} ${request.LastName}: ${request.InitialRequest}`;
                 requestsDiv.appendChild(requestElement);
             });
         })
