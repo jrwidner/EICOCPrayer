@@ -51,6 +51,11 @@ aside {
     color: darkblue;
 }
 
+/* type styling */
+.type-header {
+    color: rgb(51, 88, 7);
+}
+
 /* Table styling */
 #requests-table {
     width: 100%;
