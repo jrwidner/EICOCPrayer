@@ -60,7 +60,7 @@ aside {
 
 /* Table styling */
 #requests-table {
-    width: 85%;
+    width: 100%;
     border-collapse: collapse;
 }
 
@@ -131,7 +131,7 @@ form button:hover {
 button {
     width: 120px;
     height: 45px;
-    font-size: 16px;
+    font-size: 12px;
     background-color: #007BFF;
     color: white;
     border: none;
