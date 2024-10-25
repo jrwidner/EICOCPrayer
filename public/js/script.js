@@ -52,14 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     currentDate = requestDate;
                     currentType = ''; // Reset current type when date changes
                     const dateHeader = document.createElement('tr');
-                    dateHeader.innerHTML = `<td colspan="2"><h4 class="date-header">${currentDate}</h4></td>`;
+                    dateHeader.innerHTML = `<td colspan="2"><p class="date-header">${currentDate}</p></td>`;
                     requestsTable.appendChild(dateHeader);
                 }
                 const capitalizedType = capitalizeWords(request.TypeOfRequest);
                 if (capitalizedType !== currentType) {
                     currentType = capitalizedType;
                     const typeHeader = document.createElement('tr');
-                    typeHeader.innerHTML = `<td colspan="2"><h4>${currentType}</h4></td>`;
+                    typeHeader.innerHTML = `<td colspan="2"><p><b>${currentType}</b></p></td>`;
                     requestsTable.appendChild(typeHeader);
                 }
                 const requestRow = document.createElement('tr');
