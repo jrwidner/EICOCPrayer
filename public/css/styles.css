@@ -53,12 +53,12 @@ aside {
 
 /* type styling */
 .type-header {
-    color: rgb(51, 88, 7);
+    color: green;
 }
 
 /* Table styling */
 #requests-table {
-    width: 100%;
+    width: 85%;
     border-collapse: collapse;
 }
 
