@@ -54,8 +54,8 @@ aside {
 }
 
 /* type styling */
-.type-header {
-    color: green;
+.request-type {
+    color: #006400; /* Dark Green */
 }
 
 /* Table styling */

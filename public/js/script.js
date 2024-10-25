@@ -67,8 +67,8 @@ data.forEach(request => {
         updateText = `<em> Updated:${updateDate} ${request.UpdateToRequest}</em>`;
     }
     requestRow.innerHTML = `
-        <td>${request.TypeOfRequest}</td>
         <td><input type="checkbox" name="updateRequest" value="${request.Id}" class="update-checkbox" aria-label="Select to update request from ${request.FirstName} ${request.LastName}"></td>
+        <td><p class="request-type">${request.TypeOfRequest} - </p></td>
         <td class="request-text">
             ${request.FirstName} ${request.LastName}: ${request.InitialRequest}${updateText}
         </td>
@@ -87,6 +87,7 @@ data.forEach(request => {
     `;
     requestsTable.appendChild(updateFormRow);
 });
+
 
             // Add event listeners to checkboxes
             document.querySelectorAll('.update-checkbox').forEach(checkbox => {
