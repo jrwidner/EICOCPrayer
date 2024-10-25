@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prayer Requests</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <style>
+        /* Spinner styles */
+        .spinner {
+            display: none;
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+            margin: auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -13,6 +31,7 @@
     <main>
         <section aria-labelledby="requests-heading">
             <h2 id="requests-heading">Current Prayer Requests</h2>
+            <div id="spinner" class="spinner"></div>
             <div id="requests" role="list">
                 <!-- Records will be dynamically inserted here -->
             </div>

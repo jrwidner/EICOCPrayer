@@ -1,16 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const spinner = document.getElementById('spinner');
+    const requestsDiv = document.getElementById('requests');
+
     // Function to capitalize the first letter of each word
     function capitalizeWords(str) {
         return str.replace(/\b\w/g, char => char.toUpperCase());
     }
+
+    // Show spinner before fetching data
+    spinner.style.display = 'block';
 
     // Fetch and display existing prayer requests
     fetch('/api/prayer-requests')
         .then(response => response.json())
         .then(data => {
             console.log('Fetched data:', data); // Log fetched data
-            const requestsDiv = document.getElementById('requests');
-            
+
+            // Hide spinner after data is fetched
+            spinner.style.display = 'none';
+
             // Sort data by DateOfUpdate or DateOfRequest, newest first, then by TypeOfRequest
             data.sort((a, b) => {
                 const dateA = new Date(a.DateOfUpdate || a.DateOfRequest);
@@ -45,7 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 requestsDiv.appendChild(requestElement);
             });
         })
-        .catch(error => console.error('Error fetching prayer requests:', error));
+        .catch(error => {
+            console.error('Error fetching prayer requests:', error);
+            // Hide spinner in case of error
+            spinner.style.display = 'none';
+        });
 
     // Handle form submission
     const submitButton = document.getElementById('createNewRequest');
@@ -75,15 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(newRequest => {
             console.log('New request added:', newRequest);
-            // Optionally, you can update the UI to include the new request
-            const requestsDiv = document.getElementById('requests');
-            const requestDate = new Date(newRequest.dateOfRequest).toLocaleDateString();
-            const capitalizedType = capitalizeWords(newRequest.typeOfRequest);
-            const requestElement = document.createElement('div');
-            requestElement.innerHTML = `
-                <strong>${newRequest.firstName} ${newRequest.lastName}</strong> - ${capitalizedType}: ${newRequest.initialRequest}
-            `;
-            requestsDiv.appendChild(requestElement);
+            // Clear the form
+            form.reset();
+            // Reload the page to display the new record
+            location.reload();
         })
         .catch(error => console.error('Error adding new prayer request:', error));
     });
