@@ -77,9 +77,9 @@ data.forEach(request => {
         updateText = `<em> Updated:${updateDate} ${request.UpdateToRequest}</em>`;
     }
     requestRow.innerHTML = `
-        <td  valign=top><input type="checkbox" name="updateRequest" value="${request.Id}" class="update-checkbox" aria-label="Select to update request from ${request.FirstName} ${request.LastName}"></td>
-        <td valign=top class="request-type nowrap">${request.TypeOfRequest} - </td>
-        <td valign=top class="request-text">
+        <td  valign="top"><input type="checkbox" name="updateRequest" value="${request.Id}" class="update-checkbox" aria-label="Select to update request from ${request.FirstName} ${request.LastName}"></td>
+        <td valign="top" class="request-type nowrap">${request.TypeOfRequest} - </td>
+        <td valign="top" class="request-text">
             ${request.FirstName} ${request.LastName}: ${request.InitialRequest}${updateText}
         </td>
     `;
