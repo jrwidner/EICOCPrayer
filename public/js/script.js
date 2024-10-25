@@ -87,14 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(newRequest => {
             console.log('New request added:', newRequest);
-            // Optionally, you can update the UI to include the new request
-            const requestDate = new Date(newRequest.dateOfRequest).toLocaleDateString();
-            const capitalizedType = capitalizeWords(newRequest.typeOfRequest);
-            const requestElement = document.createElement('div');
-            requestElement.innerHTML = `
-                <strong>${newRequest.firstName} ${newRequest.lastName}</strong> - ${capitalizedType}: ${newRequest.initialRequest}
-            `;
-            requestsDiv.appendChild(requestElement);
+            // Clear the form
+            form.reset();
+            // Reload the page to display the new record
+            location.reload();
         })
         .catch(error => console.error('Error adding new prayer request:', error));
     });
