@@ -5,36 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prayer Requests</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
-    <style>
-        /* Spinner styles */
-        .spinner {
-            display: none;
-            border: 16px solid #f3f3f3;
-            border-top: 16px solid #3498db;
-            border-radius: 50%;
-            width: 120px;
-            height: 120px;
-            animation: spin 2s linear infinite;
-            margin: auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
 </head>
 <body>
     <header>
         <h1>Prayer Requests</h1>
+        <p>To update a prayer request, select the checkbox to the left of the request</p>
     </header>
     <main>
         <section aria-labelledby="requests-heading">
-            <h2 id="requests-heading">Current Prayer Requests</h2>
-            <div id="spinner" class="spinner"></div>
-            <div id="requests" role="list">
+            <div id="spinner" class="spinner" role="status" aria-live="polite">Loading...</div>
+            <table id="requests-table" role="presentation">
+                <tr><td colspan="3" align="left"><button id="printButton" class="button">Print Prayer Records</button></td></tr>
                 <!-- Records will be dynamically inserted here -->
-            </div>
+            </table>
         </section>
         <aside aria-labelledby="new-request-heading">
             <h2 id="new-request-heading">Submit a New Prayer Request</h2>
@@ -55,13 +38,7 @@
                 <div>
                     <label for="typeOfRequest">Type of Request</label>
                     <select id="typeOfRequest" name="typeOfRequest" required aria-required="true">
-                        <option value="Health">Health</option>
-                        <option value="Employment">Employment</option>
-                        <option value="Spiritual">Spiritual</option>
-                        <option value="Praise">Praise</option>
-                        <option value="Family Concerns">Family Concerns</option>
-                        <option value="Prayer Card">Prayer Cards</option>
-                        <option value="Other">Other</option>
+                        <!-- Options will be dynamically populated -->
                     </select>
                 </div>
                 <div>

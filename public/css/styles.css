@@ -14,6 +14,7 @@ main {
     display: flex;
     justify-content: space-between;
     padding: 1rem;
+    align-items: flex-start; /* Align items at the top */
 }
 
 section {
@@ -26,6 +27,76 @@ aside {
     padding: 1rem;
     background-color: #f1f1f1;
     border-radius: 8px;
+}
+
+/* Spinner styles */
+.spinner {
+    display: none;
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Date styling */
+.date-header {
+    color: darkblue;
+    font-weight: bold;
+}
+
+/* type styling */
+.request-type {
+    color: #006400; /* Dark Green */
+    margin-left: 5px;
+}
+
+/* Table styling */
+#requests-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#requests-table td {
+    padding: 0;
+    border: none;
+    vertical-align: top; /* Ensure top alignment */
+}
+
+/* Define the alternating row colors */
+.request-row:nth-child(even) {
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9; /* Light grey */
+}
+
+.request-row:nth-child(odd) {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff; /* White */
+}
+
+.request-text {
+    flex-grow: 1;
+    margin-left: 5px; /* Space between checkbox and text */
+}
+
+.update-checkbox {
+    margin-right: 0px; /* Reduced margin for tighter spacing */
+    margin-left: 5px;
+}
+
+/* Update form styling */
+.update-form {
+    display: none;
+    margin-top: 5px; /* Space between record and update form */
 }
 
 form div {
@@ -56,4 +127,51 @@ form button {
 
 form button:hover {
     background-color: #0056b3;
+}
+
+button {
+    width: 250px;
+    height: 45px;
+    font-size: 12px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 10px 0;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+@media print {
+    /* Hide the form and its heading */
+    #newRequestForm, #new-request-heading {
+        display: none;
+    }
+    /* Hide the checkboxes */
+    input[type="checkbox"] {
+        display: none;
+    }
+    /* Optionally, adjust the layout for printing */
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    header, main, aside {
+        padding: 1rem;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 0.5rem;
+        text-align: left;
+        border: 1px solid #000;
+    }
+    /* Hide the print button itself */
+    #printButton {
+        display: none;
+    }
 }
