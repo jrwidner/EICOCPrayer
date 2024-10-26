@@ -53,7 +53,6 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-// Group by date and type of request, then display
 let currentDate = '';
 let currentType = '';
 data.forEach(request => {
@@ -62,7 +61,7 @@ data.forEach(request => {
         currentDate = requestDate;
         currentType = ''; // Reset current type when date changes
         const dateHeader = document.createElement('tr');
-        dateHeader.innerHTML = `<td colspan="3"><b class="date-header">${currentDate}</b></td>`;
+        dateHeader.innerHTML = `<td colspan="3" valign="top"><b class="date-header">${currentDate}</b></td>`;
         requestsTable.appendChild(dateHeader);
     }
     const capitalizedType = capitalizeWords(request.TypeOfRequest);
@@ -77,7 +76,7 @@ data.forEach(request => {
         updateText = `<em> Updated:${updateDate} ${request.UpdateToRequest}</em>`;
     }
     requestRow.innerHTML = `
-        <td  valign="top"><input type="checkbox" name="updateRequest" value="${request.Id}" class="update-checkbox" aria-label="Select to update request from ${request.FirstName} ${request.LastName}"></td>
+        <td valign="top"><input type="checkbox" name="updateRequest" value="${request.Id}" class="update-checkbox" aria-label="Select to update request from ${request.FirstName} ${request.LastName}"></td>
         <td valign="top" class="request-type nowrap">${request.TypeOfRequest} - </td>
         <td valign="top" class="request-text">
             ${request.FirstName} ${request.LastName}: ${request.InitialRequest}${updateText}
@@ -87,7 +86,7 @@ data.forEach(request => {
 
     const updateFormRow = document.createElement('tr');
     updateFormRow.innerHTML = `
-        <td colspan="3">
+        <td colspan="3" valign="top">
             <form class="update-form" id="updateForm-${request.Id}" aria-label="Update form for request from ${request.FirstName} ${request.LastName}">
                 <input type="hidden" name="updateId" value="${request.Id}">
                 <textarea name="updateToRequest" placeholder="Update Request" required aria-required="true"></textarea>
@@ -97,8 +96,6 @@ data.forEach(request => {
     `;
     requestsTable.appendChild(updateFormRow);
 });
-
-
             // Add event listeners to checkboxes
             document.querySelectorAll('.update-checkbox').forEach(checkbox => {
                 checkbox.addEventListener('change', (event) => {
