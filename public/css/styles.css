@@ -67,6 +67,7 @@ aside {
 #requests-table td {
     padding: 0;
     border: none;
+    vertical-align: top; /* Ensure top alignment */
 }
 
 /* Define the alternating row colors */
@@ -148,33 +149,27 @@ button:hover {
     #newRequestForm, #new-request-heading {
         display: none;
     }
-
     /* Hide the checkboxes */
     input[type="checkbox"] {
         display: none;
     }
-
     /* Optionally, adjust the layout for printing */
     body {
         margin: 0;
         padding: 0;
     }
-
     header, main, aside {
         padding: 1rem;
     }
-
     table {
         width: 100%;
         border-collapse: collapse;
     }
-
     th, td {
         padding: 0.5rem;
         text-align: left;
         border: 1px solid #000;
     }
-
     /* Hide the print button itself */
     #printButton {
         display: none;
