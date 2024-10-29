@@ -182,20 +182,32 @@ data.forEach(request => {
         }
     });
 
+    // Function to print prayer records
     function printPrayerRecords() {
         const table = document.getElementById('requests-table');
+        if (!table) {
+            console.error('Table with ID "requests-table" not found.');
+            return;
+        }
+
+        const thead = table.querySelector('thead');
+        if (!thead) {
+            console.error('Table with ID "requests-table" does not have a <thead> element.');
+            return;
+        }
+
         const rows = table.querySelectorAll('tr');
-        let tableHTML = '<table border="1"><thead>' + table.querySelector('thead').innerHTML + '</thead><tbody>';
-    
+        let tableHTML = '<table><thead>' + thead.innerHTML + '</thead><tbody>';
+
         rows.forEach(row => {
             const newRow = row.cloneNode(true);
             // Remove checkboxes and update form elements
             newRow.querySelectorAll('input[type="checkbox"], form').forEach(element => element.remove());
             tableHTML += newRow.outerHTML;
         });
-    
+
         tableHTML += '</tbody></table>';
-    
+
         const newWindow = window.open('', '', 'width=800,height=600');
         newWindow.document.write(`
             <html>
@@ -209,7 +221,6 @@ data.forEach(request => {
                     th, td {
                         padding: 8px;
                         text-align: left;
-                        border: 1px solid #ddd;
                     }
                     th {
                         background-color: #f2f2f2;
