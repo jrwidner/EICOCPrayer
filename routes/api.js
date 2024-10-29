@@ -6,6 +6,11 @@ const getprayerAddress = process.env.GETPRAYER_ADDRESS;
 const newprayerAddress = process.env.NEWPRAYER_ADDRESS;
 const updateprayerAddress = process.env.UPDATEPRAYER_ADDRESS;
 
+console.log('GETPRAYER_ADDRESS:', process.env.GETPRAYER_ADDRESS);
+console.log('NEWPRAYER_ADDRESS:', process.env.NEWPRAYER_ADDRESS);
+console.log('UPDATEPRAYER_ADDRESS:', process.env.UPDATEPRAYER_ADDRESS);
+
+
 // Route to get all prayer requests
 router.get('/prayer-requests', async (req, res) => {
     try {
