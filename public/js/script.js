@@ -182,34 +182,33 @@ data.forEach(request => {
         }
     });
 
-    // Print functionality
-    function printPrayerRecords() function printPrayerRequests() {
-        const newWindow = window.open('', '', 'width=800,height=600');
-        const tableHTML = document.getElementById('requests-table').outerHTML;
-        newWindow.document.write(`
-            <html>
-            <head>
-                <title>Print Prayer Requests</title>
-                <style>
-                    /* Add any styles you want for the print view */
-                    table { width: 100%; border-collapse: collapse; border: none; }
-                    th, td { border: none; padding: 8px; text-align: left; }
-                    th { background-color: #f2f2f2; }
-                </style>
-            </head>
-            <body>
-                ${tableHTML}
-                <script>
-                    window.onload = function() {
-                        window.print();
-                    };
-                </script>
-            </body>
-            </html>
-        `);
-        newWindow.document.close();
-    }   
-
+   // Function to print prayer requests
+   function printPrayerRequests() {
+    const newWindow = window.open('', '', 'width=800,height=600');
+    const tableHTML = document.getElementById('requests-table').outerHTML;
+    newWindow.document.write(`
+        <html>
+        <head>
+            <title>Print Prayer Requests</title>
+            <style>
+                /* Add any styles you want for the print view */
+                table { width: 100%; border-collapse: collapse; border: none; }
+                th, td { border: none; padding: 8px; text-align: left; }
+                th { background-color: #f2f2f2; }
+            </style>
+        </head>
+        <body>
+            ${tableHTML}
+            <script>
+                window.onload = function() {
+                    window.print();
+                };
+            </script>
+        </body>
+        </html>
+    `);
+    newWindow.document.close();
+}
     // Add event listener to the print button
     document.getElementById('printButton').addEventListener('click', printPrayerRecords);
 });
