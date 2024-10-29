@@ -56,7 +56,10 @@ aside {
 .request-type {
     color: #006400; /* Dark Green */
     margin-left: 5px;
+    white-space: nowrap;
+    flex-grow: 1;
 }
+
 
 /* Table styling */
 #requests-table {
