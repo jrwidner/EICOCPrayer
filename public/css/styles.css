@@ -58,7 +58,10 @@ aside {
     margin-left: 5px;
     white-space: nowrap;
     flex-grow: 1;
+    text-align: left; /* Left justify text */
+    vertical-align: top; /* Top justify text */
 }
+
 
 
 /* Table styling */
@@ -89,6 +92,8 @@ aside {
 .request-text {
     flex-grow: 1;
     margin-left: 5px; /* Space between checkbox and text */
+    text-align: left; /* Left justify text */
+    vertical-align: top; /* Top justify text */
 }
 
 .update-checkbox {
