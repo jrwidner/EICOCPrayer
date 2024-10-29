@@ -183,7 +183,7 @@ data.forEach(request => {
     });
 
    // Function to print prayer requests
-   function printPrayerRequests() {
+   function printPrayerRecords() {
     const newWindow = window.open('', '', 'width=800,height=600');
     const tableHTML = document.getElementById('requests-table').outerHTML;
     newWindow.document.write(`
