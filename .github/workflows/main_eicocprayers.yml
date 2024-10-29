@@ -61,11 +61,11 @@ jobs:
         if: github.ref != 'refs/heads/main'
 
       - name: Set environment variable for UPDATEPRAYER_ADDRESS (development)
-        run: echo "UPDATEPRAYER_ADDRESS=https://eicocprayerfunc.azurewebsites.net/api/UpdatePrayerRequest?" >> $GITHUB_ENV
+        run: echo "UPDATEPRAYER_ADDRESS=https://eicocprayerfunc.azurewebsites.net/api/UpdatePrayerRequest" >> $GITHUB_ENV
         if: github.ref != 'refs/heads/main'
 
       - name: Set environment variable for GETPRAYER_ADDRESS (production)
-        run: echo "GETPRAYER_ADDRESS=https://eicocelderprayerfunc.azurewebsites.net/api/GetAllPrayerRequests?" >> $GITHUB_ENV
+        run: echo "GETPRAYER_ADDRESS=https://eicocelderprayerfunc.azurewebsites.net/api/GetAllPrayerRequests" >> $GITHUB_ENV
         if: github.ref == 'refs/heads/main'
 
       - name: Set environment variable for NEWPRAYER_ADDRESS (production)
@@ -75,6 +75,12 @@ jobs:
       - name: Set environment variable for UPDATEPRAYER_ADDRESS (production)
         run: echo "UPDATEPRAYER_ADDRESS=https://eicocelderprayerfunc.azurewebsites.net/api/UpdatePrayerRequest?code=q0P7OkHKRTtLfygOfK1suAoRG62rAI9xFKiJFaJcwidwAzFumf8UIg%3D%3D" >> $GITHUB_ENV
         if: github.ref == 'refs/heads/main'
+
+      - name: Replace placeholders in api.js
+        run: |
+          sed -i 's|process.env.GETPRAYER_ADDRESS|"$GETPRAYER_ADDRESS"|g' ./routes/api.js
+          sed -i 's|process.env.NEWPRAYER_ADDRESS|"$NEWPRAYER_ADDRESS"|g' ./routes/api.js
+          sed -i 's|process.env.UPDATEPRAYER_ADDRESS|"$UPDATEPRAYER_ADDRESS"|g' ./routes/api.js
 
       - name: Login to Azure
         uses: azure/login@v2
