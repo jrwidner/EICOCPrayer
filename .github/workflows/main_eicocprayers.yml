@@ -1,6 +1,10 @@
 name: Build and deploy Node.js app to Azure Web App - EicocPrayers
 
-
+on:
+  push:
+    branches-ignore:
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -47,6 +51,16 @@ jobs:
 
       - name: Extract artifact
         run: tar -xzf release.tar.gz
+
+      - name: Set environment variable for API address (development)
+        run: echo "GETPRAYER_ADDRESS=https://eicocprayerfunc.azurewebsites.net/api/GetAllPrayerRequests" >> $GITHUB_ENV
+        run: echo "NEWPRAYER_ADDRESS=https://eicocprayerfunc.azurewebsites.net/api/CreateNewPrayerRequest" >> $GITHUB_ENV
+        run: echo "UPDATEPRAYER_ADDRESS=https://eicocprayerfunc.azurewebsites.net/api/UpdatePrayerRequest?" >> $GITHUB_ENV
+        if: github.ref != 'refs/heads/main'
+
+      - name: Set environment variable for API address (production)
+        run: echo "API_ADDRESS=https://eicocelderprayerfunc.azurewebsites.net" >> $GITHUB_ENV
+        if: github.ref == 'refs/heads/main'
 
       - name: Login to Azure
         uses: azure/login@v2
