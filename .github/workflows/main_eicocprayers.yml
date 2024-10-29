@@ -78,9 +78,9 @@ jobs:
 
       - name: Replace placeholders in api.js
         run: |
-          sed -i 's|process.env.GETPRAYER_ADDRESS|"$GETPRAYER_ADDRESS"|g' ./routes/api.js
-          sed -i 's|process.env.NEWPRAYER_ADDRESS|"$NEWPRAYER_ADDRESS"|g' ./routes/api.js
-          sed -i 's|process.env.UPDATEPRAYER_ADDRESS|"$UPDATEPRAYER_ADDRESS"|g' ./routes/api.js
+          sed -i 's|process.env.GETPRAYER_ADDRESS|'"$GETPRAYER_ADDRESS"'|g' ./routes/api.js
+          sed -i 's|process.env.NEWPRAYER_ADDRESS|'"$NEWPRAYER_ADDRESS"'|g' ./routes/api.js
+          sed -i 's|process.env.UPDATEPRAYER_ADDRESS|'"$UPDATEPRAYER_ADDRESS"'|g' ./routes/api.js
 
       - name: Login to Azure
         uses: azure/login@v2
