@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         typeOfRequestSelect.innerHTML = ''; // Clear existing options
         types.forEach(type => {
             const option = document.createElement('option');
-            option.value = type.toLowerCase();
+            option.value = capitalizeWords(type);
             option.textContent = capitalizeWords(type);
             typeOfRequestSelect.appendChild(option);
         });
