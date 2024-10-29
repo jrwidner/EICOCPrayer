@@ -52,13 +52,19 @@ jobs:
       - name: Extract artifact
         run: tar -xzf release.tar.gz
 
-      - name: Set environment variable for API address (development)
+      - name: Set environment variable for GETPRAYER_ADDRESS (development)
         run: echo "GETPRAYER_ADDRESS=https://eicocprayerfunc.azurewebsites.net/api/GetAllPrayerRequests" >> $GITHUB_ENV
+        if: github.ref != 'refs/heads/main'
+
+      - name: Set environment variable for NEWPRAYER_ADDRESS (development)
         run: echo "NEWPRAYER_ADDRESS=https://eicocprayerfunc.azurewebsites.net/api/CreateNewPrayerRequest" >> $GITHUB_ENV
+        if: github.ref != 'refs/heads/main'
+
+      - name: Set environment variable for UPDATEPRAYER_ADDRESS (development)
         run: echo "UPDATEPRAYER_ADDRESS=https://eicocprayerfunc.azurewebsites.net/api/UpdatePrayerRequest?" >> $GITHUB_ENV
         if: github.ref != 'refs/heads/main'
 
-      - name: Set environment variable for API address (production)
+      - name: Set environment variable for API_ADDRESS (production)
         run: echo "API_ADDRESS=https://eicocelderprayerfunc.azurewebsites.net" >> $GITHUB_ENV
         if: github.ref == 'refs/heads/main'
 
