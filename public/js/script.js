@@ -225,6 +225,10 @@ data.forEach(request => {
                     th {
                         background-color: #f2f2f2;
                     }
+                    /* Remove borders */
+                    table, th, td {
+                        border: none;
+                    }
                 </style>
             </head>
             <body>
