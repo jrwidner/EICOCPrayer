@@ -2,42 +2,33 @@ const express = require('express');
 const axios = require('axios');
 const router = express.Router();
 
-const getprayerAddress = process.env.GETPRAYER_ADDRESS;
-const newprayerAddress = process.env.NEWPRAYER_ADDRESS;
-const updateprayerAddress = process.env.UPDATEPRAYER_ADDRESS;
-
-console.log('GETPRAYER_ADDRESS:', process.env.GETPRAYER_ADDRESS);
-console.log('NEWPRAYER_ADDRESS:', process.env.NEWPRAYER_ADDRESS);
-console.log('UPDATEPRAYER_ADDRESS:', process.env.UPDATEPRAYER_ADDRESS);
-
-
 // Route to get all prayer requests
 router.get('/prayer-requests', async (req, res) => {
     try {
-        const response = await axios.get(getprayerAddress);
+        const response = await axios.get(GETPRAYER_ADDRESS);
         res.json(response.data);
     } catch (error) {
-        res.status(500).json({ error: `${error.message} - URL: ${getprayerAddress}` });
+        res.status(500).json({ error: `${error.message} - URL: GETPRAYER_ADDRESS` });
     }
 });
 
 // Route to create a new prayer request
 router.post('/create-prayer-request', async (req, res) => {
     try {
-        const response = await axios.post(newprayerAddress, req.body);
+        const response = await axios.post(NEWPRAYER_ADDRESS, req.body);
         res.status(response.status).json(response.data);
     } catch (error) {
-        res.status(500).json({ error: `${error.message} - URL: ${newprayerAddress}` });
+        res.status(500).json({ error: `${error.message} - URL: NEWPRAYER_ADDRESS` });
     }
 });
 
 // Route to update an existing prayer request
 router.put('/update-prayer-request/:id', async (req, res) => {
     try {
-        const response = await axios.post(updateprayerAddress, req.body);
+        const response = await axios.post(UPDATEPRAYER_ADDRESS, req.body);
         res.status(response.status).json(response.data);
     } catch (error) {
-        res.status(500).json({ error: `${error.message} - URL: ${updateprayerAddress}` });
+        res.status(500).json({ error: `${error.message} - URL: UPDATEPRAYER_ADDRESS` });
     }
 });
 
