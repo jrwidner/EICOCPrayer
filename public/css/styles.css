@@ -56,6 +56,9 @@ aside {
 .request-type {
     color: #006400; /* Dark Green */
     margin-left: 5px;
+    white-space: nowrap;
+    text-align: left; /* Left justify text */
+    vertical-align: top; /* Top justify text */
 }
 
 /* Table styling */
@@ -73,19 +76,21 @@ aside {
 /* Define the alternating row colors */
 .request-row:nth-child(even) {
     display: flex;
-    align-items: center;
+    align-items: left;
     background-color: #f9f9f9; /* Light grey */
 }
 
 .request-row:nth-child(odd) {
     display: flex;
-    align-items: center;
+    align-items: left;
     background-color: #ffffff; /* White */
 }
 
 .request-text {
     flex-grow: 1;
     margin-left: 5px; /* Space between checkbox and text */
+    text-align: left; /* Left justify text */
+    vertical-align: top; /* Top justify text */
 }
 
 .update-checkbox {
