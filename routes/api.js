@@ -16,15 +16,18 @@ function extractDetailsFromFileName(fileName) {
     return { date, serviceType };
 }
 
-// Function to extract names using regex
 function extractNames(content, date, serviceType) {
-    const regex = /(?:\d+\s[A-Za-z\s.]+)?([A-Z][a-zA-Z]+)([A-Z][a-zA-Z]+)\s*gbef/g;
+    const regex = /(?:\d+\s[A-Za-z\s.]+)?([A-Z][a-zA-Z]*[a-z][A-Z][a-zA-Z]*)\s*([A-Z][a-zA-Z]*)\s*gbef/g;
     let match;
     const records = [];
 
     while ((match = regex.exec(content)) !== null) {
-        const lastName = match[1];
+        let lastName = match[1];
         const firstName = match[2];
+
+        // Remove any leading characters that are not part of the last name
+        lastName = lastName.replace(/^[A-Z][a-z]*[A-Z]/, '');
+
         records.push({ lastName, firstName, date, serviceType });
     }
 
@@ -90,7 +93,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
         res.send(response.data);
     } catch (error) {
-        res.status(500).json({ error: `${error.message} - URL: UPLOAD_ATTENDANCE`, data: pdfJson });
+        res.status(500).json({ error: `${error.message} - URL: UPLOAD_ATTENDANCE`});
     }
 });
 
