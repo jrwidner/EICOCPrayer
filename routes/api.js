@@ -18,7 +18,7 @@ function extractDetailsFromFileName(fileName) {
 
 // Function to extract names using regex
 function extractNames(content, date, serviceType) {
-    const regex = /([A-Z][a-zA-Z]*)([A-Z][a-zA-Z]*)\s*gbef/g;
+    const regex = /(?:\d+\s[A-Za-z\s.]+)?([A-Z][a-zA-Z]+)([A-Z][a-zA-Z]+)\s*gbef/g;
     let match;
     const records = [];
 
