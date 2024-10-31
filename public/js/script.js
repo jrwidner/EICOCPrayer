@@ -238,6 +238,7 @@ data.forEach(request => {
         `);
         newWindow.document.close();
         newWindow.print();
+        newWindow.close();
     }
     // Add event listener to the print button
     document.getElementById('printButton').addEventListener('click', printPrayerRecords);
