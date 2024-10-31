@@ -9,6 +9,13 @@ const router = express.Router();
 // Configure multer for file uploads
 const upload = multer({ dest: 'uploads/' });
 
+// Function to extract worship date and service type from file name
+function extractDetailsFromFileName(fileName) {
+    const [date, ...serviceTypeParts] = fileName.split(' ');
+    const serviceType = serviceTypeParts.join(' ').replace('.pdf', '');
+    return { date, serviceType };
+}
+
 // Route to get all prayer requests
 router.get('/prayer-requests', async (req, res) => {
     try {
@@ -61,11 +68,11 @@ router.post('/upload', upload.single('file'), async (req, res) => {
         fs.unlinkSync(filePath); // Delete the file after reading
 
         // Send JSON to Azure Function
-        const response = await axios.post('https://eicocprayerfunc.azurewebsites.net/api/UploadAttendance', pdfJson);
+        const response = await axios.post('UPLOAD_ATTENDANCE', pdfJson);
 
         res.send(response.data);
     } catch (error) {
-        res.status(500).json({ error: `${error.message} - URL: ${process.env.AZURE_FUNCTION_URL}` });
+        res.status(500).json({ error: `${error.message} - URL: ${'UPLOAD_ATTENDANCE'}` });
     }
 });
 

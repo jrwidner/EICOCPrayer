@@ -58,6 +58,7 @@ jobs:
           sed -i 's|GETPRAYER_ADDRESS|https://eicocprayerfunc.azurewebsites.net/api/GetAllPrayerRequests|g' ./routes/api.js
           sed -i 's|NEWPRAYER_ADDRESS|https://eicocprayerfunc.azurewebsites.net/api/CreateNewPrayerRequest|g' ./routes/api.js
           sed -i 's|UPDATEPRAYER_ADDRESS|https://eicocprayerfunc.azurewebsites.net/api/UpdatePrayerRequest|g' ./routes/api.js
+          sed -i 's|UPLOAD_ATTENDANCE'|https://eicocprayerfunc.azurewebsites.net/api/UploadAttendance|g' ./routes/api.js
 
       - name: Replace placeholders in api.js for production
         if: github.ref == 'refs/heads/main'
