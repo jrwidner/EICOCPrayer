@@ -3,6 +3,7 @@ const axios = require('axios');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const pdfParse = require('pdf-parse');
 const router = express.Router();
 
 // Configure multer for file uploads
@@ -38,7 +39,7 @@ router.put('/update-prayer-request/:id', async (req, res) => {
     }
 });
 
-// Route to handle file upload and send to Azure Function
+// Route to handle file upload, convert PDF to JSON, and send to Azure Function
 router.post('/upload', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded.');
@@ -46,19 +47,25 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
     try {
         const filePath = req.file.path;
-        const content = fs.readFileSync(filePath).toString('base64');
+        const dataBuffer = fs.readFileSync(filePath);
+
+        // Convert PDF to JSON
+        const pdfData = await pdfParse(dataBuffer);
+        const pdfJson = { content: pdfData.text };
+
+        // Extract worship date and service type from file name
+        const { date, serviceType } = extractDetailsFromFileName(req.file.originalname);
+        pdfJson.date = date;
+        pdfJson.serviceType = serviceType;
+
         fs.unlinkSync(filePath); // Delete the file after reading
 
-        const response = await axios.post('https://eicocprayerfunc.azurewebsites.net/api/UploadAttendance', {
-            files: [{
-                filename: req.file.originalname,
-                content: content
-            }]
-        });
+        // Send JSON to Azure Function
+        const response = await axios.post('https://eicocprayerfunc.azurewebsites.net/api/UploadAttendance', pdfJson);
 
         res.send(response.data);
     } catch (error) {
-        res.status(500).json({ error: `${error.message} - URL: Azure Function` });
+        res.status(500).json({ error: `${error.message} - URL: ${process.env.AZURE_FUNCTION_URL}` });
     }
 });
 

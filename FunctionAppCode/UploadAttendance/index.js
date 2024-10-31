@@ -56,6 +56,7 @@ async function updateDatabase(service, date, records) {
         console.log('Database updated successfully');
     } catch (err) {
         console.error('Error updating database:', err);
+        throw err; // Re-throw the error after logging it
     } finally {
         await sql.close();
     }
@@ -64,38 +65,46 @@ async function updateDatabase(service, date, records) {
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
 
-    if (req.body && req.body.files) {
+    if (req.body && req.body.files && req.body.files.length === 1) {
         try {
-            for (const file of req.body.files) {
-                const filePath = path.join('/tmp', file.filename);
-                fs.writeFileSync(filePath, Buffer.from(file.content, 'base64'));
+            const file = req.body.files[0];
+            const filePath = path.join('/tmp', file.filename);
+            fs.writeFileSync(filePath, Buffer.from(file.content, 'base64'));
 
-                const service = file.filename.split(' ')[1]; // Extract service from filename
+            context.log(`File written to ${filePath}`);
 
-                const { date, records } = await parsePDF(filePath);
-                if (date && records.length > 0) {
-                    await updateDatabase(service, date, records);
-                } else {
-                    context.log(`No valid data found in the PDF: ${file.filename}`);
-                }
+            const service = file.filename.split(' ')[1]; // Extract service from filename
+            context.log(`Service extracted: ${service}`);
 
-                fs.unlinkSync(filePath); // Delete the file after processing
+            const { date, records } = await parsePDF(filePath);
+            context.log(`Date extracted: ${date}`);
+            context.log(`Records extracted: ${JSON.stringify(records)}`);
+
+            if (date && records.length > 0) {
+                await updateDatabase(service, date, records);
+            } else {
+                context.log(`No valid data found in the PDF: ${file.filename}`);
             }
+
+            fs.unlinkSync(filePath); // Delete the file after processing
+            context.log(`File deleted: ${filePath}`);
 
             context.res = {
                 status: 200,
-                body: 'Files processed and database updated successfully.'
+                body: 'File processed and database updated successfully.'
             };
         } catch (err) {
+            context.log('Error processing file:', err);
             context.res = {
                 status: 500,
-                body: 'Error processing files.'
+                body: `Error processing file: ${err.message}`
             };
         }
     } else {
+        context.log('No file uploaded or multiple files uploaded.');
         context.res = {
             status: 400,
-            body: 'No files uploaded.'
+            body: 'No file uploaded or multiple files uploaded.'
         };
     }
 };
