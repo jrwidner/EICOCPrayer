@@ -73,11 +73,11 @@ data.forEach(request => {
     let updateText = '';
     if (request.UpdateToRequest) {
         const updateDate = new Date(request.DateOfUpdate).toLocaleDateString();
-        updateText = `<em> Updated:${updateDate} ${request.UpdateToRequest}</em>`;
+        updateText = `<span class="highlighted-date"> - Updated:${new Date(request.DateOfUpdate).toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' })}</span> ${request.UpdateToRequest}`;
     }
     requestRow.innerHTML = `
         <td valign="top"><input type="checkbox" name="updateRequest" value="${request.Id}" class="update-checkbox" aria-label="Select to update request from ${request.FirstName} ${request.LastName}"></td>
-        <td class="request-type">${request.TypeOfRequest} - </td>
+        <td class="request-type">${request.TypeOfRequest}: </td>
         <td class="request-text">
             ${request.FirstName} ${request.LastName}: ${request.InitialRequest}${updateText}
         </td>
@@ -204,7 +204,8 @@ data.forEach(request => {
             // Remove checkboxes and update form elements
             newRow.querySelectorAll('input[type="checkbox"], form').forEach(element => element.remove());
             tableHTML += newRow.outerHTML;
-        });
+        })
+        ;
 
         tableHTML += '</tbody></table>';
 
@@ -229,6 +230,19 @@ data.forEach(request => {
                     table, th, td {
                         border: none;
                     }
+                    .request-type {
+                        color: #006400; /* Dark Green */
+                        margin-left: 5px;
+                        white-space: nowrap;
+                        text-align: left; /* Left justify text */
+                        vertical-align: top; /* Top justify text */
+                        font-size: smaller;
+                        font-weight: bold; /* Makes the text bold */
+                    }
+                    .highlighted-date {
+                        color: #4507ee; /* You can choose any color you prefer */
+                        font-size: smaller; /* This makes the font one size smaller */
+                    }
                 </style>
             </head>
             <body>
@@ -238,6 +252,7 @@ data.forEach(request => {
         `);
         newWindow.document.close();
         newWindow.print();
+        newWindow.close();
     }
     // Add event listener to the print button
     document.getElementById('printButton').addEventListener('click', printPrayerRecords);

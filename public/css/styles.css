@@ -4,6 +4,11 @@ body {
     padding: 0;
 }
 
+.container {
+    width: 100%;
+    padding: 15px;
+}
+
 header {
     background-color: #f8f9fa;
     padding: 1rem;
@@ -12,9 +17,10 @@ header {
 
 main {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     padding: 1rem;
-    align-items: flex-start; /* Align items at the top */
+    align-items: flex-start;
 }
 
 section {
@@ -29,22 +35,47 @@ aside {
     border-radius: 8px;
 }
 
+@media (max-width: 600px) {
+    main {
+        flex-direction: column;
+    }
+
+    section {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+
+    aside {
+        width: 100%;
+    }
+}
+
 /* Spinner styles */
 .spinner {
     display: none;
-    border: 16px solid #f3f3f3;
-    border-top: 16px solid #3498db;
+    border: 2vw solid #f3f3f3; /* Use viewport width for scaling */
+    border-top: 2vw solid #3498db; /* Use viewport width for scaling */
     border-radius: 50%;
-    width: 120px;
-    height: 120px;
+    width: 10vw; /* Use viewport width for scaling */
+    height: 10vw; /* Use viewport width for scaling */
     animation: spin 2s linear infinite;
     margin: auto;
+}
+
+@media (max-width: 600px) {
+    .spinner {
+        border: 4vh solid #f3f3f3; /* Adjust for smaller screens */
+        border-top: 4vh solid #3498db; /* Adjust for smaller screens */
+        width: 20vh; /* Adjust for smaller screens */
+        height: 20vh; /* Adjust for smaller screens */
+    }
 }
 
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 /* Date styling */
 .date-header {
@@ -59,6 +90,8 @@ aside {
     white-space: nowrap;
     text-align: left; /* Left justify text */
     vertical-align: top; /* Top justify text */
+    font-size: smaller;
+    font-weight: bold; /* Makes the text bold */
 }
 
 /* Table styling */
@@ -91,6 +124,10 @@ aside {
     margin-left: 5px; /* Space between checkbox and text */
     text-align: left; /* Left justify text */
     vertical-align: top; /* Top justify text */
+}
+.highlighted-date {
+    color: #4507ee; /* You can choose any color you prefer */
+    font-size: smaller; /* This makes the font one size smaller */
 }
 
 .update-checkbox {
