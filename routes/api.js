@@ -13,21 +13,20 @@ const upload = multer({ dest: 'uploads/' });
 function extractDetailsFromFileName(fileName) {
     const [date, ...serviceTypeParts] = fileName.split(' ');
     const serviceType = serviceTypeParts.join(' ').replace('.pdf', '');
-    return { date, serviceType };
+    // Convert date to SQL Date format (YYYY-MM-DD)
+    const formattedDate = `20${date.slice(0, 2)}-${date.slice(2, 4)}-${date.slice(4, 6)}`;
+    return { date: formattedDate, serviceType };
 }
 
+// Function to extract names using regex
 function extractNames(content, date, serviceType) {
-    const regex = /(?:\d+\s[A-Za-z\s.]+)?([A-Z][a-zA-Z]*[a-z][A-Z][a-zA-Z]*)\s*([A-Z][a-zA-Z]*)\s*gbef/g;
+    const regex = /(?:\d+\s[A-Za-z\s.]+)?([A-Z][a-z]*[A-Z]?[a-zA-Z]*)\s*([A-Z][a-zA-Z]*)\s*gbef/g;
     let match;
     const records = [];
 
     while ((match = regex.exec(content)) !== null) {
-        let lastName = match[1];
+        const lastName = match[1];
         const firstName = match[2];
-
-        // Remove any leading characters that are not part of the last name
-        lastName = lastName.replace(/^[A-Z][a-z]*[A-Z]/, '');
-
         records.push({ lastName, firstName, date, serviceType });
     }
 
