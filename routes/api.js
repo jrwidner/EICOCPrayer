@@ -44,7 +44,7 @@ router.get('/prayer-requests', async (req, res) => {
 // Route to create a new prayer request
 router.post('/create-prayer-request', async (req, res) => {
     try {
-        const response = await axios.post(NEWPRAYER_ADDRESS, req.body);
+        const response = await axios.post('NEWPRAYER_ADDRESS', req.body);
         res.status(response.status).json(response.data);
     } catch (error) {
         res.status(500).json({ error: `${error.message} - URL: NEWPRAYER_ADDRESS` });
@@ -54,10 +54,10 @@ router.post('/create-prayer-request', async (req, res) => {
 // Route to update an existing prayer request
 router.put('/update-prayer-request/:id', async (req, res) => {
     try {
-        const response = await axios.put(`UPDATEPRAYER_ADDRESS/${req.params.id}`, req.body);
+        const response = await axios.put(`UPDATEPRAYER_ADDRESS`, req.body);
         res.status(response.status).json(response.data);
     } catch (error) {
-        res.status(500).json({ error: `${error.message} - URL: UPDATEPRAYER_ADDRESS/${req.params.id}` });
+        res.status(500).json({ error: `${error.message} - URL: UPDATEPRAYER_ADDRESS` });
     }
 });
 
@@ -86,7 +86,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
         fs.unlinkSync(filePath); // Delete the file after reading
 
         // Send JSON to Azure Function
-        const response = await axios.post('UPLOAD_ATTENDANCE, pdfJson');
+        const response = await axios.post('UPLOAD_ATTENDANCE', pdfJson);
 
         res.send(response.data);
     } catch (error) {
