@@ -18,21 +18,15 @@ function extractDetailsFromFileName(fileName) {
     return { date: formattedDate, serviceType };
 }
 
-
 // Function to extract names using regex
 function extractNames(content, date, serviceType) {
-    const regex = /(?:\d+\s[A-Za-z\s.]+)?([A-Z][a-z]*[A-Z]?[a-zA-Z]*)\s*([A-Z][a-zA-Z]*)\s*gbef/g;
+    const regex = /\b([A-Z][a-z]*[A-Z]?[a-zA-Z']*)\s([A-Z][a-zA-Z']+)\b\s*gbef/g;
     let match;
     const records = [];
 
     while ((match = regex.exec(content)) !== null) {
-        let lastName = match[1];
+        const lastName = match[1];
         const firstName = match[2];
-
-        // Correctly handle names with prefixes like "Mc" and remove "Mac" prefix
-        if (lastName.startsWith('Mac')) {
-            lastName = lastName.slice(3);
-        }
 
         records.push({ lastName, firstName, date, serviceType });
     }
