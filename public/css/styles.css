@@ -94,8 +94,8 @@ aside {
 }
 .highlighted-date {
     color: #4507ee; /* You can choose any color you prefer */
+    font-size: smaller; /* This makes the font one size smaller */
 }
-
 
 .update-checkbox {
     margin-right: 0px; /* Reduced margin for tighter spacing */
