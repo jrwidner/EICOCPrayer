@@ -73,7 +73,7 @@ data.forEach(request => {
     let updateText = '';
     if (request.UpdateToRequest) {
         const updateDate = new Date(request.DateOfUpdate).toLocaleDateString();
-        updateText = `<em> Updated:${updateDate} ${request.UpdateToRequest}</em>`;
+        updateText = `<span class="highlighted-date">Updated:${request.DateOfUpdate}</span> ${request.UpdateToRequest}`;
     }
     requestRow.innerHTML = `
         <td valign="top"><input type="checkbox" name="updateRequest" value="${request.Id}" class="update-checkbox" aria-label="Select to update request from ${request.FirstName} ${request.LastName}"></td>

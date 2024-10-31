@@ -92,6 +92,10 @@ aside {
     text-align: left; /* Left justify text */
     vertical-align: top; /* Top justify text */
 }
+.highlighted-date {
+    color: #9c341d; /* You can choose any color you prefer */
+}
+
 
 .update-checkbox {
     margin-right: 0px; /* Reduced margin for tighter spacing */
