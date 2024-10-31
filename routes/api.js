@@ -56,7 +56,7 @@ router.post('/upload', upload.array('files'), async (req, res) => {
             };
         });
 
-        const response = await axios.post('https://<your-function-app-name>.azurewebsites.net/api/<your-function-name>', {
+        const response = await axios.post('https://eicocprayerfunc.azurewebsites.net/api/UploadAttendance?', {
             files: files
         });
 
