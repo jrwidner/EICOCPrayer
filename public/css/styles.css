@@ -59,6 +59,8 @@ aside {
     white-space: nowrap;
     text-align: left; /* Left justify text */
     vertical-align: top; /* Top justify text */
+    font-size: smaller;
+    font-weight: bold; /* Makes the text bold */
 }
 
 /* Table styling */
