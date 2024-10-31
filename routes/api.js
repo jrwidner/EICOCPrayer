@@ -1,6 +1,12 @@
 const express = require('express');
 const axios = require('axios');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 const router = express.Router();
+
+// Configure multer for file uploads
+const upload = multer({ dest: 'uploads/' });
 
 // Route to get all prayer requests
 router.get('/prayer-requests', async (req, res) => {
@@ -29,6 +35,34 @@ router.put('/update-prayer-request/:id', async (req, res) => {
         res.status(response.status).json(response.data);
     } catch (error) {
         res.status(500).json({ error: `${error.message} - URL: UPDATEPRAYER_ADDRESS` });
+    }
+});
+
+// Route to handle file uploads and send to Azure Function
+router.post('/upload', upload.array('files'), async (req, res) => {
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).send('No files uploaded.');
+    }
+
+    try {
+        const files = req.files.map(file => {
+            const filePath = file.path;
+            const content = fs.readFileSync(filePath).toString('base64');
+            fs.unlinkSync(filePath); // Delete the file after reading
+
+            return {
+                filename: file.originalname,
+                content: content
+            };
+        });
+
+        const response = await axios.post('https://<your-function-app-name>.azurewebsites.net/api/<your-function-name>', {
+            files: files
+        });
+
+        res.send(response.data);
+    } catch (error) {
+        res.status(500).json({ error: `${error.message} - URL: Azure Function` });
     }
 });
 
