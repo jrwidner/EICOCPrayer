@@ -16,6 +16,21 @@ function extractDetailsFromFileName(fileName) {
     return { date, serviceType };
 }
 
+// Function to extract names using regex
+function extractNames(content, date, serviceType) {
+    const regex = /([A-Z][a-zA-Z]*)([A-Z][a-zA-Z]*)\s*gbef/g;
+    let match;
+    const records = [];
+
+    while ((match = regex.exec(content)) !== null) {
+        const lastName = match[1];
+        const firstName = match[2];
+        records.push({ lastName, firstName, date, serviceType });
+    }
+
+    return records;
+}
+
 // Route to get all prayer requests
 router.get('/prayer-requests', async (req, res) => {
     try {
@@ -29,7 +44,7 @@ router.get('/prayer-requests', async (req, res) => {
 // Route to create a new prayer request
 router.post('/create-prayer-request', async (req, res) => {
     try {
-        const response = await axios.post('NEWPRAYER_ADDRESS', req.body);
+        const response = await axios.post(NEWPRAYER_ADDRESS, req.body);
         res.status(response.status).json(response.data);
     } catch (error) {
         res.status(500).json({ error: `${error.message} - URL: NEWPRAYER_ADDRESS` });
@@ -39,10 +54,10 @@ router.post('/create-prayer-request', async (req, res) => {
 // Route to update an existing prayer request
 router.put('/update-prayer-request/:id', async (req, res) => {
     try {
-        const response = await axios.post('UPDATEPRAYER_ADDRESS', req.body);
+        const response = await axios.put(`UPDATEPRAYER_ADDRESS/${req.params.id}`, req.body);
         res.status(response.status).json(response.data);
     } catch (error) {
-        res.status(500).json({ error: `${error.message} - URL: UPDATEPRAYER_ADDRESS` });
+        res.status(500).json({ error: `${error.message} - URL: UPDATEPRAYER_ADDRESS/${req.params.id}` });
     }
 });
 
@@ -65,14 +80,17 @@ router.post('/upload', upload.single('file'), async (req, res) => {
         pdfJson.date = date;
         pdfJson.serviceType = serviceType;
 
+        // Extract names using regex and include date and service type
+        pdfJson.records = extractNames(pdfJson.content, date, serviceType);
+
         fs.unlinkSync(filePath); // Delete the file after reading
 
         // Send JSON to Azure Function
-        const response = await axios.post('UPLOAD_ATTENDANCE', pdfJson);
+        const response = await axios.post('UPLOAD_ATTENDANCE, pdfJson');
 
         res.send(response.data);
     } catch (error) {
-        res.status(500).json({ error: `${error.message} - URL: ${'UPLOAD_ATTENDANCE'}` });
+        res.status(500).json({ error: `${error.message} - URL: UPLOAD_ATTENDANCE` });
     }
 });
 
