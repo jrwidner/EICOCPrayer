@@ -184,62 +184,53 @@ data.forEach(request => {
 
     // Function to print prayer records
     function printPrayerRecords() {
-        const table = document.getElementById('requests-table');
-        if (!table) {
-            console.error('Table with ID "requests-table" not found.');
-            return;
-        }
-
-        const thead = table.querySelector('thead');
-        if (!thead) {
-            console.error('Table with ID "requests-table" does not have a <thead> element.');
-            return;
-        }
-
-        const rows = table.querySelectorAll('tr');
-        let tableHTML = '<table><thead>' + thead.innerHTML + '</thead><tbody>';
-
-        rows.forEach(row => {
-            const newRow = row.cloneNode(true);
-            // Remove checkboxes and update form elements
-            newRow.querySelectorAll('input[type="checkbox"], form').forEach(element => element.remove());
-            tableHTML += newRow.outerHTML;
-        });
-
-        tableHTML += '</tbody></table>';
-
+        const tableHTML = requestsTable.outerHTML;
+        const styles = `
+            <style>
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                th, td {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                }
+                th {
+                    background-color: #f2f2f2;
+                    text-align: left;
+                }
+                .request-type {
+                    color: #006400; /* Dark Green */
+                    margin-left: 5px;
+                    white-space: nowrap;
+                    text-align: left; /* Left justify text */
+                    vertical-align: top; /* Top justify text */
+                    font-size: smaller;
+                    font-weight: bold; /* Makes the text bold */
+                }
+                .highlighted-date {
+                    color: #4507ee; /* You can choose any color you prefer */
+                    font-size: smaller; /* This makes the font one size smaller */
+                }
+            </style>
+        `;
         const newWindow = window.open('', '', 'width=800,height=600');
         newWindow.document.write(`
             <html>
-            <head>
-                <title>Prayer Requests</title>
-                <style>
-                    table {
-                        width: 100%;
-                        border-collapse: collapse;
-                    }
-                    th, td {
-                        padding: 8px;
-                        text-align: left;
-                    }
-                    th {
-                        background-color: #f2f2f2;
-                    }
-                    /* Remove borders */
-                    table, th, td {
-                        border: none;
-                    }
-                </style>
-            </head>
-            <body>
-                ${tableHTML}
-            </body>
+                <head>
+                    <title>Print Prayer Records</title>
+                    ${styles}
+                </head>
+                <body>
+                    ${tableHTML}
+                </body>
             </html>
         `);
         newWindow.document.close();
         newWindow.print();
         newWindow.close();
     }
+    
     // Add event listener to the print button
     document.getElementById('printButton').addEventListener('click', printPrayerRecords);
 });
