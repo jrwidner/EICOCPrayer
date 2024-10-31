@@ -38,26 +38,22 @@ router.put('/update-prayer-request/:id', async (req, res) => {
     }
 });
 
-// Route to handle file uploads and send to Azure Function
-router.post('/upload', upload.array('files'), async (req, res) => {
-    if (!req.files || req.files.length === 0) {
-        return res.status(400).send('No files uploaded.');
+// Route to handle file upload and send to Azure Function
+router.post('/upload', upload.single('file'), async (req, res) => {
+    if (!req.file) {
+        return res.status(400).send('No file uploaded.');
     }
 
     try {
-        const files = req.files.map(file => {
-            const filePath = file.path;
-            const content = fs.readFileSync(filePath).toString('base64');
-            fs.unlinkSync(filePath); // Delete the file after reading
+        const filePath = req.file.path;
+        const content = fs.readFileSync(filePath).toString('base64');
+        fs.unlinkSync(filePath); // Delete the file after reading
 
-            return {
-                filename: file.originalname,
+        const response = await axios.post('https://eicocprayerfunc.azurewebsites.net/api/UploadAttendance', {
+            files: [{
+                filename: req.file.originalname,
                 content: content
-            };
-        });
-
-        const response = await axios.post('https://eicocprayerfunc.azurewebsites.net/api/UploadAttendance?', {
-            files: files
+            }]
         });
 
         res.send(response.data);
