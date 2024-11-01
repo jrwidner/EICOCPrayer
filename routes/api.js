@@ -14,14 +14,15 @@ function extractDetailsFromFileName(fileName) {
     const [date, ...serviceTypeParts] = fileName.split(' ');
     const serviceType = serviceTypeParts.join(' ').replace('.pdf', '');
     // Convert date to SQL Date format (YYYY-MM-DD)
-    const [month, day, year] = date.split('-');
+    const [year, day, month] = date.match(/(\d{2})(\d{2})(\d{2})/).slice(1);
     const formattedDate = `20${year}-${month}-${day}`;
     return { date: formattedDate, serviceType };
 }
 
 // Function to extract names using regex
 function extractNames(content, date, serviceType) {
-    const regex = /(?:\d+\s[\w\s.']+)([A-Z][a-zA-Z']+)\s*([A-Z][a-zA-Z']+)/g;
+    //const regex = /(?:\d+\s[\w\s.']+)([A-Z][a-zA-Z']+)\s*([A-Z][a-zA-Z']+)/g
+    const regex = /([A-Z][a-zA-Z']+)\s*([A-Z][a-zA-Z']+)/g;
     let match;
     const records = [];
 
