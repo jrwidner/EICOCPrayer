@@ -4,10 +4,54 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const pdfParse = require('pdf-parse');
+const sql = require('mssql');
 const router = express.Router();
 
 // Configure multer for file uploads
 const upload = multer({ dest: 'uploads/' });
+
+// Azure SQL Database configuration
+const config = {
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    server: process.env.DB_SERVER,
+    database: process.env.DB_DATABASE,
+    options: {
+        encrypt: true // Use encryption
+    }
+};
+
+// Function to escape special characters in SQL queries
+function escapeSql(value) {
+    return value.replace(/'/g, "''");
+}
+
+// Function to update Azure SQL Database
+async function updateDatabase(records) {
+    try {
+        await sql.connect(config);
+        const request = new sql.Request();
+
+        for (const record of records) {
+            request.input('Service', sql.NVarChar, record.serviceType);
+            request.input('Date', sql.Date, record.date);
+            request.input('LastName', sql.NVarChar, record.lastName);
+            request.input('FirstName', sql.NVarChar, record.firstName);
+
+            await request.query(`
+                INSERT INTO Attendance (Service, Date, LastName, FirstName)
+                VALUES (@Service, @Date, @LastName, @FirstName)
+            `);
+        }
+
+        console.log('Database updated successfully');
+    } catch (err) {
+        console.error('Error updating database:', err);
+        throw err; // Re-throw the error after logging it
+    } finally {
+        await sql.close();
+    }
+}
 
 // Function to extract worship date and service type from file name
 function extractDetailsFromFileName(fileName) {
@@ -89,10 +133,10 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
         fs.unlinkSync(filePath); // Delete the file after reading
 
-        // Send JSON to Azure Function
-        const response = await axios.post('https://eicocprayerfunc.azurewebsites.net/api/UploadAttendance', records);
+        // Update the database with the extracted records
+        await updateDatabase(records);
 
-        res.send(response.data);
+        res.send('JSON processed and database updated successfully.');
     } catch (error) {
         res.status(500).json({ error: `${error.message} - URL: UPLOAD_ATTENDANCE` });
     }
