@@ -21,16 +21,16 @@ function extractDetailsFromFileName(fileName) {
 
 // Function to extract names using regex
 function extractNames(content, date, serviceType, context) {
-    // Clean up headers and any known extraneous text
+    // Remove known headers and any extraneous text
     content = content.replace(/\nReport List\nAddressLast NameFirst NameTag\n639/g, '');
 
-    // Adjusted regex pattern to isolate "Last Name, First Name" by targeting names directly
-    const regex = /\b(?:\d+\s[A-Za-z\s.]+)?([A-Z][a-zA-Z']+)\s([A-Z][a-zA-Z']+)\b(?=\s*gbef)/g;
+    // New regex pattern to identify names more precisely, excluding common address keywords
+    const regex = /\b(?:Dr|Ave|Rd|St|Blvd|Terr|Lane|Pl|Ct|Apt|(?:N|S|E|W)\.?)?\s?([A-Z][a-zA-Z']+)\s([A-Z][a-zA-Z']+)(?=\s*gbef)/g;
     let match;
     const records = [];
 
     while ((match = regex.exec(content)) !== null) {
-        let lastName = match[1];
+        const lastName = match[1];
         const firstName = match[2];
 
         // Log extracted data for verification in Azure log stream
@@ -43,6 +43,7 @@ function extractNames(content, date, serviceType, context) {
     context.log(`Total Records Extracted: ${records.length}`);
     return records;
 }
+
 
 // Route to get all prayer requests
 router.get('/prayer-requests', async (req, res) => {
