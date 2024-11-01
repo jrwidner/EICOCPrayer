@@ -24,14 +24,19 @@ function extractNames(content, date, serviceType) {
     // Remove unwanted segments
     content = content.replace(/\nReport List\nAddressLast NameFirst NameTag\n639/g, '');
 
-    // Updated regex pattern to capture "Last Name, First Name" without trailing characters
-    const regex = /(?:\n|Address|Dr|Ave|St|Blvd|Terr|Rd)([A-Z][a-zA-Z']+)([A-Z][a-zA-Z']+)(?=\W|$)/g;
+    // Updated regex pattern to capture "Last Name, First Name" with apostrophes and mixed uppercase patterns
+    const regex = /(?:\n|Address|Dr|Ave|St|Blvd|Terr|Rd)([A-Z](?:[NESW])?[a-zA-Z']*?[A-Z]?[a-zA-Z']*)([A-Z][a-zA-Z']+)(?=\W|$)/g;
     let match;
     const records = [];
 
     while ((match = regex.exec(content)) !== null) {
-        const lastName = match[1];
+        let lastName = match[1];
         const firstName = match[2];
+
+        // Remove single letter directional prefix (N, E, S, W) if it exists at the start of last name
+        if (/^[NESW][A-Z]/.test(lastName)) {
+            lastName = lastName.slice(1);  // Remove the first character if it's a direction prefix
+        }
 
         // Filter out invalid records
         if (lastName !== "Address" && !/[^a-zA-Z']/.test(firstName) && !/[^a-zA-Z']/.test(lastName)) {
@@ -41,7 +46,6 @@ function extractNames(content, date, serviceType) {
 
     return records;
 }
-
 
 // Route to get all prayer requests
 router.get('/prayer-requests', async (req, res) => {
