@@ -21,11 +21,11 @@ function extractDetailsFromFileName(fileName) {
 
 // Function to extract names using regex
 function extractNames(content, date, serviceType) {
-    // Remove unwanted segments
+    // Remove any known headers that might interfere with parsing
     content = content.replace(/\nReport List\nAddressLast NameFirst NameTag\n639/g, '');
 
-    // Updated regex pattern to capture "Last Name, First Name" with apostrophes and mixed uppercase patterns
-    const regex = /(?:\n|Address|Dr|Ave|St|Blvd|Terr|Rd)([A-Z](?:[NESW])?[a-zA-Z']*?[A-Z]?[a-zA-Z']*)([A-Z][a-zA-Z']+)(?=\W|$)/g;
+    // Regex pattern to capture addresses followed by last and first names, allowing for optional spaces or special characters
+    const regex = /(?:\n|\d{1,5}\s[\w\s.]+)([A-Z][a-zA-Z']+)([A-Z][a-zA-Z']+)(?=\s*gbef)/g;
     let match;
     const records = [];
 
@@ -33,19 +33,23 @@ function extractNames(content, date, serviceType) {
         let lastName = match[1];
         const firstName = match[2];
 
-        // Remove single letter directional prefix (N, E, S, W) if it exists at the start of last name
+        // Remove any unwanted directional prefixes (S, N, E, W) from last names
         if (/^[NESW][A-Z]/.test(lastName)) {
-            lastName = lastName.slice(1);  // Remove the first character if it's a direction prefix
+            lastName = lastName.slice(1);
         }
 
-        // Filter out invalid records
+        // Filter out invalid records and log each step
         if (lastName !== "Address" && !/[^a-zA-Z']/.test(firstName) && !/[^a-zA-Z']/.test(lastName)) {
             records.push({ lastName, firstName, date, serviceType });
+            console.log(`Extracted: LastName=${lastName}, FirstName=${firstName}`);
+        } else {
+            console.log(`Skipped: LastName=${lastName}, FirstName=${firstName}`);
         }
     }
 
     return records;
 }
+
 
 // Route to get all prayer requests
 router.get('/prayer-requests', async (req, res) => {
