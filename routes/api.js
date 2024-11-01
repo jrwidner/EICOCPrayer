@@ -102,8 +102,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
         res.send(response.data);
     } catch (error) {
-        res.status(500).json({ error: `${error.message} - URL: UPLOAD_ATTENDANCE`,
-                             data: '{records}');
+        res.status(500).json({ error: `${error.message} - URL: UPLOAD_ATTENDANCE');
     }
 });
 
