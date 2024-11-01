@@ -33,14 +33,9 @@ function extractNames(content, date, serviceType, context) {
         const lastName = match[1];
         const firstName = match[2];
 
-        // Log extracted data for verification in Azure log stream
-        context.log(`Extracted: LastName=${lastName}, FirstName=${firstName}`);
-
         // Add to records if parsed correctly
         records.push({ lastName, firstName, date, serviceType });
     }
-
-    context.log(`Total Records Extracted: ${records.length}`);
     return records;
 }
 
