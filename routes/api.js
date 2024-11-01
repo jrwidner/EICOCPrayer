@@ -14,14 +14,16 @@ function extractDetailsFromFileName(fileName) {
     const [date, ...serviceTypeParts] = fileName.split(' ');
     const serviceType = serviceTypeParts.join(' ').replace('.pdf', '');
     // Convert date to SQL Date format (YYYY-MM-DD)
-    const [year, day, month] = date.match(/(\d{2})(\d{2})(\d{2})/).slice(1);
+    const [month, day, year] = date.match(/(\d{2})(\d{2})(\d{2})/).slice(1);
     const formattedDate = `20${year}-${month}-${day}`;
     return { date: formattedDate, serviceType };
 }
 
 // Function to extract names using regex
 function extractNames(content, date, serviceType) {
+    // Remove unwanted segments
     content = content.replace(/\nReport List\nAddressLast NameFirst NameTag\n639/g, '');
+
     // Updated regex pattern to capture "Last Name, First Name" without trailing characters
     const regex = /(?:\n|Address|Dr|Ave|St|Blvd|Terr|Rd)([A-Z][a-zA-Z']+)([A-Z][a-zA-Z']+)(?=\W|$)/g;
     let match;
@@ -31,11 +33,15 @@ function extractNames(content, date, serviceType) {
         const lastName = match[1];
         const firstName = match[2];
 
-        records.push({ lastName, firstName, date, serviceType });
+        // Filter out invalid records
+        if (lastName !== "Address" && !/[^a-zA-Z']/.test(firstName) && !/[^a-zA-Z']/.test(lastName)) {
+            records.push({ lastName, firstName, date, serviceType });
+        }
     }
 
     return records;
 }
+
 
 // Route to get all prayer requests
 router.get('/prayer-requests', async (req, res) => {
@@ -96,7 +102,8 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
         res.send(response.data);
     } catch (error) {
-        res.status(500).json({ error: `${error.message} - URL: UPLOAD_ATTENDANCE` });
+        res.status(500).json({ error: `${error.message} - URL: UPLOAD_ATTENDANCE`,
+                             data: {records});
     }
 });
 
