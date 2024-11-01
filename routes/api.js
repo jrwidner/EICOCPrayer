@@ -98,12 +98,16 @@ router.post('/upload', upload.single('file'), async (req, res) => {
         fs.unlinkSync(filePath); // Delete the file after reading
 
         // Send JSON to Azure Function
-        const response = await axios.post('https://eicocprayerfunc.azurewebsites.net/api/UploadAttendance', { records });
+        const response = await axios.post('UPLOAD_ATTENDANCE', { records });
 
         res.send(response.data);
     } catch (error) {
-        res.status(500).json({ error: `${error.message} - URL: UPLOAD_ATTENDANCE');
+        res.status(500).json({ 
+            error: `${error.message} - URL: UPLOAD_ATTENDANCE`, 
+            data: { records } 
+        });
     }
 });
+
 
 module.exports = router;
