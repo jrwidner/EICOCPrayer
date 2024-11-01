@@ -20,7 +20,7 @@ function extractDetailsFromFileName(fileName) {
 
 // Function to extract names using regex
 function extractNames(content, date, serviceType) {
-    const regex = /\b([A-Z][a-z]*[A-Z]?[a-zA-Z']*)\s([A-Z][a-zA-Z']+)\b\s*gbef/g;
+    const regex = /(?:\d+\s[\w\s.']+)([A-Z][a-zA-Z']+)([A-Z][a-zA-Z']+)/g;
     let match;
     const records = [];
 
@@ -33,7 +33,6 @@ function extractNames(content, date, serviceType) {
 
     return records;
 }
-
 
 // Route to get all prayer requests
 router.get('/prayer-requests', async (req, res) => {
@@ -90,12 +89,11 @@ router.post('/upload', upload.single('file'), async (req, res) => {
         fs.unlinkSync(filePath); // Delete the file after reading
 
         // Send JSON to Azure Function
-        const response = await axios.post('UPLOAD_ATTENDANCE', pdfJson);
+        const response = await axios.post('UPLOAD_ATTENDANCE', pdfJson.records);
 
         res.send(response.data);
     } catch (error) {
-        res.status(500).json({error: `${error.message} - URL: UPLOAD_ATTENDANCE\nPDF Contents: ${JSON.stringify(pdfjson)}`});
-
+        res.status(500).json({ error: `${error.message} - URL: UPLOAD_ATTENDANCE` });
     }
 });
 
