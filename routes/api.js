@@ -21,11 +21,11 @@ function extractDetailsFromFileName(fileName) {
 
 // Function to extract names using regex
 function extractNames(content, date, serviceType) {
-    // Remove any known headers that might interfere with parsing
+    // Remove known headers and unrelated parts
     content = content.replace(/\nReport List\nAddressLast NameFirst NameTag\n639/g, '');
 
-    // Regex pattern to capture addresses followed by last and first names, allowing for optional spaces or special characters
-    const regex = /(?:\n|\d{1,5}\s[\w\s.]+)([A-Z][a-zA-Z']+)([A-Z][a-zA-Z']+)(?=\s*gbef)/g;
+    // Adjusted regex pattern to capture "Last Name, First Name" with optional address components
+    const regex = /\b([A-Z][a-zA-Z']*)\s*([A-Z][a-zA-Z']+)\b(?=\s*gbef)/g;
     let match;
     const records = [];
 
@@ -33,24 +33,18 @@ function extractNames(content, date, serviceType) {
         let lastName = match[1];
         const firstName = match[2];
 
-        // Remove any unwanted directional prefixes (S, N, E, W) from last names
+        // Remove single-letter directional prefix (N, E, S, W) if it exists at the start of last name
         if (/^[NESW][A-Z]/.test(lastName)) {
-            lastName = lastName.slice(1);
+            lastName = lastName.slice(1); // Remove the first character if it's a direction prefix
         }
 
-        // Filter out invalid records and log each step
-        if (lastName !== "Address" && !/[^a-zA-Z']/.test(firstName) && !/[^a-zA-Z']/.test(lastName)) {
-            records.push({ lastName, firstName, date, serviceType });
-            console.log(`Extracted: LastName=${lastName}, FirstName=${firstName}`);
-        } else {
-            console.log(`Skipped: LastName=${lastName}, FirstName=${firstName}`);
-        }
+        // Add to records if the name appears valid
+        records.push({ lastName, firstName, date, serviceType });
+        console.log(`Extracted: LastName=${lastName}, FirstName=${firstName}`);
     }
 
     return records;
 }
-
-
 // Route to get all prayer requests
 router.get('/prayer-requests', async (req, res) => {
     try {
