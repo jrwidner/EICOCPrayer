@@ -21,8 +21,8 @@ function extractDetailsFromFileName(fileName) {
 
 // Function to extract names using regex
 function extractNames(content, date, serviceType) {
-    //const regex = /(?:\d+\s[\w\s.']+)([A-Z][a-zA-Z']+)\s*([A-Z][a-zA-Z']+)/g
-    const regex = /([A-Z][a-zA-Z']+)\s*([A-Z][a-zA-Z']+)/g;
+    // Updated regex pattern to capture "Last Name, First Name" without trailing characters
+    const regex = /(?:\n|Address|Dr|Ave|St|Blvd|Terr|Rd)([A-Z][a-zA-Z']+)([A-Z][a-zA-Z']+)(?=\W|$)/g;
     let match;
     const records = [];
 
