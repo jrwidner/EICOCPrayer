@@ -14,7 +14,8 @@ function extractDetailsFromFileName(fileName) {
     const [date, ...serviceTypeParts] = fileName.split(' ');
     const serviceType = serviceTypeParts.join(' ').replace('.pdf', '');
     // Convert date to SQL Date format (YYYY-MM-DD)
-    const formattedDate = `20${date.slice(0, 2)}-${date.slice(2, 4)}-${date.slice(4, 6)}`;
+    const [month, day, year] = date.split('-');
+    const formattedDate = `20${year}-${month}-${day}`;
     return { date: formattedDate, serviceType };
 }
 
@@ -84,12 +85,12 @@ router.post('/upload', upload.single('file'), async (req, res) => {
         pdfJson.serviceType = serviceType;
 
         // Extract names using regex and include date and service type
-        pdfJson.records = extractNames(pdfJson.content, date, serviceType);
+        const records = extractNames(pdfJson.content, date, serviceType);
 
         fs.unlinkSync(filePath); // Delete the file after reading
 
         // Send JSON to Azure Function
-        const response = await axios.post('UPLOAD_ATTENDANCE', pdfJson.records);
+        const response = await axios.post('https://eicocprayerfunc.azurewebsites.net/api/UploadAttendance', records);
 
         res.send(response.data);
     } catch (error) {
