@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Show spinner before fetching data
     spinner.style.display = 'block';
 
-    // Fetch and display attendance difference
+    // Fetch and display attendance data
     fetch('/api/attendance-difference')
         .then(response => response.json())
         .then(data => {
@@ -21,6 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 .nowrap {
                     white-space: nowrap;
                 }
+                .checkmark {
+                    color: green;
+                }
+                .cross {
+                    color: red;
+                }
             `;
             document.head.appendChild(style);
 
@@ -30,21 +36,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (recordDate !== currentDate) {
                     currentDate = recordDate;
                     const dateHeader = document.createElement('tr');
-                    dateHeader.innerHTML = `<td colspan="3" valign="top"><b class="date-header">${currentDate}</b></td>`;
+                    dateHeader.innerHTML = `<td colspan="4" valign="top"><b class="date-header">${currentDate}</b></td>`;
                     attendanceTable.appendChild(dateHeader);
                 }
                 const recordRow = document.createElement('tr');
                 recordRow.classList.add('record-row');
                 recordRow.innerHTML = `
-                    <td class="nowrap">${record.FirstName}</td>
-                    <td class="nowrap">${record.LastName}</td>
-                    <td class="nowrap">${record.ServiceType}</td>
+                    <td class="nowrap">${record.LastName}, ${record.FirstName}</td>
+                    <td class="nowrap">${record.WorshipService ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
+                    <td class="nowrap">${record.BibleClass ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
                 `;
                 attendanceTable.appendChild(recordRow);
             });
         })
         .catch(error => {
-            console.error('Error fetching attendance difference:', error);
+            console.error('Error fetching attendance data:', error);
             // Hide spinner in case of error
             spinner.style.display = 'none';
         });
