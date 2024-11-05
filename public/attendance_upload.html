@@ -4,14 +4,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Attendance Files</title>
+    <style>
+        #drop-area {
+            border: 2px dashed #ccc;
+            border-radius: 20px;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+        #drop-area.highlight {
+            border-color: purple;
+        }
+        .my-form {
+            margin-bottom: 10px;
+        }
+        #fileElem {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <h1>Upload Attendance Files</h1>
-    <form action="/api/upload" method="post" enctype="multipart/form-data">
-        <label for="files">Choose Excel files:</label>
-        <input type="file" id="files" name="files" accept=".xls" multiple required>
-        <br><br>
-        <button type="submit">Upload</button>
-    </form>
+    <div id="drop-area">
+        <form class="my-form">
+            <p>Drag and drop files here or click to select files</p>
+            <input type="file" id="fileElem" name="files" accept=".xls" multiple required>
+            <label class="button" for="fileElem">Select Files</label>
+        </form>
+        <progress id="progress-bar" max=100 value=0></progress>
+        <div id="gallery"></div>
+    </div>
+
+    <script>
+        let dropArea = document.getElementById('drop-area');
+
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        // Highlight drop area when item is dragged over it
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        // Handle dropped files
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        function highlight(e) {
+            dropArea.classList.add('highlight');
+        }
+
+        function unhighlight(e) {
+            dropArea.classList.remove('highlight');
+        }
+
+        function handleDrop(e) {
+            let dt = e.dataTransfer;
+            let files = dt.files;
+
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            ([...files]).forEach(uploadFile);
+            ([...files]).forEach(previewFile);
+        }
+
+        function uploadFile(file) {
+            let url = '/api/upload';
+            let formData = new FormData();
+            formData.append('files', file);
+
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+            .then(() => { /* Done. Inform the user */ })
+            .catch(() => { /* Error. Inform the user */ });
+        }
+
+        function previewFile(file) {
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = function() {
+                let img = document.createElement('img');
+                img.src = reader.result;
+                document.getElementById('gallery').appendChild(img);
+            }
+        }
+    </script>
 </body>
 </html>
