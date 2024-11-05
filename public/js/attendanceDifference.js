@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Sort data by date, newest first
             data.sort((a, b) => new Date(b.Date) - new Date(a.Date));
 
-            // Sort data by last name in descending order
-            data.sort((a, b) => b.LastName.localeCompare(a.LastName));
+            // Sort data by last name in ascending order
+            data.sort((a, b) => a.LastName.localeCompare(b.LastName));
 
             // Add this CSS to your stylesheet or within a <style> tag
             const style = document.createElement('style');
@@ -42,6 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 .alt-bg-2 {
                     background-color: #e0e0e0;
+                }
+                .row-bg-1 {
+                    background-color: #d0e7ff;
+                }
+                .row-bg-2 {
+                    background-color: #b0d7ff;
                 }
                 table {
                     border-collapse: collapse;
@@ -76,8 +82,9 @@ document.addEventListener('DOMContentLoaded', () => {
             attendanceTable.appendChild(serviceHeaderRow);
 
             const uniqueNames = [...new Set(data.map(record => `${record.LastName}, ${record.FirstName}`))];
-            uniqueNames.forEach(name => {
+            uniqueNames.forEach((name, index) => {
                 const nameRow = document.createElement('tr');
+                nameRow.classList.add(index % 2 === 0 ? 'row-bg-1' : 'row-bg-2');
                 nameRow.innerHTML = `<td class="nowrap">${name}</td>`;
                 uniqueDates.forEach(date => {
                     const record = data.find(record => 
