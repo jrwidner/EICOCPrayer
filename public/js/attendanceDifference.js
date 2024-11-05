@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Sort data by date, newest first
             data.sort((a, b) => new Date(b.Date) - new Date(a.Date));
 
+            // Sort data by last name in descending order
+            data.sort((a, b) => b.LastName.localeCompare(a.LastName));
+
             // Add this CSS to your stylesheet or within a <style> tag
             const style = document.createElement('style');
             style.innerHTML = `
@@ -45,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     margin: 20px;
                 }
                 th, td {
-                    padding: 10px;
                     border: 1px solid #ddd;
                 }
             `;
