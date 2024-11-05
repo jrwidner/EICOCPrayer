@@ -27,11 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Function to calculate attendance percentages
-            const calculatePercentages = (records, name) => {
+            const calculatePercentages = (records, name, totalWeeks) => {
                 const totalRecords = records.filter(record => `${record.LastName}, ${record.FirstName}` === name).length;
                 const worshipCount = records.filter(record => `${record.LastName}, ${record.FirstName}` === name && record.WorshipService).length;
                 const bibleClassCount = records.filter(record => `${record.LastName}, ${record.FirstName}` === name && record.BibleClass).length;
-                const worshipPercentage = totalRecords ? (worshipCount / totalRecords * 100).toFixed(2) : 0;
+                const worshipPercentage = totalWeeks ? (worshipCount / totalWeeks * 100).toFixed(2) : 0;
                 const bibleClassPercentage = totalRecords ? (bibleClassCount / totalRecords * 100).toFixed(2) : 0;
                 return { worshipPercentage, bibleClassPercentage };
             };
@@ -67,10 +67,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 uniqueNames.forEach((name, index) => {
                     if (selectedMembers.length === 0 || selectedMembers.includes(name)) {
-                        const { worshipPercentage, bibleClassPercentage } = calculatePercentages(data, name);
+                        const { worshipPercentage, bibleClassPercentage } = calculatePercentages(data, name, uniqueDates.length);
                         const nameRow = document.createElement('tr');
                         nameRow.classList.add(index % 2 === 0 ? 'row-bg-1' : 'row-bg-2');
-                        nameRow.innerHTML = `<td class="nowrap">${name} (${worshipPercentage}% Worship, ${bibleClassPercentage}% Bible Class)</td>`;
+                        nameRow.innerHTML = `<td class="nowrap">${name}<br>(Worship: ${worshipPercentage}%, Bible Class: ${bibleClassPercentage}%)</td>`;
                         uniqueDates.forEach(date => {
                             const record = data.find(record => 
                                 `${record.LastName}, ${record.FirstName}` === name && 
