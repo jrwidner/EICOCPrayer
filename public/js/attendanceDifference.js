@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const spinner = document.getElementById('spinner');
-    const attendanceTable = document.getElementById('attendance-table');
+    const attendanceTable = document.getElementById('attendance-table').querySelector('tbody');
+    const memberSelect = document.getElementById('member-select');
 
     // Show spinner before fetching data
     spinner.style.display = 'block';
@@ -18,104 +19,75 @@ document.addEventListener('DOMContentLoaded', () => {
             // Sort data by last name in ascending order
             data.sort((a, b) => a.LastName.localeCompare(b.LastName));
 
-            // Add this CSS to your stylesheet or within a <style> tag
-            const style = document.createElement('style');
-            style.innerHTML = `
-                .nowrap {
-                    white-space: nowrap;
-                }
-                .checkmark {
-                    color: green;
-                }
-                .cross {
-                    color: red;
-                }
-                .no-data {
-                    color: blue;
-                }
-                .date-header {
-                    font-weight: bold;
-                    text-align: center;
-                    padding-left: 2px;
-                    padding-right: 2px;
-                    position: sticky;
-                    top: 0;
-                    background: white;
-                    z-index: 2;
-                }
-                .alt-bg-1 {
-                    background-color: #f0f0f0;
-                }
-                .alt-bg-2 {
-                    background-color: #e0e0e0;
-                }
-                .row-bg-1 {
-                    background-color: #e6f2ff;
-                }
-                .row-bg-2 {
-                    background-color: #cce6ff;
-                }
-                table {
-                    border-collapse: collapse;
-                    margin: 20px;
-                }
-                th, td {
-                    border: 1px solid #ddd;
-                }
-                th {
-                    position: sticky;
-                    top: 0;
-                    background: white;
-                    z-index: 1;
-                }
-            `;
-            document.head.appendChild(style);
-
-            let currentDate = '';
-            let altBg = true;
-
-            // Create the header rows
-            const dateHeaderRow = document.createElement('tr');
-            const serviceHeaderRow = document.createElement('tr');
-            dateHeaderRow.innerHTML = `<th>Name</th>`;
-            serviceHeaderRow.innerHTML = `<th></th>`;
-
-            const uniqueDates = [...new Set(data.map(record => new Date(record.Date).toLocaleDateString()))];
-            uniqueDates.forEach(date => {
-                altBg = !altBg;
-                dateHeaderRow.innerHTML += `<th colspan="2" class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${date}</th>`;
-                serviceHeaderRow.innerHTML += `
-                    <th class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">Worship</th>
-                    <th class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">Bible Class</th>
-                `;
+            // Populate member select options
+            const uniqueNames = [...new Set(data.map(record => `${record.LastName}, ${record.FirstName}`))];
+            uniqueNames.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                memberSelect.appendChild(option);
             });
 
-            attendanceTable.appendChild(dateHeaderRow);
-            attendanceTable.appendChild(serviceHeaderRow);
+            // Function to render the table based on selected members
+            const renderTable = (selectedMembers) => {
+                attendanceTable.innerHTML = '';
 
-            const uniqueNames = [...new Set(data.map(record => `${record.LastName}, ${record.FirstName}`))];
-            uniqueNames.forEach((name, index) => {
-                const nameRow = document.createElement('tr');
-                nameRow.classList.add(index % 2 === 0 ? 'row-bg-1' : 'row-bg-2');
-                nameRow.innerHTML = `<td class="nowrap">${name}</td>`;
+                let currentDate = '';
+                let altBg = true;
+
+                // Create the header rows
+                const dateHeaderRow = document.createElement('tr');
+                const serviceHeaderRow = document.createElement('tr');
+                dateHeaderRow.innerHTML = `<th>Name</th>`;
+                serviceHeaderRow.innerHTML = `<th></th>`;
+
+                const uniqueDates = [...new Set(data.map(record => new Date(record.Date).toLocaleDateString()))];
                 uniqueDates.forEach(date => {
-                    const record = data.find(record => 
-                        `${record.LastName}, ${record.FirstName}` === name && 
-                        new Date(record.Date).toLocaleDateString() === date
-                    );
-                    if (record) {
-                        nameRow.innerHTML += `
-                            <td class="nowrap">${record.WorshipService ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
-                            <td class="nowrap">${record.BibleClass ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
-                        `;
-                    } else {
-                        nameRow.innerHTML += `
-                            <td class="nowrap"><span class="no-data">⦸</span></td>
-                            <td class="nowrap"><span class="no-data">⦸</span></td>
-                        `;
+                    altBg = !altBg;
+                    dateHeaderRow.innerHTML += `<th colspan="2" class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${date}</th>`;
+                    serviceHeaderRow.innerHTML += `
+                        <th class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">Worship</th>
+                        <th class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">Bible Class</th>
+                    `;
+                });
+
+                attendanceTable.appendChild(dateHeaderRow);
+                attendanceTable.appendChild(serviceHeaderRow);
+
+                uniqueNames.forEach((name, index) => {
+                    if (selectedMembers.length === 0 || selectedMembers.includes(name)) {
+                        const nameRow = document.createElement('tr');
+                        nameRow.classList.add(index % 2 === 0 ? 'row-bg-1' : 'row-bg-2');
+                        nameRow.innerHTML = `<td class="nowrap">${name}</td>`;
+                        uniqueDates.forEach(date => {
+                            const record = data.find(record => 
+                                `${record.LastName}, ${record.FirstName}` === name && 
+                                new Date(record.Date).toLocaleDateString() === date
+                            );
+                            if (record) {
+                                nameRow.innerHTML += `
+                                    <td class="nowrap">${record.WorshipService ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
+                                    <td class="nowrap">${record.BibleClass ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
+                                `;
+                            } else {
+                                nameRow.innerHTML += `
+                                    <td class="nowrap"><span class="no-data">⦸</span></td>
+                                    <td class="nowrap"><span class="no-data">⦸</span></td>
+                                `;
+                            }
+                        });
+                        attendanceTable.appendChild(nameRow);
                     }
                 });
-                attendanceTable.appendChild(nameRow);
+            };
+
+            // Initial render with all members
+            renderTable([]);
+
+            // Event listener for member selection change
+            memberSelect.addEventListener('change', () => {
+                const selectedOptions = Array.from(memberSelect.selectedOptions).map(option => option.value);
+                renderTable(selectedOptions);
             });
         })
         .catch(error => {
