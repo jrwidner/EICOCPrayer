@@ -16,7 +16,9 @@ router.use(morgan('combined'));
 // Function to extract worship date and service type from file name
 function extractDetailsFromFileName(fileName) {
     const [date, ...serviceTypeParts] = fileName.split(' ');
-    const serviceType = serviceTypeParts.join(' ').replace('.xlsx', '');
+    let serviceType = serviceTypeParts.join(' ').replace('.xlsx', '');
+    // Remove "attendance-converted" from the service type
+    serviceType = serviceType.replace('attendance-converted', '').trim();
     // Convert date to SQL Date format (YYYY-MM-DD)
     const [month, day, year] = date.match(/(\d{2})(\d{2})(\d{2})/).slice(1);
     const formattedDate = `20${year}-${month}-${day}`;
