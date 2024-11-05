@@ -36,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 .date-header {
                     font-weight: bold;
                     text-align: center;
+                    padding-left: 2px;
+                    padding-right: 2px;
                 }
                 .alt-bg-1 {
                     background-color: #f0f0f0;
@@ -93,13 +95,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     );
                     if (record) {
                         nameRow.innerHTML += `
-                            <td class="nowrap ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${record.WorshipService ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
-                            <td class="nowrap ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${record.BibleClass ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
+                            <td class="nowrap">${record.WorshipService ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
+                            <td class="nowrap">${record.BibleClass ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
                         `;
                     } else {
                         nameRow.innerHTML += `
-                            <td class="nowrap ${altBg ? 'alt-bg-1' : 'alt-bg-2'}"><span class="no-data">⦸</span></td>
-                            <td class="nowrap ${altBg ? 'alt-bg-1' : 'alt-bg-2'}"><span class="no-data">⦸</span></td>
+                            <td class="nowrap"><span class="no-data">⦸</span></td>
+                            <td class="nowrap"><span class="no-data">⦸</span></td>
                         `;
                     }
                 });
