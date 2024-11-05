@@ -48,6 +48,7 @@
             border: 1px solid #ddd;
             padding-left: 2px; /* Reduced padding */
             padding-right: 2px; /* Reduced padding */
+            vertical-align: top; /* Align cells to the top */
         }
         th {
             position: sticky;
@@ -56,11 +57,9 @@
             z-index: 1;
         }
         #member-select {
-            width: 200px;
-            margin-left: 10px;
+            width: 100%;
         }
         #clear-selection {
-            margin-left: 10px;
             padding: 2px 5px;
             font-size: 0.8em;
         }
@@ -70,6 +69,7 @@
             margin-bottom: 10px;
         }
         .selection-table {
+            width: 20%;
             border: none;
             margin: 0;
             padding: 0;
@@ -77,6 +77,8 @@
         .selection-table td {
             border: none;
             padding: 2px;
+            vertical-align: top; /* Align cells to the top */
+            text-align: center; /* Center-align cells */
         }
     </style>
 </head>
@@ -86,7 +88,7 @@
     <div class="selection-container">
         <table class="selection-table">
             <tr>
-                <td>Select Member(s)</td>
+                <td>Select member or to select multiple hold Ctrl key and click on names</td>
             </tr>
             <tr>
                 <td>
