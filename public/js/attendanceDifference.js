@@ -38,6 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     text-align: center;
                     padding-left: 2px;
                     padding-right: 2px;
+                    position: sticky;
+                    top: 0;
+                    background: white;
+                    z-index: 2;
                 }
                 .alt-bg-1 {
                     background-color: #f0f0f0;
