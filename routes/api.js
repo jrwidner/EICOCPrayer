@@ -106,27 +106,17 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     }
 });
 
-// Route to identify members present at worship but not Bible class by week
+// Route to get all attendance records
 router.get('/attendance-difference', async (req, res) => {
     try {
         const response = await axios.get('GET_ATTENDANCE');
         const attendanceRecords = response.data;
-
-        const worshipOnly = attendanceRecords.filter(record => 
-            record.ServiceType.includes('Worship') && 
-            !attendanceRecords.some(bibleRecord => 
-                bibleRecord.ServiceType === 'Bible Class' && 
-                bibleRecord.FirstName === record.FirstName && 
-                bibleRecord.LastName === record.LastName && 
-                bibleRecord.Date === record.Date
-            )
-        );
-
-        res.json(worshipOnly);
+        res.json(attendanceRecords);
     } catch (err) {
-        console.error('Error fetching attendance difference:', err);
-        res.status(500).json({ error: `Error fetching attendance difference: ${err.message}` });
+        console.error('Error fetching attendance data:', err);
+        res.status(500).json({ error: `Error fetching attendance data: ${err.message}` });
     }
 });
+
 
 module.exports = router;
