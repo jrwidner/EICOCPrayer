@@ -65,7 +65,7 @@ jobs:
         run: |
           sed -i 's|GETPRAYER_ADDRESS|https://eicocelderprayerfunc.azurewebsites.net/api/GetAllPrayerRequests|g' ./routes/api.js
           sed -i 's|NEWPRAYER_ADDRESS|https://eicocelderprayerfunc.azurewebsites.net/api/CreateNewPrayerRequest?code=q0P7OkHKRTtLfygOfK1suAoRG62rAI9xFKiJFaJcwidwAzFumf8UIg%3D%3D|g' ./routes/api.js
-          sed -i 's|UPDATEPRAYER_ADDRESS|https://eicocelderprayerfunc.azurewebsites.net/api/UploadAttendance?|g' ./routes/api.js
+          sed -i 's|UPDATEPRAYER_ADDRESS|https://eicocelderprayerfunc.azurewebsites.net/api/UploadAttendance|g' ./routes/api.js
 
       - name: Display api.js contents
         run: cat ./routes/api.js
