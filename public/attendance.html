@@ -42,10 +42,12 @@
             border-collapse: collapse;
             margin: 20px;
             width: 100%;
+            font-size: 0.9em; /* Reduced font size */
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 5px;
+            padding-left: 2px; /* Reduced padding */
+            padding-right: 2px; /* Reduced padding */
         }
         th {
             position: sticky;
@@ -55,16 +57,24 @@
         }
         #member-select {
             margin-bottom: 10px;
+            width: 200px;
         }
         #clear-selection {
             margin-left: 10px;
+            padding: 2px 5px;
+            font-size: 0.9em;
+        }
+        .selection-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
     <h1>Attendance by Date and Service</h1>
     <div id="spinner" class="spinner" role="status" aria-live="polite">Loading...</div>
-    <div>
+    <div class="selection-container">
         <label for="member-select">Select Members:</label>
         <select id="member-select" multiple>
             <!-- Options will be populated dynamically -->
