@@ -66,8 +66,17 @@
         }
         .selection-container {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 10px;
+        }
+        .selection-table {
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+        .selection-table td {
+            border: none;
+            padding: 2px;
         }
     </style>
 </head>
@@ -75,11 +84,21 @@
     <h1>Attendance by Date and Service</h1>
     <div id="spinner" class="spinner" role="status" aria-live="polite">Loading...</div>
     <div class="selection-container">
-        <label for="member-select">Select Members:</label>
-        <select id="member-select" multiple>
-            <!-- Options will be populated dynamically -->
-        </select>
-        <button id="clear-selection">Clear Selection</button>
+        <table class="selection-table">
+            <tr>
+                <td>Select Member(s)</td>
+            </tr>
+            <tr>
+                <td>
+                    <select id="member-select" multiple>
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><button id="clear-selection">Clear Selection</button></td>
+            </tr>
+        </table>
     </div>
     <table id="attendance-table" border="0">
         <tbody>
