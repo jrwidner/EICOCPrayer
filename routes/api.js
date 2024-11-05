@@ -18,14 +18,13 @@ function extractDetailsFromFileName(fileName) {
     const [date, ...serviceTypeParts] = fileName.split(' ');
     let serviceType = serviceTypeParts.join(' ').replace('.xlsx', '');
     // Remove "attendance-converted" from the service type
-    serviceType = serviceType.replace('attendance-converted', '').trim();
+    serviceType = serviceType.replace('Attendance.xls', '').trim();
     // Convert date to SQL Date format (YYYY-MM-DD)
     const [month, day, year] = date.match(/(\d{2})(\d{2})(\d{2})/).slice(1);
     const formattedDate = `20${year}-${month}-${day}`;
     return { date: formattedDate, serviceType };
 }
 
-// Function to extract names from Excel content
 function extractNamesFromExcel(sheet, date, serviceType) {
     const records = [];
     const range = xlsx.utils.decode_range(sheet['!ref']);
@@ -36,11 +35,12 @@ function extractNamesFromExcel(sheet, date, serviceType) {
         const homeAddress = sheet[xlsx.utils.encode_cell({ r: rowNum, c: 3 })]?.v;
         // Ignore records where FirstName is "First Name"
         if (firstName && firstName !== "First Name") {
-            records.push({ firstName, lastName, date, serviceType,homeAddress });
+            records.push({ firstName, lastName, date, serviceType, homeAddress });
         }
     }
     return records;
 }
+
 
 // Route to get all prayer requests
 router.get('/prayer-requests', async (req, res) => {
