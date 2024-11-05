@@ -33,7 +33,8 @@ function extractNamesFromExcel(sheet, date, serviceType) {
     for (let rowNum = range.s.r + 1; rowNum <= range.e.r; rowNum++) {
         const firstName = sheet[xlsx.utils.encode_cell({ r: rowNum, c: 1 })]?.v;
         const lastName = sheet[xlsx.utils.encode_cell({ r: rowNum, c: 2 })]?.v;
-        // Ignore records where FirstName is "FirstName"
+        const homeAddress = sheet[xlsx.utils.encode_cell({ r: rowNum, c: 3 })]?.v;
+        // Ignore records where FirstName is "First Name"
         if (firstName && firstName !== "First Name") {
             records.push({ firstName, lastName, date, serviceType });
         }
@@ -74,30 +75,35 @@ router.put('/update-prayer-request/:id', async (req, res) => {
     }
 });
 
-// Route to handle file upload, convert Excel to JSON, and send to Azure Function
-router.post('/upload', upload.single('file'), async (req, res) => {
-    if (!req.file) {
-        return res.status(400).send('No file uploaded.');
+// Route to handle multiple file uploads, convert Excel to JSON, and send to Azure Function
+router.post('/upload', upload.array('files'), async (req, res) => {
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).send('No files uploaded.');
     }
 
     try {
-        const filePath = req.file.path;
-        const workbook = xlsx.readFile(filePath);
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const allRecords = [];
 
-        // Extract worship date and service type from file name
-        const { date, serviceType } = extractDetailsFromFileName(req.file.originalname);
+        for (const file of req.files) {
+            const filePath = file.path;
+            const workbook = xlsx.readFile(filePath);
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
-        // Extract names from Excel sheet and include date and service type
-        const records = extractNamesFromExcel(sheet, date, serviceType);
+            // Extract worship date and service type from file name
+            const { date, serviceType } = extractDetailsFromFileName(file.originalname);
 
-        fs.unlinkSync(filePath); // Delete the file after reading
+            // Extract names from Excel sheet and include date and service type
+            const records = extractNamesFromExcel(sheet, date, serviceType);
+            allRecords.push(...records);
+
+            fs.unlinkSync(filePath); // Delete the file after reading
+        }
 
         // Log the records being sent
-        console.log('Records to be sent:', records);
+        console.log('Records to be sent:', allRecords);
 
         // Send JSON to Azure Function
-        const response = await axios.post('UPLOAD_ATTENDANCE', { records });
+        const response = await axios.post('UPLOAD_ATTENDANCE', { records: allRecords });
 
         res.send(response.data);
     } catch (error) {
