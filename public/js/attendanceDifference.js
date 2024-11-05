@@ -14,9 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Hide spinner after data is fetched
             spinner.style.display = 'none';
 
-            // Sort data by date, newest first
-            data.sort((a, b) => new Date(b.Date) - new Date(a.Date));
-
             // Sort data by last name in ascending order
             data.sort((a, b) => a.LastName.localeCompare(b.LastName));
 
@@ -42,7 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 dateHeaderRow.innerHTML = `<th>Name</th>`;
                 serviceHeaderRow.innerHTML = `<th></th>`;
 
+                // Sort unique dates from newest to oldest
                 const uniqueDates = [...new Set(data.map(record => new Date(record.Date).toLocaleDateString()))];
+                uniqueDates.sort((a, b) => new Date(b) - new Date(a));
+
                 uniqueDates.forEach(date => {
                     altBg = !altBg;
                     dateHeaderRow.innerHTML += `<th colspan="2" class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${date}</th>`;
