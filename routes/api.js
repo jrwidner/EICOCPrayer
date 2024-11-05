@@ -106,17 +106,40 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     }
 });
 
-// Route to get all attendance records
+// Route to get combined attendance records
 router.get('/attendance-difference', async (req, res) => {
     try {
         const response = await axios.get('GET_ATTENDANCE');
         const attendanceRecords = response.data;
-        res.json(attendanceRecords);
+
+        // Combine records by name and date
+        const combinedRecords = attendanceRecords.reduce((acc, record) => {
+            const key = `${record.FirstName}-${record.LastName}-${record.Date}`;
+            if (!acc[key]) {
+                acc[key] = {
+                    Date: record.Date,
+                    FirstName: record.FirstName,
+                    LastName: record.LastName,
+                    WorshipService: false,
+                    BibleClass: false
+                };
+            }
+            if (record.ServiceType.includes('Worship')) {
+                acc[key].WorshipService = true;
+            }
+            if (record.ServiceType.includes('Bible class')) {
+                acc[key].BibleClass = true;
+            }
+            return acc;
+        }, {});
+
+        res.json(Object.values(combinedRecords));
     } catch (err) {
         console.error('Error fetching attendance data:', err);
         res.status(500).json({ error: `Error fetching attendance data: ${err.message}` });
     }
 });
+
 
 
 module.exports = router;
