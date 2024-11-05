@@ -46,10 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     background-color: #e0e0e0;
                 }
                 .row-bg-1 {
-                    background-color: #d0e7ff;
+                    background-color: #e6f2ff;
                 }
                 .row-bg-2 {
-                    background-color: #b0d7ff;
+                    background-color: #cce6ff;
                 }
                 table {
                     border-collapse: collapse;
@@ -57,6 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 th, td {
                     border: 1px solid #ddd;
+                }
+                th {
+                    position: sticky;
+                    top: 0;
+                    background: white;
+                    z-index: 1;
                 }
             `;
             document.head.appendChild(style);
