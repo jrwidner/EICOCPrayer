@@ -23,6 +23,9 @@
         #fileElem {
             display: none;
         }
+        #file-list {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -35,10 +38,13 @@
             <br><br>
             <button type="submit">Upload</button>
         </form>
+        <div id="file-list"></div>
     </div>
 
     <script>
         let dropArea = document.getElementById('drop-area');
+        let fileInput = document.getElementById('fileElem');
+        let fileList = document.getElementById('file-list');
 
         // Prevent default drag behaviors
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -74,27 +80,18 @@
         function handleDrop(e) {
             let dt = e.dataTransfer;
             let files = dt.files;
-
-            handleFiles(files);
+            fileInput.files = files;
+            displayFiles(files);
         }
 
-        function handleFiles(files) {
-            let formData = new FormData();
-            ([...files]).forEach(file => {
-                formData.append('files', file);
-            });
-
-            fetch('/api/upload', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        function displayFiles(files) {
+            fileList.innerHTML = '';
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                let listItem = document.createElement('div');
+                listItem.textContent = file.name;
+                fileList.appendChild(listItem);
+            }
         }
     </script>
 </body>
