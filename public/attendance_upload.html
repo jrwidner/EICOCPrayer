@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Attendance File</title>
+    <title>Upload Attendance Files</title>
 </head>
 <body>
-    <h1>Upload Attendance File</h1>
+    <h1>Upload Attendance Files</h1>
     <form action="/api/upload" method="post" enctype="multipart/form-data">
-        <label for="file">Choose excel file:</label>
-        <input type="file" id="file" name="file" accept=".xls" required>
+        <label for="files">Choose Excel files:</label>
+        <input type="file" id="files" name="files" accept=".xls" multiple required>
         <br><br>
         <button type="submit">Upload</button>
     </form>
