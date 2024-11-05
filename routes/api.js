@@ -35,7 +35,7 @@ function extractNamesFromExcel(sheet, date, serviceType) {
         const lastName = sheet[xlsx.utils.encode_cell({ r: rowNum, c: 2 })]?.v;
 
         // Ignore records where FirstName is "FirstName"
-        if (firstName && lastName && firstName !== "FirstName") {
+        if (firstName !== "FirstName") {
             records.push({ firstName, lastName, date, serviceType });
         }
     }
