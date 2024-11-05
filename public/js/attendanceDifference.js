@@ -40,6 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 .alt-bg-2 {
                     background-color: #e0e0e0;
                 }
+                table {
+                    border-collapse: collapse;
+                    margin: 20px;
+                }
+                th, td {
+                    padding: 10px;
+                    border: 1px solid #ddd;
+                }
             `;
             document.head.appendChild(style);
 
