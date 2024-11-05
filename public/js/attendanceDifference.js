@@ -27,26 +27,49 @@ document.addEventListener('DOMContentLoaded', () => {
                 .cross {
                     color: red;
                 }
+                .date-header {
+                    font-weight: bold;
+                    text-align: center;
+                }
+                .alt-bg-1 {
+                    background-color: #f0f0f0;
+                }
+                .alt-bg-2 {
+                    background-color: #e0e0e0;
+                }
             `;
             document.head.appendChild(style);
 
             let currentDate = '';
-            data.forEach(record => {
-                const recordDate = new Date(record.Date).toLocaleDateString();
-                if (recordDate !== currentDate) {
-                    currentDate = recordDate;
-                    const dateHeader = document.createElement('tr');
-                    dateHeader.innerHTML = `<td colspan="4" valign="top"><b class="date-header">${currentDate}</b></td>`;
-                    attendanceTable.appendChild(dateHeader);
-                }
-                const recordRow = document.createElement('tr');
-                recordRow.classList.add('record-row');
-                recordRow.innerHTML = `
-                    <td class="nowrap">${record.LastName}, ${record.FirstName}</td>
-                    <td class="nowrap">${record.WorshipService ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
-                    <td class="nowrap">${record.BibleClass ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
-                `;
-                attendanceTable.appendChild(recordRow);
+            let altBg = true;
+            const headerRow = document.createElement('tr');
+            headerRow.innerHTML = `
+                <th>Name</th>
+                ${data.map(record => {
+                    const recordDate = new Date(record.Date).toLocaleDateString();
+                    if (recordDate !== currentDate) {
+                        currentDate = recordDate;
+                        altBg = !altBg;
+                        return `<th colspan="2" class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${currentDate}</th>`;
+                    }
+                    return '';
+                }).join('')}
+            `;
+            attendanceTable.appendChild(headerRow);
+
+            const uniqueNames = [...new Set(data.map(record => `${record.LastName}, ${record.FirstName}`))];
+            uniqueNames.forEach(name => {
+                const nameRow = document.createElement('tr');
+                nameRow.innerHTML = `<td class="nowrap">${name}</td>`;
+                data.forEach(record => {
+                    if (`${record.LastName}, ${record.FirstName}` === name) {
+                        nameRow.innerHTML += `
+                            <td class="nowrap ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${record.WorshipService ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
+                            <td class="nowrap ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${record.BibleClass ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
+                        `;
+                    }
+                });
+                attendanceTable.appendChild(nameRow);
             });
         })
         .catch(error => {
