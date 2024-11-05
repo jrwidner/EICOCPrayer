@@ -3,7 +3,7 @@ const axios = require('axios');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
-const pdfParse = require('pdf-parse');
+const xlsx = require('xlsx');
 const router = express.Router();
 
 // Configure multer for file uploads
@@ -12,33 +12,28 @@ const upload = multer({ dest: 'uploads/' });
 // Function to extract worship date and service type from file name
 function extractDetailsFromFileName(fileName) {
     const [date, ...serviceTypeParts] = fileName.split(' ');
-    const serviceType = serviceTypeParts.join(' ').replace('.pdf', '');
+    const serviceType = serviceTypeParts.join(' ').replace('.xlsx', '');
     // Convert date to SQL Date format (YYYY-MM-DD)
     const [month, day, year] = date.match(/(\d{2})(\d{2})(\d{2})/).slice(1);
     const formattedDate = `20${year}-${month}-${day}`;
     return { date: formattedDate, serviceType };
 }
 
-// Function to extract names using regex
-function extractNames(content, date, serviceType, context) {
-    // Remove known headers and any extraneous text
-    content = content.replace(/\nReport List\nAddressLast NameFirst NameTag\n639/g, '');
-
-    // New regex pattern to identify names more precisely, excluding common address keywords
-    const regex = /\b(?:Dr|Ave|Rd|St|Blvd|Terr|Lane|Pl|Ct|Apt|(?:N|S|E|W)\.?)?\s?([A-Z][a-zA-Z']+)\s([A-Z][a-zA-Z']+)(?=\s*gbef)/g;
-    let match;
+// Function to extract names from Excel content
+function extractNamesFromExcel(sheet, date, serviceType) {
     const records = [];
+    const range = xlsx.utils.decode_range(sheet['!ref']);
+    
+    for (let rowNum = range.s.r + 1; rowNum <= range.e.r; rowNum++) {
+        const firstName = sheet[xlsx.utils.encode_cell({ r: rowNum, c: 1 })]?.v;
+        const lastName = sheet[xlsx.utils.encode_cell({ r: rowNum, c: 2 })]?.v;
 
-    while ((match = regex.exec(content)) !== null) {
-        const lastName = match[1];
-        const firstName = match[2];
-
-        // Add to records if parsed correctly
-        records.push({ lastName, firstName, date, serviceType });
+        if (firstName && lastName) {
+            records.push({ firstName, lastName, date, serviceType });
+        }
     }
     return records;
 }
-
 
 // Route to get all prayer requests
 router.get('/prayer-requests', async (req, res) => {
@@ -70,7 +65,7 @@ router.put('/update-prayer-request/:id', async (req, res) => {
     }
 });
 
-// Route to handle file upload, convert PDF to JSON, and send to Azure Function
+// Route to handle file upload, convert Excel to JSON, and send to Azure Function
 router.post('/upload', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded.');
@@ -78,19 +73,14 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
     try {
         const filePath = req.file.path;
-        const dataBuffer = fs.readFileSync(filePath);
-
-        // Convert PDF to JSON
-        const pdfData = await pdfParse(dataBuffer);
-        const pdfJson = { content: pdfData.text };
+        const workbook = xlsx.readFile(filePath);
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
         // Extract worship date and service type from file name
         const { date, serviceType } = extractDetailsFromFileName(req.file.originalname);
-        pdfJson.date = date;
-        pdfJson.serviceType = serviceType;
 
-        // Extract names using regex and include date and service type
-        const records = extractNames(pdfJson.content, date, serviceType);
+        // Extract names from Excel sheet and include date and service type
+        const records = extractNamesFromExcel(sheet, date, serviceType);
 
         fs.unlinkSync(filePath); // Delete the file after reading
 
@@ -99,7 +89,8 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
         res.send(response.data);
     } catch (error) {
-        res.status(500).json({error: `${error.message} - URL: UPLOAD_ATTENDANCE`});
+        res.status(500).json({ error: `${error.message} - URL: UPLOAD_ATTENDANCE` });
     }
 });
+
 module.exports = router;
