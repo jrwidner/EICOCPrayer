@@ -58,9 +58,11 @@ jobs:
       - name: Replace placeholders in api.js for development
         if: github.ref != 'refs/heads/main'
         run: |
-          sed -i 's|GETPRAYER_ADDRESS|https://eicocprayerfunc.azurewebsites.net/api/GetAllPrayerRequests|g' ./routes/api.js
-          sed -i 's|NEWPRAYER_ADDRESS|https://eicocprayerfunc.azurewebsites.net/api/CreateNewPrayerRequest|g' ./routes/api.js
-          sed -i 's|UPDATEPRAYER_ADDRESS|https://eicocprayerfunc.azurewebsites.net/api/UpdatePrayerRequest|g' ./routes/api.js
+          sed -i 's|GETPRAYER_ADDRESS|https://eicocelderprayerfunc.azurewebsites.net/api/GetAllPrayerRequests|g' ./routes/api.js
+          sed -i 's|NEWPRAYER_ADDRESS|https://eicocelderprayerfunc.azurewebsites.net/api/CreateNewPrayerRequest?code=q0P7OkHKRTtLfygOfK1suAoRG62rAI9xFKiJFaJcwidwAzFumf8UIg%3D%3D|g' ./routes/api.js
+          sed -i 's|UPDATEPRAYER_ADDRESS|https://eicocelderprayerfunc.azurewebsites.net/api/UpdatePrayerRequest?code=q0P7OkHKRTtLfygOfK1suAoRG62rAI9xFKiJFaJcwidwAzFumf8UIg%3D%3D|g' ./routes/api.js
+          sed -i 's|UPLOAD_ATTENDANCE|https://eicocelderprayerfunc.azurewebsites.net/api/UploadAttendance|g' ./routes/api.js
+          sed -i 's|GET_ATTENDANCE|https://eicocelderprayerfunc.azurewebsites.net/api/GetAttendanceRecords|g' ./routes/api.js
 
       - name: Replace placeholders in api.js for production
         if: github.ref == 'refs/heads/main'
@@ -68,6 +70,8 @@ jobs:
           sed -i 's|GETPRAYER_ADDRESS|https://eicocelderprayerfunc.azurewebsites.net/api/GetAllPrayerRequests|g' ./routes/api.js
           sed -i 's|NEWPRAYER_ADDRESS|https://eicocelderprayerfunc.azurewebsites.net/api/CreateNewPrayerRequest?code=q0P7OkHKRTtLfygOfK1suAoRG62rAI9xFKiJFaJcwidwAzFumf8UIg%3D%3D|g' ./routes/api.js
           sed -i 's|UPDATEPRAYER_ADDRESS|https://eicocelderprayerfunc.azurewebsites.net/api/UpdatePrayerRequest?code=q0P7OkHKRTtLfygOfK1suAoRG62rAI9xFKiJFaJcwidwAzFumf8UIg%3D%3D|g' ./routes/api.js
+          sed -i 's|UPLOAD_ATTENDANCE|https://eicocelderprayerfunc.azurewebsites.net/api/UploadAttendance|g' ./routes/api.js
+          sed -i 's|GET_ATTENDANCE|https://eicocelderprayerfunc.azurewebsites.net/api/GetAttendanceRecords|g' ./routes/api.js
 
       - name: Display api.js contents
         run: cat ./routes/api.js
