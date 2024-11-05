@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const spinner = document.getElementById('spinner');
     const attendanceTable = document.getElementById('attendance-table').querySelector('tbody');
     const memberSelect = document.getElementById('member-select');
+    const clearSelectionButton = document.getElementById('clear-selection');
 
     // Show spinner before fetching data
     spinner.style.display = 'block';
@@ -88,6 +89,12 @@ document.addEventListener('DOMContentLoaded', () => {
             memberSelect.addEventListener('change', () => {
                 const selectedOptions = Array.from(memberSelect.selectedOptions).map(option => option.value);
                 renderTable(selectedOptions);
+            });
+
+            // Event listener for clear selection button
+            clearSelectionButton.addEventListener('click', () => {
+                memberSelect.selectedIndex = -1;
+                renderTable([]);
             });
         })
         .catch(error => {

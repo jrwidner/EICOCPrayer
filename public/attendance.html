@@ -2,7 +2,64 @@
 <html>
 <head>
     <title>Attendance by Date and Service</title>
-    <link rel="stylesheet" type="text/css" href="./css/styles.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <style>
+        .nowrap {
+            white-space: nowrap;
+        }
+        .checkmark {
+            color: green;
+        }
+        .cross {
+            color: red;
+        }
+        .no-data {
+            color: blue;
+        }
+        .date-header {
+            font-weight: bold;
+            text-align: center;
+            padding-left: 2px;
+            padding-right: 2px;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 2;
+        }
+        .alt-bg-1 {
+            background-color: #f0f0f0;
+        }
+        .alt-bg-2 {
+            background-color: #e0e0e0;
+        }
+        .row-bg-1 {
+            background-color: #e6f2ff;
+        }
+        .row-bg-2 {
+            background-color: #cce6ff;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 20px;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 5px;
+        }
+        th {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+        }
+        #member-select {
+            margin-bottom: 10px;
+        }
+        #clear-selection {
+            margin-left: 10px;
+        }
+    </style>
 </head>
 <body>
     <h1>Attendance by Date and Service</h1>
@@ -12,12 +69,13 @@
         <select id="member-select" multiple>
             <!-- Options will be populated dynamically -->
         </select>
+        <button id="clear-selection">Clear Selection</button>
     </div>
     <table id="attendance-table" border="0">
         <tbody>
             <!-- Data will be inserted here by JavaScript -->
         </tbody>
     </table>
-    <script src="./js/attendanceDifference.js"></script>
+    <script src="js/attendanceDifference.js"></script>
 </body>
 </html>
