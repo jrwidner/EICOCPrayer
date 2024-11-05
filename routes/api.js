@@ -127,7 +127,7 @@ router.get('/attendance-difference', async (req, res) => {
             if (record.ServiceType.includes('Worship')) {
                 acc[key].WorshipService = true;
             }
-            if (record.ServiceType.includes('Bible class')) {
+            if (record.ServiceType.includes('Bible')) {
                 acc[key].BibleClass = true;
             }
             return acc;
@@ -139,7 +139,5 @@ router.get('/attendance-difference', async (req, res) => {
         res.status(500).json({ error: `Error fetching attendance data: ${err.message}` });
     }
 });
-
-
 
 module.exports = router;
