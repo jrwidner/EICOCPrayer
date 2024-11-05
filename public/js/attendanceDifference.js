@@ -72,8 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 `;
                             } else {
                                 nameRow.innerHTML += `
-                                    <td class="nowrap"><span class="no-data">⦸</span></td>
-                                    <td class="nowrap"><span class="no-data">⦸</span></td>
+                                    <td class="nowrap"><span class="no-data">✗</span></td>
+                                    <td class="nowrap"><span class="no-data">✗</span></td>
                                 `;
                             }
                         });
