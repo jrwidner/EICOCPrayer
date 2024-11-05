@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 recordRow.innerHTML = `
                     <td class="nowrap">${record.LastName}, ${record.FirstName}</td>
                     <td class="nowrap">${record.ServiceType.includes('Worship') ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
-                    <td class="nowrap">${record.ServiceType.includes('Bible Class') ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
+                    <td class="nowrap">${record.ServiceType.includes('Bible class') ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
                 `;
                 attendanceTable.appendChild(recordRow);
             });
