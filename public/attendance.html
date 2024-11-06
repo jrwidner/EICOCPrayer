@@ -80,16 +80,6 @@
             vertical-align: top; /* Align cells to the top */
             text-align: center; /* Center-align cells */
         }
-        .toggle-button {
-            padding: 5px 10px;
-            margin-left: 10px;
-            font-size: 0.8em;
-            cursor: pointer;
-        }
-        .toggle-button.active {
-            background-color: #007bff;
-            color: white;
-        }
     </style>
 </head>
 <body>
@@ -111,7 +101,9 @@
                 <td><button id="clear-selection">Clear Selection</button></td>
             </tr>
         </table>
-        <button id="hide-visitors" class="toggle-button">Hide Visitors</button>
+        <label>
+            <input type="checkbox" id="hide-visitors-checkbox"> Hide Visitors
+        </label>
     </div>
     <table id="attendance-table" border="0">
         <tbody>
