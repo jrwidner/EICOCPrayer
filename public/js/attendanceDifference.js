@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const worshipCount = records.filter(record => `${record.LastName}, ${record.FirstName}` === name && record.WorshipService).length;
                 const bibleClassCount = records.filter(record => `${record.LastName}, ${record.FirstName}` === name && record.BibleClass).length;
                 const worshipPercentage = totalWeeks ? (worshipCount / totalWeeks * 100).toFixed(2) : 0;
-                const bibleClassPercentage = totalRecords ? (bibleClassCount / totalRecords * 100).toFixed(2) : 0;
+                const bibleClassPercentage = totalWeeks ? (bibleClassCount / totalWeeks * 100).toFixed(2) : 0;
                 return { worshipPercentage, bibleClassPercentage, worshipCount };
             };
 
@@ -79,12 +79,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 uniqueNames.forEach((name, index) => {
                     const { worshipPercentage, bibleClassPercentage, worshipCount } = calculatePercentages(data, name, uniqueDates.length);
 
-                    // Determine color coding
+                    // Determine color coding for worship attendance
                     let worshipColor = 'red';
                     if (worshipPercentage >= 75) {
                         worshipColor = 'green';
                     } else if (worshipPercentage >= 50) {
-                        worshipColor = 'yellow';
+                        worshipColor = 'orange';
+                    }
+
+                    // Determine color coding for Bible class attendance
+                    let bibleClassColor = 'red';
+                    if (bibleClassPercentage >= 75) {
+                        bibleClassColor = 'green';
+                    } else if (bibleClassPercentage >= 50) {
+                        bibleClassColor = 'orange';
                     }
 
                     // Check if the member is a visitor
@@ -98,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (selectedMembers.length === 0 || selectedMembers.includes(name)) {
                         const nameRow = document.createElement('tr');
                         nameRow.classList.add(index % 2 === 0 ? 'row-bg-1' : 'row-bg-2');
-                        nameRow.innerHTML = `<td class="nowrap">${name}<br>(Worship: <span style="color:${worshipColor}">${worshipPercentage}%</span>, Bible Class: ${bibleClassPercentage}%)</td>`;
+                        nameRow.innerHTML = `<td class="nowrap">${name}<br>(Worship: <span style="color:${worshipColor}">${worshipPercentage}%</span>, Bible Class: <span style="color:${bibleClassColor}">${bibleClassPercentage}%</span>)</td>`;
                         uniqueDates.forEach(date => {
                             const record = data.find(record => 
                                 `${record.LastName}, ${record.FirstName}` === name && 
