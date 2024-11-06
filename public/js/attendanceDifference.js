@@ -40,6 +40,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 return { worshipPercentage, bibleClassPercentage, worshipCount, bibleClassCount, totalRecords };
             };
 
+            // Function to check if a member is a visitor
+            const isVisitor = (records, name) => {
+                const memberRecords = records.filter(record => `${record.LastName}, ${record.FirstName}` === name);
+                const worshipCount = memberRecords.filter(record => record.WorshipService).length;
+
+                // Check if there are 3 weeks of attendance in the most recent 4-week stretch
+                const recentRecords = memberRecords.slice(-4);
+                const recentWorshipCount = recentRecords.filter(record => record.WorshipService).length;
+
+                return (worshipCount >= 0 && worshipCount <= 3 && recentWorshipCount < 3);
+            };
+
             // Function to render the table based on selected members
             const renderTable = (selectedMembers) => {
                 attendanceTable.innerHTML = '';
@@ -88,18 +100,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         bibleClassColor = 'orange';
                     }
 
-                    // Check if the member is a visitor
-                    const isVisitor = (worshipCount >= 0 && worshipCount <= 3 && totalRecords >= 6);
-
                     // Skip visitors if the hide visitors checkbox is checked
-                    if (hideVisitorsCheckbox.checked && isVisitor) {
+                    if (hideVisitorsCheckbox.checked && isVisitor(data, name)) {
                         return;
                     }
 
                     if (selectedMembers.length === 0 || selectedMembers.includes(name)) {
                         const nameRow = document.createElement('tr');
                         nameRow.classList.add(index % 2 === 0 ? 'row-bg-1' : 'row-bg-2');
-                        nameRow.innerHTML = `<td class="nowrap">${name}<br>Worship: <span style="color:${worshipColor}">${worshipPercentage}%</span> ${worshipCount}, Bible Class: <span style="color:${bibleClassColor}">${bibleClassPercentage}%</span> ${bibleClassCount}</td>`;
+                        nameRow.innerHTML = `<td class="nowrap">${name}<br>${worshipCount} Worships ${worshipPercentage}% - ${bibleClassCount} Bible Classes ${bibleClassPercentage}%</td>`;
                         uniqueDates.forEach(date => {
                             const record = data.find(record => 
                                 `${record.LastName}, ${record.FirstName}` === name && 
