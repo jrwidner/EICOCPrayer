@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (selectedMembers.length === 0 || selectedMembers.includes(name)) {
                         const nameRow = document.createElement('tr');
                         nameRow.classList.add(index % 2 === 0 ? 'row-bg-1' : 'row-bg-2');
-                        nameRow.innerHTML = `<td class="nowrap">${name}<br>${worshipCount} Worships ${worshipPercentage}% - ${bibleClassCount} Bible Classes ${bibleClassPercentage}%</td>`;
+                        nameRow.innerHTML = `<td class="nowrap"><span class="name">${name}</span><br>${worshipCount} Worships <span style="color:${worshipColor}">${worshipPercentage}%</span> - ${bibleClassCount} Bible Classes <span style="color:${bibleClassColor}">${bibleClassPercentage}%</span></td>`;
                         uniqueDates.forEach(date => {
                             const record = data.find(record => 
                                 `${record.LastName}, ${record.FirstName}` === name && 
