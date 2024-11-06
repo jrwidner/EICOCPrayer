@@ -3,17 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const attendanceTable = document.getElementById('attendance-table').querySelector('tbody');
     const memberSelect = document.getElementById('member-select');
     const clearSelectionButton = document.getElementById('clear-selection');
-    const hideVisitorsCheckbox = document.createElement('input');
-    hideVisitorsCheckbox.type = 'checkbox';
-    hideVisitorsCheckbox.id = 'hide-visitors';
-    const hideVisitorsLabel = document.createElement('label');
-    hideVisitorsLabel.htmlFor = 'hide-visitors';
-    hideVisitorsLabel.textContent = 'Hide Visitors';
+    const hideVisitorsToggle = document.createElement('button');
+    hideVisitorsToggle.id = 'hide-visitors';
+    hideVisitorsToggle.textContent = 'Hide Visitors';
+    hideVisitorsToggle.classList.add('toggle-button');
 
-    // Add the hide visitors checkbox to the selection container
+    // Add the hide visitors toggle to the selection container
     const selectionContainer = document.querySelector('.selection-container');
-    selectionContainer.appendChild(hideVisitorsCheckbox);
-    selectionContainer.appendChild(hideVisitorsLabel);
+    selectionContainer.appendChild(hideVisitorsToggle);
 
     // Show spinner before fetching data
     spinner.style.display = 'block';
@@ -44,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const bibleClassCount = records.filter(record => `${record.LastName}, ${record.FirstName}` === name && record.BibleClass).length;
                 const worshipPercentage = totalWeeks ? (worshipCount / totalWeeks * 100).toFixed(2) : 0;
                 const bibleClassPercentage = totalWeeks ? (bibleClassCount / totalWeeks * 100).toFixed(2) : 0;
-                return { worshipPercentage, bibleClassPercentage, worshipCount, bibleClassCount };
+                return { worshipPercentage, bibleClassPercentage, worshipCount, bibleClassCount, totalRecords };
             };
 
             // Function to render the table based on selected members
@@ -77,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 attendanceTable.appendChild(serviceHeaderRow);
 
                 uniqueNames.forEach((name, index) => {
-                    const { worshipPercentage, bibleClassPercentage, worshipCount, bibleClassCount } = calculateAttendance(data, name, uniqueDates.length);
+                    const { worshipPercentage, bibleClassPercentage, worshipCount, bibleClassCount, totalRecords } = calculateAttendance(data, name, uniqueDates.length);
 
                     // Determine color coding for worship attendance
                     let worshipColor = 'red';
@@ -96,10 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     // Check if the member is a visitor
-                    const isVisitor = (worshipCount >= 1 && worshipCount <= 3);
+                    const isVisitor = (worshipCount >= 0 && worshipCount <= 3 && totalRecords >= 6);
 
-                    // Skip visitors if the hide visitors checkbox is checked
-                    if (hideVisitorsCheckbox.checked && isVisitor) {
+                    // Skip visitors if the hide visitors toggle is active
+                    if (hideVisitorsToggle.classList.contains('active') && isVisitor) {
                         return;
                     }
 
@@ -144,8 +141,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderTable([]);
             });
 
-            // Event listener for hide visitors checkbox
-            hideVisitorsCheckbox.addEventListener('change', () => {
+            // Event listener for hide visitors toggle
+            hideVisitorsToggle.addEventListener('click', () => {
+                hideVisitorsToggle.classList.toggle('active');
+                hideVisitorsToggle.textContent = hideVisitorsToggle.classList.contains('active') ? 'Show Visitors' : 'Hide Visitors';
                 const selectedOptions = Array.from(memberSelect.selectedOptions).map(option => option.value);
                 renderTable(selectedOptions);
             });
