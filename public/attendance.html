@@ -7,7 +7,129 @@
         .nowrap {
             white-space: nowrap;
         }
+        .checkmark {<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance by Date and Service</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <style>
+        .nowrap {
+            white-space: nowrap;
+        }
         .checkmark {
+            color: green;
+        }
+        .cross {
+            color: red;
+        }
+        .no-data {
+            color: rgb(5, 20, 90);
+        }
+        .date-header {
+            font-weight: bold;
+            text-align: center;
+            padding-left: 2px;
+            padding-right: 2px;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 2;
+        }
+        .alt-bg-1 {
+            background-color: #f0f0f0;
+        }
+        .alt-bg-2 {
+            background-color: #e0e0e0;
+        }
+        .row-bg-1 {
+            background-color: #e6f2ff;
+        }
+        .row-bg-2 {
+            background-color: #cce6ff;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 5px;
+            width: 100%;
+            font-size: 0.8em; /* Further reduced font size */
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding-left: 2px; /* Reduced padding */
+            padding-right: 2px; /* Reduced padding */
+            vertical-align: top; /* Align cells to the top */
+        }
+        th {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+        }
+        #member-select {
+            width: 100%;
+        }
+        #clear-selection {
+            padding: 2px 5px;
+            font-size: 0.8em;
+        }
+        .selection-container {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        .selection-table {
+            width: 10%;
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+        .selection-table td {
+            border: none;
+            padding: 2px;
+            vertical-align: top; /* Align cells to the top */
+            text-align: center; /* Center-align cells */
+        }
+        .toggle-button {
+            padding: 5px 10px;
+            margin-left: 10px;
+            font-size: 0.8em;
+            cursor: pointer;
+        }
+        .toggle-button.active {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Attendance by Date and Service</h1>
+    <div id="spinner" class="spinner" role="status" aria-live="polite">Loading...</div>
+    <div class="selection-container">
+        <table class="selection-table">
+            <tr>
+                <td>Select member or to select multiple hold Ctrl key and click on names</td>
+            </tr>
+            <tr>
+                <td>
+                    <select id="member-select" multiple>
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><button id="clear-selection">Clear Selection</button></td>
+            </tr>
+        </table>
+    </div>
+    <table id="attendance-table" border="0">
+        <tbody>
+            <!-- Data will be inserted here by JavaScript -->
+        </tbody>
+    </table>
+    <script src="js/attendanceDifference.js"></script>
+</body>
+</html>
+
             color: green;
         }
         .cross {
