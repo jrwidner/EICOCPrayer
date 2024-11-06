@@ -27,13 +27,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 memberSelect.appendChild(option);
             });
 
+            // Calculate total weeks in the data set
+            const totalWeeks = [...new Set(data.map(record => new Date(record.Date).toLocaleDateString()))].length;
+
             // Function to calculate attendance percentages and totals
-            const calculateAttendance = (records, name, totalWeeks) => {
+            const calculateAttendance = (records, name) => {
                 const totalRecords = records.filter(record => `${record.LastName}, ${record.FirstName}` === name).length;
                 const worshipCount = records.filter(record => `${record.LastName}, ${record.FirstName}` === name && record.WorshipService).length;
                 const bibleClassCount = records.filter(record => `${record.LastName}, ${record.FirstName}` === name && record.BibleClass).length;
                 const worshipPercentage = totalWeeks ? (worshipCount / totalWeeks * 100).toFixed(2) : 0;
-                const bibleClassPercentage = totalWeeks ? (bibleClassCount / totalWeeks * 100).toFixed(2) : 0;
+                const bibleClassPercentage = worshipCount ? (bibleClassCount / worshipCount * 100).toFixed(2) : 0;
                 return { worshipPercentage, bibleClassPercentage, worshipCount, bibleClassCount, totalRecords };
             };
 
@@ -67,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 attendanceTable.appendChild(serviceHeaderRow);
 
                 uniqueNames.forEach((name, index) => {
-                    const { worshipPercentage, bibleClassPercentage, worshipCount, bibleClassCount, totalRecords } = calculateAttendance(data, name, uniqueDates.length);
+                    const { worshipPercentage, bibleClassPercentage, worshipCount, bibleClassCount, totalRecords } = calculateAttendance(data, name);
 
                     // Determine color coding for worship attendance
                     let worshipColor = 'red';
