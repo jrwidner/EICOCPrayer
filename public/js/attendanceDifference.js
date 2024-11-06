@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const recentRecords = memberRecords.slice(-4);
                 const recentWorshipCount = recentRecords.filter(record => record.WorshipService).length;
 
-                return (worshipCount >= 0 && worshipCount <= 3 && recentWorshipCount < 3);
+                return (worshipCount >= 0 && worshipCount <= 4 && recentWorshipCount < 3);
             };
 
             // Function to render the table based on selected members
