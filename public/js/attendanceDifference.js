@@ -3,14 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const attendanceTable = document.getElementById('attendance-table').querySelector('tbody');
     const memberSelect = document.getElementById('member-select');
     const clearSelectionButton = document.getElementById('clear-selection');
-    const hideVisitorsToggle = document.createElement('button');
-    hideVisitorsToggle.id = 'hide-visitors';
-    hideVisitorsToggle.textContent = 'Hide Visitors';
-    hideVisitorsToggle.classList.add('toggle-button');
-
-    // Add the hide visitors toggle to the selection container
-    const selectionContainer = document.querySelector('.selection-container');
-    selectionContainer.appendChild(hideVisitorsToggle);
+    const hideVisitorsCheckbox = document.getElementById('hide-visitors-checkbox');
 
     // Show spinner before fetching data
     spinner.style.display = 'block';
@@ -95,15 +88,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Check if the member is a visitor
                     const isVisitor = (worshipCount >= 0 && worshipCount <= 3 && totalRecords >= 6);
 
-                    // Skip visitors if the hide visitors toggle is active
-                    if (hideVisitorsToggle.classList.contains('active') && isVisitor) {
+                    // Skip visitors if the hide visitors checkbox is checked
+                    if (hideVisitorsCheckbox.checked && isVisitor) {
                         return;
                     }
 
                     if (selectedMembers.length === 0 || selectedMembers.includes(name)) {
                         const nameRow = document.createElement('tr');
                         nameRow.classList.add(index % 2 === 0 ? 'row-bg-1' : 'row-bg-2');
-                        nameRow.innerHTML = `<td class="nowrap">${name}<br>(Worship: <span style="color:${worshipColor}">${worshipPercentage}%</span> (${worshipCount}), Bible Class: <span style="color:${bibleClassColor}">${bibleClassPercentage}%</span> (${bibleClassCount}))</td>`;
+                        nameRow.innerHTML = `<td class="nowrap">${name}<br>Worship: <span style="color:${worshipColor}">${worshipPercentage}%</span> ${worshipCount}, Bible Class: <span style="color:${bibleClassColor}">${bibleClassPercentage}%</span> ${bibleClassCount}</td>`;
                         uniqueDates.forEach(date => {
                             const record = data.find(record => 
                                 `${record.LastName}, ${record.FirstName}` === name && 
@@ -141,10 +134,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderTable([]);
             });
 
-            // Event listener for hide visitors toggle
-            hideVisitorsToggle.addEventListener('click', () => {
-                hideVisitorsToggle.classList.toggle('active');
-                hideVisitorsToggle.textContent = hideVisitorsToggle.classList.contains('active') ? 'Show Visitors' : 'Hide Visitors';
+            // Event listener for hide visitors checkbox
+            hideVisitorsCheckbox.addEventListener('change', () => {
                 const selectedOptions = Array.from(memberSelect.selectedOptions).map(option => option.value);
                 renderTable(selectedOptions);
             });
