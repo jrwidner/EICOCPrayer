@@ -126,14 +126,18 @@ router.get('/attendance-difference', async (req, res) => {
                     FirstName: record.FirstName,
                     LastName: record.LastName,
                     WorshipService: false,
-                    BibleClass: false
+                    BibleClass: false,
+                    WorshipAttendancePercentage: 0,
+                    BibleClassAttendancePercentage: 0
                 };
             }
             if (record.ServiceType.includes('Worship')) {
                 acc[key].WorshipService = true;
+                acc[key].WorshipAttendancePercentage = record.WorshipAttendancePercentage;
             }
             if (record.ServiceType.includes('Bible')) {
                 acc[key].BibleClass = true;
+                acc[key].BibleClassAttendancePercentage = record.BibleClassAttendancePercentage;
             }
             return acc;
         }, {});
