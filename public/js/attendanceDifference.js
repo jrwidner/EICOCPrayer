@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const memberSelect = document.getElementById('member-select');
     const clearSelectionButton = document.getElementById('clear-selection');
     const hideVisitorsCheckbox = document.getElementById('hide-visitors-checkbox');
+    const infoBlock = document.getElementById('info-block'); // Add this line
 
     // Show spinner before fetching data
     spinner.style.display = 'block';
@@ -30,6 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Calculate total weeks in the data set
             const totalWeeks = [...new Set(data.map(record => new Date(record.Date).toLocaleDateString()))].length;
 
+            // Calculate total number of possible Worship services
+            const totalPossibleWorshipServices = totalWeeks;
+
             // Function to calculate attendance percentages and totals
             const calculateAttendance = (records, name) => {
                 const totalRecords = records.filter(record => `${record.LastName}, ${record.FirstName}` === name).length;
@@ -44,31 +48,29 @@ document.addEventListener('DOMContentLoaded', () => {
             const isVisitor = (records, name) => {
                 const memberRecords = records.filter(record => `${record.LastName}, ${record.FirstName}` === name);
                 const worshipCount = memberRecords.filter(record => record.WorshipService).length;
-
                 // Check if there are 3 weeks of attendance in the most recent 4-week stretch
                 const recentRecords = memberRecords.slice(-4);
                 const recentWorshipCount = recentRecords.filter(record => record.WorshipService).length;
-
                 return (worshipCount >= 0 && worshipCount <= 4 && recentWorshipCount < 3);
             };
 
             // Function to render the table based on selected members
             const renderTable = (selectedMembers) => {
                 attendanceTable.innerHTML = '';
-
                 let currentDate = '';
                 let altBg = true;
 
                 // Create the header rows
                 const dateHeaderRow = document.createElement('tr');
                 const serviceHeaderRow = document.createElement('tr');
+                const totalAttendanceRow = document.createElement('tr'); // Add this line
                 dateHeaderRow.innerHTML = `<th>Name</th>`;
                 serviceHeaderRow.innerHTML = `<th></th>`;
+                totalAttendanceRow.innerHTML = `<th>Total</th>`; // Add this line
 
                 // Sort unique dates from newest to oldest
                 const uniqueDates = [...new Set(data.map(record => new Date(record.Date).toLocaleDateString()))];
                 uniqueDates.sort((a, b) => new Date(b) - new Date(a));
-
                 uniqueDates.forEach(date => {
                     altBg = !altBg;
                     dateHeaderRow.innerHTML += `<th colspan="2" class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${date}</th>`;
@@ -76,10 +78,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         <th class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">Worship</th>
                         <th class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">Bible Class</th>
                     `;
-                });
 
+                    // Calculate total attendees for each date
+                    const totalWorshipAttendees = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length;
+                    const totalBibleClassAttendees = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length;
+                    totalAttendanceRow.innerHTML += `
+                        <td colspan="2" class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">
+                            Worship: ${totalWorshipAttendees}, Bible Class: ${totalBibleClassAttendees}
+                        </td>
+                    `;
+                });
                 attendanceTable.appendChild(dateHeaderRow);
                 attendanceTable.appendChild(serviceHeaderRow);
+                attendanceTable.appendChild(totalAttendanceRow); // Add this line
 
                 uniqueNames.forEach((name, index) => {
                     const { worshipPercentage, bibleClassPercentage, worshipCount, bibleClassCount, totalRecords } = calculateAttendance(data, name);
@@ -110,8 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         nameRow.classList.add(index % 2 === 0 ? 'row-bg-1' : 'row-bg-2');
                         nameRow.innerHTML = `<td class="nowrap"><span class="name">${name}</span><br>${worshipCount} Worships <span style="color:${worshipColor}">${worshipPercentage}%</span> - ${bibleClassCount} Bible Classes <span style="color:${bibleClassColor}">${bibleClassPercentage}%</span></td>`;
                         uniqueDates.forEach(date => {
-                            const record = data.find(record => 
-                                `${record.LastName}, ${record.FirstName}` === name && 
+                            const record = data.find(record =>
+                                `${record.LastName}, ${record.FirstName}` === name &&
                                 new Date(record.Date).toLocaleDateString() === date
                             );
                             if (record) {
@@ -151,10 +162,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 const selectedOptions = Array.from(memberSelect.selectedOptions).map(option => option.value);
                 renderTable(selectedOptions);
             });
+
+            // Add information block content
+            infoBlock.innerHTML = `
+                <p>Total Number of Possible Worship Services: ${totalPossibleWorshipServices}</p>
+                <p><strong>Explanation of Attendance Percentages:</strong></p>
+                <p>Worship Attendance Percentage: (Number of Worship Services Attended / Total Number of Possible Worship Services) * 100</p>
+                <p>Bible Class Attendance Percentage: (Number of Bible Classes Attended / Number of Worship Services Attended) * 100</p>
+                <p><strong>Legend:</strong></p>
+                <p><span class="checkmark">✓</span> Attended</p>
+                <p><span class="cross">✗</span> Did not attend Bible Class</p>
+                <p><span class="no-data">✗</span> Did not attend Worshp or Bible Class</p>
+            `;
         })
         .catch(error => {
             console.error('Error fetching attendance data:', error);
             // Hide spinner in case of error
             spinner.style.display = 'none';
-        });
-});
