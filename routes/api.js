@@ -116,7 +116,7 @@ router.post('/upload', upload.array('files'), async (req, res) => {
 router.get('/attendance-difference', async (req, res) => {
     try {
         const response = await axios.get('GET_ATTENDANCE');
-        const attendanceRecords = response.data.attendancePercentages;
+        const attendanceRecords = response.data;
 
         // Debug logging to check the type and content of attendanceRecords
         console.log('Type of attendanceRecords:', typeof attendanceRecords);
