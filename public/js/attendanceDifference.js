@@ -25,14 +25,12 @@ document.addEventListener('DOMContentLoaded', () => {
             spinner.style.display = 'none';
             console.log('Data received from API:', data); // Debug logging
 
-            // Extract the attendancePercentages array from the data object
-            const attendanceData = data.attendancePercentages;
-            console.log('attendanceData:', attendanceData); // Debug logging
-
-            // Check if attendanceData is an array
-            if (!Array.isArray(attendanceData)) {
-                throw new TypeError('Expected attendanceData to be an array');
+            // Check if data is an array
+            if (!Array.isArray(data)) {
+                throw new TypeError('Expected data to be an array');
             }
+
+            const attendanceData = data;
             attendanceData.sort((a, b) => a.LastName.localeCompare(b.LastName));
             const uniqueNames = [...new Set(attendanceData.map(record => `${record.LastName}, ${record.FirstName}`))];
             const fragment = document.createDocumentFragment();
