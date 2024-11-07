@@ -118,6 +118,10 @@ router.get('/attendance-difference', async (req, res) => {
         const response = await axios.get('GET_ATTENDANCE');
         const attendanceRecords = response.data;
 
+        // Debug logging to check the type and content of attendanceRecords
+        console.log('Type of attendanceRecords:', typeof attendanceRecords);
+        console.log('Content of attendanceRecords:', attendanceRecords);
+
         // Combine records by name and date
         const combinedRecords = attendanceRecords.reduce((acc, record) => {
             const key = `${record.FirstName}-${record.LastName}-${record.Date}`;
