@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const memberSelect = document.getElementById('member-select');
     const clearSelectionButton = document.getElementById('clear-selection');
     const hideVisitorsCheckbox = document.getElementById('hide-visitors-checkbox');
-    const infoBlock = document.getElementById('info-block'); // Add this line
+    const infoBlock = document.getElementById('info-block');
 
     // Show spinner before fetching data
     spinner.style.display = 'block';
@@ -170,6 +170,50 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p><strong>Legend:</strong></p>
                 <p><span class="checkmark">✓</span> Attended <span class="cross">✗</span> Not Attended <span class="no-data">∅</span> Attendance not recored</p>
             `;
+            // Chart.js integration
+            const ctx = document.getElementById('attendanceChart').getContext('2d');
+            const attendanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: uniqueDates.reverse(), // Reverse to show oldest to newest
+                    datasets: [
+                        {
+                            label: 'Worship Attendance',
+                            data: uniqueDates.map(date => data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length),
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            fill: false,
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Bible Class Attendance',
+                            data: uniqueDates.map(date => data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length),
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            fill: false,
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Weeks'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Attendance'
+                            }
+                        }
+                    }
+                }
+            });
+
         })
         .catch(error => {
             console.error('Error fetching attendance data:', error);

@@ -90,7 +90,12 @@
             background-color: #f9f9f9;
             font-size: 0.8em;
         }
+        .chart-container {
+            width: 45%;
+            margin-left: 20px;
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <h1>Attendance by Date and Service</h1>
@@ -118,7 +123,10 @@
                 </td>
             </tr>
         </table>
-        <div id="info-block" class="info-block"></div> <!-- Add this line -->
+        <div id="info-block" class="info-block"></div>
+        <div class="chart-container">
+            <canvas id="attendanceChart" width="400" height="200"></canvas>
+        </div>
     </div>
     <table id="attendance-table" border="0">
         <tbody>
