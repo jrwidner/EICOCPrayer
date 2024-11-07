@@ -19,7 +19,15 @@ document.addEventListener('DOMContentLoaded', () => {
         spinner.style.display = 'none';
         data.sort((a, b) => a.LastName.localeCompare(b.LastName));
   
-        const uniqueNames = [...new Set(data.map(record => `${record.LastName}, ${record.FirstName}`))];
+        const filteredData = data.filter(record => {
+          const memberRecords = data.filter(r => `${r.LastName}, ${r.FirstName}` === `${record.LastName}, ${record.FirstName}`);
+          const worshipCount = memberRecords.filter(r => r.WorshipService).length;
+          const recentRecords = memberRecords.slice(-6);
+          const recentWorshipCount = recentRecords.filter(r => r.WorshipService).length;
+          return !(worshipCount <= 4 && recentWorshipCount < 3);
+        });
+  
+        const uniqueNames = [...new Set(filteredData.map(record => `${record.LastName}, ${record.FirstName}`))];
         const fragment = document.createDocumentFragment();
         uniqueNames.forEach(name => {
           const option = document.createElement('option');
@@ -29,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         memberSelect.appendChild(fragment);
   
-        const uniqueDates = [...new Set(data.map(record => new Date(record.Date).toLocaleDateString()))];
+        const uniqueDates = [...new Set(filteredData.map(record => new Date(record.Date).toLocaleDateString()))];
         const totalWeeks = uniqueDates.length;
   
         const calculateAttendance = (records, name) => {
