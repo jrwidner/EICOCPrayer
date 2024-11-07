@@ -100,6 +100,48 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderTable(selectedOptions);
             });
             infoBlock.innerHTML = `<p><strong>Legend:</strong></p><p><span class="checkmark">✓</span> Attended <span class="cross">✗</span> Not Attended <span class="no-data">∅</span> Attendance not recorded</p>`;
+            const ctx = document.getElementById('attendanceChart').getContext('2d');
+            const attendanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: uniqueDates.reverse(),
+                    datasets: [
+                        {
+                            label: 'Worship Attendance',
+                            data: uniqueDates.map(date => filteredData.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length),
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            fill: false,
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Bible Class Attendance',
+                            data: uniqueDates.map(date => filteredData.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length),
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            fill: false,
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Weeks'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Attendance'
+                            }
+                        }
+                    }
+                }
+            });
         })
         .catch(error => {
             console.error('Error fetching attendance data:', error);
