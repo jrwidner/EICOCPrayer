@@ -17,6 +17,15 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             spinner.style.display = 'none';
+
+            // Log the type and content of data
+            console.log('Data type:', typeof data);
+            console.log('Data content:', data);
+
+            if (!Array.isArray(data)) {
+                throw new TypeError('Expected data to be an array');
+            }
+
             data.sort((a, b) => a.LastName.localeCompare(b.LastName));
 
             const uniqueNames = [...new Set(data.map(record => `${record.LastName}, ${record.FirstName}`))];
