@@ -63,10 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Create the header rows
                 const dateHeaderRow = document.createElement('tr');
                 const serviceHeaderRow = document.createElement('tr');
-                const totalAttendanceRow = document.createElement('tr'); // Add this line
                 dateHeaderRow.innerHTML = `<th>Name</th>`;
                 serviceHeaderRow.innerHTML = `<th></th>`;
-                totalAttendanceRow.innerHTML = `<th>Total</th>`; // Add this line
 
                 // Sort unique dates from newest to oldest
                 const uniqueDates = [...new Set(data.map(record => new Date(record.Date).toLocaleDateString()))];
@@ -78,19 +76,22 @@ document.addEventListener('DOMContentLoaded', () => {
                         <th class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">Worship</th>
                         <th class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">Bible Class</th>
                     `;
-
-                    // Calculate total attendees for each date
-                    const totalWorshipAttendees = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length;
-                    const totalBibleClassAttendees = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length;
-                    totalAttendanceRow.innerHTML += `
-                        <td colspan="2" class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">
-                            Worship: ${totalWorshipAttendees}, Bible Class: ${totalBibleClassAttendees}
-                        </td>
-                    `;
                 });
                 attendanceTable.appendChild(dateHeaderRow);
                 attendanceTable.appendChild(serviceHeaderRow);
-                attendanceTable.appendChild(totalAttendanceRow); // Add this line
+
+                // Add total attendance counts below each date
+                const totalAttendanceRow = document.createElement('tr');
+                totalAttendanceRow.innerHTML = `<td></td><td></td>`;
+                uniqueDates.forEach(date => {
+                    const totalWorshipAttendees = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length;
+                    const totalBibleClassAttendees = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length;
+                    totalAttendanceRow.innerHTML += `
+                        <td class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${totalWorshipAttendees}</td>
+                        <td class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${totalBibleClassAttendees}</td>
+                    `;
+                });
+                attendanceTable.appendChild(totalAttendanceRow);
 
                 uniqueNames.forEach((name, index) => {
                     const { worshipPercentage, bibleClassPercentage, worshipCount, bibleClassCount, totalRecords } = calculateAttendance(data, name);
