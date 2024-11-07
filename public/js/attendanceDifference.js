@@ -164,61 +164,66 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderTable(selectedOptions);
             });
 
-            // Add information block content
+// Define uniqueDates here to ensure it is in scope
+const uniqueDates = [...new Set(data.map(record => new Date(record.Date).toLocaleDateString()))];
+uniqueDates.sort((a, b) => new Date(b) - new Date(a));
+
+// Add information block content
 infoBlock.innerHTML = `
-<p>Total Number of Possible Worship Services: ${totalPossibleWorshipServices}</p>
-<p><strong>Legend:</strong></p>
-<p><span class="checkmark">✓</span> Attended <span class="cross">✗</span> Not Attended <span class="no-data">∅</span> Attendance not recorded</p>
+    <p>Total Number of Possible Worship Services: ${totalPossibleWorshipServices}</p>
+    <p><strong>Legend:</strong></p>
+    <p><span class="checkmark">✓</span> Attended <span class="cross">✗</span> Not Attended <span class="no-data">∅</span> Attendance not recorded</p>
 `;
 
 // Chart.js integration
 const ctx = document.getElementById('attendanceChart').getContext('2d');
 const attendanceChart = new Chart(ctx, {
-type: 'line',
-data: {
-    labels: uniqueDates, // Keep the order as newest to oldest
-    datasets: [
-        {
-            label: 'Worship Attendance',
-            data: uniqueDates.map(date => data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length),
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            fill: false,
-            tension: 0.1
-        },
-        {
-            label: 'Bible Class Attendance',
-            data: uniqueDates.map(date => data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length),
-            borderColor: 'rgba(255, 99, 132, 1)',
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            fill: false,
-            tension: 0.1
-        }
-    ]
-},
-options: {
-    responsive: true,
-    scales: {
-        x: {
-            title: {
-                display: true,
-                text: 'Weeks'
+    type: 'line',
+    data: {
+        labels: uniqueDates, // Keep the order as newest to oldest
+        datasets: [
+            {
+                label: 'Worship Attendance',
+                data: uniqueDates.map(date => data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length),
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: false,
+                tension: 0.1
+            },
+            {
+                label: 'Bible Class Attendance',
+                data: uniqueDates.map(date => data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length),
+                borderColor: 'rgba(255, 99, 132, 1)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                fill: false,
+                tension: 0.1
             }
-        },
-        y: {
-            title: {
-                display: true,
-                text: 'Attendance'
+        ]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Weeks'
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Attendance'
+                }
             }
         }
     }
-}
 });
 
 }).catch(error => {
-console.error('Error fetching attendance data:', error);
-// Hide spinner in case of error
-spinner.style.display = 'none';
+    console.error('Error fetching attendance data:', error);
+    // Hide spinner in case of error
+    spinner.style.display = 'none';
 });
+
 
 });
