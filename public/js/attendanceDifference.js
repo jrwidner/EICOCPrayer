@@ -167,13 +167,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Add information block content
             infoBlock.innerHTML = `
                 <p>Total Number of Possible Worship Services: ${totalPossibleWorshipServices}</p>
-                <p><strong>Explanation of Attendance Percentages:</strong></p>
-                <p>Worship Attendance Percentage: (Number of Worship Services Attended / Total Number of Possible Worship Services) * 100</p>
-                <p>Bible Class Attendance Percentage: (Number of Bible Classes Attended / Number of Worship Services Attended) * 100</p>
                 <p><strong>Legend:</strong></p>
-                <p><span class="checkmark">✓</span> Attended</p>
-                <p><span class="cross">✗</span> Not Attended</p>
-                <p><span class="no-data">✗</span> No Data</p>
+                <p><span class="checkmark">✓</span> Attended <span class="cross">✗</span> Not Attended <span class="no-data">✗</span> No Data</p>
             `;
         })
         .catch(error => {
