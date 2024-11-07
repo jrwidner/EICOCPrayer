@@ -3,228 +3,143 @@ document.addEventListener('DOMContentLoaded', () => {
     const attendanceTable = document.getElementById('attendance-table').querySelector('tbody');
     const memberSelect = document.getElementById('member-select');
     const clearSelectionButton = document.getElementById('clear-selection');
-    const hideVisitorsCheckbox = document.getElementById('hide-visitors-checkbox');
     const infoBlock = document.getElementById('info-block');
-
-    // Show spinner before fetching data
     spinner.style.display = 'block';
-
-    // Fetch and display attendance data
     fetch('/api/attendance-difference')
         .then(response => response.json())
         .then(data => {
-            // Hide spinner after data is fetched
             spinner.style.display = 'none';
-
-            // Sort data by last name in ascending order
             data.sort((a, b) => a.LastName.localeCompare(b.LastName));
-
-            // Populate member select options
-            const uniqueNames = [...new Set(data.map(record => `${record.LastName}, ${record.FirstName}`))];
+            const filteredData = data.filter(record => {
+                const memberRecords = data.filter(r => `${r.LastName}, ${r.FirstName}` === `${record.LastName}, ${record.FirstName}`);
+                const worshipCount = memberRecords.filter(r => r.WorshipService).length;
+                const recentRecords = memberRecords.slice(-4);
+                const recentWorshipCount = recentRecords.filter(r => r.WorshipService).length;
+                return !(worshipCount >= 0 && worshipCount <= 4 && recentWorshipCount < 3);
+            });
+            const uniqueNames = [...new Set(filteredData.map(record => `${record.LastName}, ${record.FirstName}`))];
+            const fragment = document.createDocumentFragment();
             uniqueNames.forEach(name => {
                 const option = document.createElement('option');
                 option.value = name;
                 option.textContent = name;
-                memberSelect.appendChild(option);
+                fragment.appendChild(option);
             });
-
-            // Calculate total weeks in the data set
-            const totalWeeks = [...new Set(data.map(record => new Date(record.Date).toLocaleDateString()))].length;
-
-            // Calculate total number of possible Worship services
-            const totalPossibleWorshipServices = totalWeeks;
-
-            // Function to calculate attendance percentages and totals
+            memberSelect.appendChild(fragment);
+            const uniqueDates = [...new Set(filteredData.map(record => new Date(record.Date).toLocaleDateString()))];
+            const totalWeeks = uniqueDates.length;
             const calculateAttendance = (records, name) => {
-                const totalRecords = records.filter(record => `${record.LastName}, ${record.FirstName}` === name).length;
-                const worshipCount = records.filter(record => `${record.LastName}, ${record.FirstName}` === name && record.WorshipService).length;
-                const bibleClassCount = records.filter(record => `${record.LastName}, ${record.FirstName}` === name && record.BibleClass).length;
-                const worshipPercentage = totalWeeks ? (worshipCount / totalWeeks * 100).toFixed(2) : 0;
-                const bibleClassPercentage = worshipCount ? (bibleClassCount / worshipCount * 100).toFixed(2) : 0;
-                return { worshipPercentage, bibleClassPercentage, worshipCount, bibleClassCount, totalRecords };
-            };
-
-            // Function to check if a member is a visitor
-            const isVisitor = (records, name) => {
                 const memberRecords = records.filter(record => `${record.LastName}, ${record.FirstName}` === name);
                 const worshipCount = memberRecords.filter(record => record.WorshipService).length;
-                // Check if there are 3 weeks of attendance in the most recent 4-week stretch
-                const recentRecords = memberRecords.slice(-4);
-                const recentWorshipCount = recentRecords.filter(record => record.WorshipService).length;
-                return (worshipCount >= 0 && worshipCount <= 4 && recentWorshipCount < 3);
+                const bibleClassCount = memberRecords.filter(record => record.BibleClass).length;
+                const worshipPercentage = totalWeeks ? (worshipCount / totalWeeks * 100).toFixed(2) : 0;
+                const bibleClassPercentage = worshipCount ? (bibleClassCount / worshipCount * 100).toFixed(2) : 0;
+                return { worshipPercentage, bibleClassPercentage, worshipCount, bibleClassCount, totalRecords: memberRecords.length };
             };
-
-            // Function to render the table based on selected members
             const renderTable = (selectedMembers) => {
                 attendanceTable.innerHTML = '';
-                let currentDate = '';
+                const fragment = document.createDocumentFragment();
                 let altBg = true;
-
-                // Create the header rows
                 const dateHeaderRow = document.createElement('tr');
                 const serviceHeaderRow = document.createElement('tr');
                 dateHeaderRow.innerHTML = `<th>Name</th>`;
                 serviceHeaderRow.innerHTML = `<th></th>`;
-
-                // Sort unique dates from newest to oldest
-                const uniqueDates = [...new Set(data.map(record => new Date(record.Date).toLocaleDateString()))];
                 uniqueDates.sort((a, b) => new Date(b) - new Date(a));
                 uniqueDates.forEach(date => {
                     altBg = !altBg;
                     dateHeaderRow.innerHTML += `<th colspan="2" class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${date}</th>`;
-                    serviceHeaderRow.innerHTML += `
-                        <th class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">Worship</th>
-                        <th class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">Class</th>
-                    `;
+                    serviceHeaderRow.innerHTML += `<th class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">Worship</th><th class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">Class</th>`;
                 });
-                attendanceTable.appendChild(dateHeaderRow);
-                attendanceTable.appendChild(serviceHeaderRow);
-
-                // Add total attendance counts below each date
+                fragment.appendChild(dateHeaderRow);
+                fragment.appendChild(serviceHeaderRow);
                 const totalAttendanceRow = document.createElement('tr');
-                totalAttendanceRow.innerHTML = `<td></td>`; // Only one initial empty cell
+                totalAttendanceRow.innerHTML = `<td></td>`;
                 uniqueDates.forEach(date => {
-                    const totalWorshipAttendees = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length;
-                    const totalBibleClassAttendees = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length;
-                    totalAttendanceRow.innerHTML += `
-                        <td class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${totalWorshipAttendees}</td>
-                        <td class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${totalBibleClassAttendees}</td>
-                    `;
+                    const totalWorshipAttendees = filteredData.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length;
+                    const totalBibleClassAttendees = filteredData.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length;
+                    totalAttendanceRow.innerHTML += `<td class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${totalWorshipAttendees}</td><td class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${totalBibleClassAttendees}</td>`;
                 });
-                attendanceTable.appendChild(totalAttendanceRow);
-
+                fragment.appendChild(totalAttendanceRow);
                 uniqueNames.forEach((name, index) => {
-                    const { worshipPercentage, bibleClassPercentage, worshipCount, bibleClassCount, totalRecords } = calculateAttendance(data, name);
-
-                    // Determine color coding for worship attendance
+                    const { worshipPercentage, bibleClassPercentage, worshipCount, bibleClassCount } = calculateAttendance(filteredData, name);
                     let worshipColor = 'red';
-                    if (worshipPercentage >= 75) {
-                        worshipColor = 'green';
-                    } else if (worshipPercentage >= 50) {
-                        worshipColor = 'rgb(185, 92, 6)';
-                    }
-
-                    // Determine color coding for Bible class attendance
+                    if (worshipPercentage >= 75) worshipColor = 'green';
+                    else if (worshipPercentage >= 50) worshipColor = 'rgb(185, 92, 6)';
                     let bibleClassColor = 'red';
-                    if (bibleClassPercentage >= 75) {
-                        bibleClassColor = 'green';
-                    } else if (bibleClassPercentage >= 50) {
-                        bibleClassColor = 'rgb(185, 92, 6)';
-                    }
-
-                    // Skip visitors if the hide visitors checkbox is checked
-                    if (hideVisitorsCheckbox.checked && isVisitor(data, name)) {
-                        return;
-                    }
-
+                    if (bibleClassPercentage >= 75) bibleClassColor = 'green';
+                    else if (bibleClassPercentage >= 50) bibleClassColor = 'rgb(185, 92, 6)';
                     if (selectedMembers.length === 0 || selectedMembers.includes(name)) {
                         const nameRow = document.createElement('tr');
                         nameRow.classList.add(index % 2 === 0 ? 'row-bg-1' : 'row-bg-2');
                         nameRow.innerHTML = `<td class="nowrap"><span class="name">${name}</span><br>${worshipCount} Worships <span style="color:${worshipColor}">${worshipPercentage}%</span> - ${bibleClassCount} Bible Classes <span style="color:${bibleClassColor}">${bibleClassPercentage}%</span></td>`;
                         uniqueDates.forEach(date => {
-                            const record = data.find(record =>
-                                `${record.LastName}, ${record.FirstName}` === name &&
-                                new Date(record.Date).toLocaleDateString() === date
-                            );
+                            const record = filteredData.find(record => `${record.LastName}, ${record.FirstName}` === name && new Date(record.Date).toLocaleDateString() === date);
                             if (record) {
-                                nameRow.innerHTML += `
-                                    <td class="nowrap">${record.WorshipService ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
-                                    <td class="nowrap">${record.BibleClass ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>
-                                `;
+                                nameRow.innerHTML += `<td class="nowrap">${record.WorshipService ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td><td class="nowrap">${record.BibleClass ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>`;
                             } else {
-                                nameRow.innerHTML += `
-                                    <td class="nowrap"><span class="no-data">∅</span></td>
-                                    <td class="nowrap"><span class="no-data">∅</span></td>
-                                `;
+                                nameRow.innerHTML += `<td class="nowrap"><span class="no-data">∅</span></td><td class="nowrap"><span class="no-data">∅</span></td>`;
                             }
                         });
-                        attendanceTable.appendChild(nameRow);
+                        fragment.appendChild(nameRow);
                     }
                 });
+                attendanceTable.appendChild(fragment);
             };
-
-            // Initial render with all members
             renderTable([]);
-
-            // Event listener for member selection change
             memberSelect.addEventListener('change', () => {
                 const selectedOptions = Array.from(memberSelect.selectedOptions).map(option => option.value);
                 renderTable(selectedOptions);
             });
-
-            // Event listener for clear selection button
             clearSelectionButton.addEventListener('click', () => {
                 memberSelect.selectedIndex = -1;
                 renderTable([]);
             });
-
-            // Event listener for hide visitors checkbox
-            hideVisitorsCheckbox.addEventListener('change', () => {
-                const selectedOptions = Array.from(memberSelect.selectedOptions).map(option => option.value);
-                renderTable(selectedOptions);
-            });
-
-// Define uniqueDates here to ensure it is in scope
-const uniqueDates = [...new Set(data.map(record => new Date(record.Date).toLocaleDateString()))];
-uniqueDates.sort((a, b) => new Date(b) - new Date(a));
-// Add information block content
-infoBlock.innerHTML = `
-    <p><strong>Legend:</strong></p>
-    <p><span class="checkmark">✓</span> Attended <span class="cross">✗</span> Not Attended <span class="no-data">∅</span> Attendance not recorded</p>
-`;
-const ctx = document.getElementById('attendanceChart').getContext('2d');
-const attendanceChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: uniqueDates, // Keep the order as newest to oldest
-        datasets: [
-            {
-                label: 'Worship Attendance',
-                data: uniqueDates.map(date => data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length),
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                fill: false,
-                tension: 0.1,
-                yAxisID: 'y'
-            },
-            {
-                label: 'Bible Class Attendance',
-                data: uniqueDates.map(date => data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length),
-                borderColor: 'rgba(255, 99, 132, 1)',
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                fill: false,
-                tension: 0.1,
-                yAxisID: 'y'
-            },
-            
-        ]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            x: {
-                title: {
-                    display: true,
-                    text: 'Weeks'
-                }
-            },
-            y: {
-                title: {
-                    display: true,
-                    text: 'Attendance'
+            infoBlock.innerHTML = `<p>Total Number of Possible Worship Services: ${totalWeeks}</p><p><strong>Legend:</strong></p><p><span class="checkmark">✓</span> Attended <span class="cross">✗</span> Not Attended <span class="no-data">∅</span> Attendance not recorded</p>`;
+            const ctx = document.getElementById('attendanceChart').getContext('2d');
+            const attendanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: uniqueDates.reverse(),
+                    datasets: [
+                        {
+                            label: 'Worship Attendance',
+                            data: uniqueDates.map(date => filteredData.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length),
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            fill: false,
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Bible Class Attendance',
+                            data: uniqueDates.map(date => filteredData.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length),
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            fill: false,
+                            tension: 0.1
+                        }
+                    ]
                 },
-                position: 'left'
-            }
-        }
-    }
-});
-
-
-}).catch(error => {
-    console.error('Error fetching attendance data:', error);
-    // Hide spinner in case of error
-    spinner.style.display = 'none';
-});
-
-
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Weeks'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Attendance'
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching attendance data:', error);
+            spinner.style.display = 'none';
+        });
 });
