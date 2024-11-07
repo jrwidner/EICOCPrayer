@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (worshipPercentage >= 75) {
                         worshipColor = 'green';
                     } else if (worshipPercentage >= 50) {
-                        worshipColor = 'orange';
+                        worshipColor = '#FFBF00;';
                     }
 
                     // Determine color coding for Bible class attendance
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (bibleClassPercentage >= 75) {
                         bibleClassColor = 'green';
                     } else if (bibleClassPercentage >= 50) {
-                        bibleClassColor = 'orange';
+                        bibleClassColor = '#FFBF00;';
                     }
 
                     // Skip visitors if the hide visitors checkbox is checked
@@ -133,8 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 `;
                             } else {
                                 nameRow.innerHTML += `
-                                    <td class="nowrap"><span class="no-data">✗</span></td>
-                                    <td class="nowrap"><span class="no-data">✗</span></td>
+                                    <td class="nowrap"><span class="no-data">∅</span></td>
+                                    <td class="nowrap"><span class="no-data">∅</span></td>
                                 `;
                             }
                         });
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
             infoBlock.innerHTML = `
                 <p>Total Number of Possible Worship Services: ${totalPossibleWorshipServices}</p>
                 <p><strong>Legend:</strong></p>
-                <p><span class="checkmark">✓</span> Attended <span class="cross">✗</span> Not Attended <span class="no-data">✗</span> No Data</p>
+                <p><span class="checkmark">✓</span> Attended <span class="cross">✗</span> Not Attended <span class="no-data">∅</span> Attendance not recored</p>
             `;
         })
         .catch(error => {
