@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const attendanceTable = document.getElementById('attendance-table').querySelector('tbody');
     const memberSelect = document.getElementById('member-select');
     const clearSelectionButton = document.getElementById('clear-selection');
+    const hideVisitorsCheckbox = document.getElementById('hide-visitors-checkbox');
     const infoBlock = document.getElementById('info-block');
     spinner.style.display = 'block';
     fetch('/api/attendance-difference')
@@ -71,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (selectedMembers.length === 0 || selectedMembers.includes(name)) {
                         const nameRow = document.createElement('tr');
                         nameRow.classList.add(index % 2 === 0 ? 'row-bg-1' : 'row-bg-2');
-                        nameRow.innerHTML = `<td class="nowrap"><span class="name">${name}</span><br>${worshipCount} Worships <span style="color:${worshipColor}">${worshipPercentage}%</span> - ${bibleClassCount} Bible Classes <span style="color:${bibleClassColor}">${bibleClassPercentage}%</span></td>`;
+                        nameRow.innerHTML = `<td class="nowrap"><span class="name">${name}</span><br>${worshipCount} Worships <span style="color:${worshipColor}">${worshipPercentage}%</span> - ${bibleClassCount} Bible Classes <span style="color:${bibleClassColor}\">${bibleClassPercentage}%</span></td>`;
                         uniqueDates.forEach(date => {
                             const record = filteredData.find(record => `${record.LastName}, ${record.FirstName}` === name && new Date(record.Date).toLocaleDateString() === date);
                             if (record) {
@@ -93,6 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
             clearSelectionButton.addEventListener('click', () => {
                 memberSelect.selectedIndex = -1;
                 renderTable([]);
+            });
+            hideVisitorsCheckbox.addEventListener('change', () => {
+                const selectedOptions = Array.from(memberSelect.selectedOptions).map(option => option.value);
+                renderTable(selectedOptions);
             });
             infoBlock.innerHTML = `<p><strong>Legend:</strong></p><p><span class="checkmark">✓</span> Attended <span class="cross">✗</span> Not Attended <span class="no-data">∅</span> Attendance not recorded</p>`;
             const ctx = document.getElementById('attendanceChart').getContext('2d');
