@@ -171,11 +171,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p>Bible Class Attendance Percentage: (Number of Bible Classes Attended / Number of Worship Services Attended) * 100</p>
                 <p><strong>Legend:</strong></p>
                 <p><span class="checkmark">✓</span> Attended</p>
-                <p><span class="cross">✗</span> Did not attend Bible Class</p>
-                <p><span class="no-data">✗</span> Did not attend Worshp or Bible Class</p>
+                <p><span class="cross">✗</span> Not Attended</p>
+                <p><span class="no-data">✗</span> No Data</p>
             `;
         })
         .catch(error => {
             console.error('Error fetching attendance data:', error);
             // Hide spinner in case of error
             spinner.style.display = 'none';
+        });
+});
