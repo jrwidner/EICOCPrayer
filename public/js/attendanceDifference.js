@@ -18,17 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             spinner.style.display = 'none';
 
-            // Log the type and content of data
-            console.log('Data type:', typeof data);
-            console.log('Data content:', data);
+            const attendanceData = data.attendancePercentages;
 
-            if (!Array.isArray(data)) {
-                throw new TypeError('Expected data to be an array');
-            }
+            attendanceData.sort((a, b) => a.LastName.localeCompare(b.LastName));
 
-            data.sort((a, b) => a.LastName.localeCompare(b.LastName));
-
-            const uniqueNames = [...new Set(data.map(record => `${record.LastName}, ${record.FirstName}`))];
+            const uniqueNames = [...new Set(attendanceData.map(record => `${record.LastName}, ${record.FirstName}`))];
             const fragment = document.createDocumentFragment();
             uniqueNames.forEach(name => {
                 const option = document.createElement('option');
@@ -38,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             memberSelect.appendChild(fragment);
 
-            const uniqueDates = [...new Set(data.map(record => new Date(record.Date).toLocaleDateString()))];
+            const uniqueDates = [...new Set(attendanceData.map(record => new Date(record.Date).toLocaleDateString()))];
             const totalWeeks = uniqueDates.length;
 
             const filterDataByAttendance = (data, criteria) => {
@@ -52,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const renderTable = (selectedMembers, worshipFilterCriteria = 'all') => {
                 attendanceTable.innerHTML = '';
-                let filteredData = filterDataByAttendance(data, worshipFilterCriteria);
+                let filteredData = filterDataByAttendance(attendanceData, worshipFilterCriteria);
 
                 const filteredNames = [...new Set(filteredData.map(record => `${record.LastName}, ${record.FirstName}`))];
 
@@ -134,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     datasets: [
                         {
                             label: 'Worship Attendance',
-                            data: uniqueDates.map(date => data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length),
+                            data: uniqueDates.map(date => attendanceData.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length),
                             borderColor: 'rgba(75, 192, 192, 1)',
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
                             fill: false,
@@ -142,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         {
                             label: 'Bible Class Attendance',
-                            data: uniqueDates.map(date => data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length),
+                            data: uniqueDates.map(date => attendanceData.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length),
                             borderColor: 'rgba(255, 99, 132, 1)',
                             backgroundColor: 'rgba(255, 99, 132, 0.2)',
                             fill: false,
