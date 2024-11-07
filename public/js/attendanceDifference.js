@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     dateHeaderRow.innerHTML += `<th colspan="2" class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${date}</th>`;
                     serviceHeaderRow.innerHTML += `
                         <th class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">Worship</th>
-                        <th class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">Bible Class</th>
+                        <th class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">Class</th>
                     `;
                 });
                 attendanceTable.appendChild(dateHeaderRow);

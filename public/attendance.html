@@ -83,6 +83,13 @@
         .name {
             font-size: 1.2em; /* Increase font size for names */
         }
+        .info-block {
+            margin-left: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            font-size: 0.8em;
+        }
     </style>
 </head>
 <body>
@@ -103,12 +110,16 @@
             <tr>
                 <td><button id="clear-selection">Clear Selection</button></td>
             </tr>
+            <tr>
+                <td>
+                    <label>
+                        <input type="checkbox" id="hide-visitors-checkbox"> Hide Visitors
+                    </label>
+                </td>
+            </tr>
         </table>
-        <label>
-            <input type="checkbox" id="hide-visitors-checkbox"> Hide Visitors
-        </label>
+        <div id="info-block" class="info-block"></div> <!-- Add this line -->
     </div>
-    <div id="info-block"></div> <!-- Add this line -->
     <table id="attendance-table" border="0">
         <tbody>
             <!-- Data will be inserted here by JavaScript -->
