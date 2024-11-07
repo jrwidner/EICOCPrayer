@@ -107,6 +107,7 @@ router.post('/upload', upload.array('files'), async (req, res) => {
         res.send(response.data);
     } catch (error) {
         console.error(`Error uploading attendance: ${error.message}`);
+        console.error(error.stack); // Log the stack trace for debugging
         res.status(500).json({ error: `${error.message} - URL: UPLOAD_ATTENDANCE` });
     }
 });
@@ -145,7 +146,8 @@ router.get('/attendance-difference', async (req, res) => {
         // Return all combined records
         res.json(Object.values(combinedRecords));
     } catch (err) {
-        console.error('Error fetching attendance data:', err);
+        console.error('Error fetching attendance data:', err.message);
+        console.error(err.stack); // Log the stack trace for debugging
         res.status(500).json({ error: `Error fetching attendance data: ${err.message}` });
     }
 });
