@@ -41,7 +41,6 @@ function extractNamesFromExcel(sheet, date, serviceType) {
     return records;
 }
 
-
 // Route to get all prayer requests
 router.get('/prayer-requests', async (req, res) => {
     try {
@@ -139,6 +138,7 @@ router.get('/attendance-difference', async (req, res) => {
             return acc;
         }, {});
 
+        // Return all combined records
         res.json(Object.values(combinedRecords));
     } catch (err) {
         console.error('Error fetching attendance data:', err);
