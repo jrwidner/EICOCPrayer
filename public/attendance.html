@@ -98,8 +98,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>Attendance by Date and Service</h1>
+    
     <div id="spinner" class="spinner" role="status" aria-live="polite">Loading...</div>
+    <h1 valign="Center-align">Attendance for the previous 52 Sundays</h1>
+    <div id="info-block" class="info-block"></div>
     <div class="selection-container">
         <table class="selection-table">
             <tr>
@@ -123,7 +125,7 @@
                 </td>
             </tr>
         </table>
-        <div id="info-block" class="info-block"></div>
+       
         <div class="chart-container">
             <canvas id="attendanceChart" width="800" height="180"></canvas>
         </div>

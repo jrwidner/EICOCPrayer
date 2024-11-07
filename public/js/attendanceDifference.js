@@ -169,7 +169,6 @@ const uniqueDates = [...new Set(data.map(record => new Date(record.Date).toLocal
 uniqueDates.sort((a, b) => new Date(b) - new Date(a));
 // Add information block content
 infoBlock.innerHTML = `
-    <p>Total Number of Possible Worship Services: ${totalPossibleWorshipServices}</p>
     <p><strong>Legend:</strong></p>
     <p><span class="checkmark">✓</span> Attended <span class="cross">✗</span> Not Attended <span class="no-data">∅</span> Attendance not recorded</p>
 `;
