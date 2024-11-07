@@ -86,13 +86,19 @@
         .info-block {
             margin-left: 20px;
             padding: 10px;
-            border: 1px solid #ddd;
-            background-color: #f9f9f9;
             font-size: 0.8em;
+            width: 1024px;
+            margin: 0 auto; /* Centers the div horizontally */
+            text-align: center; /* Centers the contents inside the div */
         }
         .chart-container {
-            width: 45%;
+            width: 800px;
             margin-left: 20px;
+        }
+        .centered-div {
+            width: 1024px;
+            margin: 0 auto; /* Centers the div horizontally */
+            text-align: center; /* Centers the contents inside the div */
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -100,7 +106,7 @@
 <body>
     
     <div id="spinner" class="spinner" role="status" aria-live="polite">Loading...</div>
-    <h1 valign="Center-align">Attendance for the previous 52 Sundays</h1>
+    <div class="centered-div"><h1>Attendance for the previous 52 Sundays</h1></div>
     <div id="info-block" class="info-block"></div>
     <div class="selection-container">
         <table class="selection-table">
