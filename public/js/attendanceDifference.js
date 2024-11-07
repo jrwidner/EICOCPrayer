@@ -168,14 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
 const uniqueDates = [...new Set(data.map(record => new Date(record.Date).toLocaleDateString()))];
 uniqueDates.sort((a, b) => new Date(b) - new Date(a));
 
-// Add information block content
-infoBlock.innerHTML = `
-    <p>Total Number of Possible Worship Services: ${totalPossibleWorshipServices}</p>
-    <p><strong>Legend:</strong></p>
-    <p><span class="checkmark">✓</span> Attended <span class="cross">✗</span> Not Attended <span class="no-data">∅</span> Attendance not recorded</p>
-`;
-
-// Chart.js integration
 const ctx = document.getElementById('attendanceChart').getContext('2d');
 const attendanceChart = new Chart(ctx, {
     type: 'line',
@@ -188,7 +180,8 @@ const attendanceChart = new Chart(ctx, {
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 fill: false,
-                tension: 0.1
+                tension: 0.1,
+                yAxisID: 'y'
             },
             {
                 label: 'Bible Class Attendance',
@@ -196,7 +189,21 @@ const attendanceChart = new Chart(ctx, {
                 borderColor: 'rgba(255, 99, 132, 1)',
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 fill: false,
-                tension: 0.1
+                tension: 0.1,
+                yAxisID: 'y'
+            },
+            {
+                label: 'Bible Class Attendance Percentage',
+                data: uniqueDates.map(date => {
+                    const totalStudents = data.filter(record => new Date(record.Date).toLocaleDateString() === date).reduce((sum, record) => sum + record.TotalStudents, 0);
+                    const attendedStudents = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length;
+                    return (attendedStudents / totalStudents) * 100;
+                }),
+                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                fill: false,
+                tension: 0.1,
+                yAxisID: 'y1'
             }
         ]
     },
@@ -213,11 +220,23 @@ const attendanceChart = new Chart(ctx, {
                 title: {
                     display: true,
                     text: 'Attendance'
+                },
+                position: 'left'
+            },
+            y1: {
+                title: {
+                    display: true,
+                    text: 'Attendance Percentage (%)'
+                },
+                position: 'right',
+                grid: {
+                    drawOnChartArea: false
                 }
             }
         }
     }
 });
+
 
 }).catch(error => {
     console.error('Error fetching attendance data:', error);
