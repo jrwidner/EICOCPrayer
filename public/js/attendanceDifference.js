@@ -197,19 +197,7 @@ const attendanceChart = new Chart(ctx, {
                 tension: 0.1,
                 yAxisID: 'y'
             },
-            {
-                label: 'Bible Class Attendance Percentage',
-                data: uniqueDates.map(date => {
-                    const totalStudents = data.filter(record => new Date(record.Date).toLocaleDateString() === date).reduce((sum, record) => sum + record.TotalStudents, 0);
-                    const attendedStudents = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length;
-                    return (attendedStudents / totalStudents) * 100;
-                }),
-                borderColor: 'rgba(54, 162, 235, 1)',
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                fill: false,
-                tension: 0.1,
-                yAxisID: 'y1'
-            }
+            
         ]
     },
     options: {
@@ -227,16 +215,6 @@ const attendanceChart = new Chart(ctx, {
                     text: 'Attendance'
                 },
                 position: 'left'
-            },
-            y1: {
-                title: {
-                    display: true,
-                    text: 'Attendance Percentage (%)'
-                },
-                position: 'right',
-                grid: {
-                    drawOnChartArea: false
-                }
             }
         }
     }
