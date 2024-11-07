@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (worshipPercentage >= 75) {
                         worshipColor = 'green';
                     } else if (worshipPercentage >= 50) {
-                        worshipColor = '#FFBF00;';
+                        worshipColor = 'rgb(185, 92, 6)';
                     }
 
                     // Determine color coding for Bible class attendance
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (bibleClassPercentage >= 75) {
                         bibleClassColor = 'green';
                     } else if (bibleClassPercentage >= 50) {
-                        bibleClassColor = '#FFBF00;';
+                        bibleClassColor = 'rgb(185, 92, 6)';
                     }
 
                     // Skip visitors if the hide visitors checkbox is checked
