@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const memberSelect = document.getElementById('member-select');
     const clearSelectionButton = document.getElementById('clear-selection');
     const attendanceFilter = document.getElementById('attendance-filter');
-    const bibleClassFilter = document.getElementById('bible-class-filter');
     const infoBlock = document.getElementById('info-block');
     const ctx = document.getElementById('attendanceChart').getContext('2d');
   
@@ -42,26 +41,19 @@ document.addEventListener('DOMContentLoaded', () => {
           return { worshipPercentage, bibleClassPercentage, worshipCount, bibleClassCount, totalRecords: memberRecords.length };
         };
   
-        const filterDataByAttendance = (data, criteria, type) => {
+        const filterDataByAttendance = (data, criteria) => {
           return data.filter(record => {
-            const { worshipPercentage, bibleClassPercentage } = calculateAttendance(data, `${record.LastName}, ${record.FirstName}`);
-            if (type === 'worship') {
-              if (criteria === 'high') return worshipPercentage >= 75;
-              if (criteria === 'medium') return worshipPercentage >= 50 && worshipPercentage < 75;
-              if (criteria === 'low') return worshipPercentage < 50;
-            } else if (type === 'bibleClass') {
-              if (criteria === 'high') return bibleClassPercentage >= 75;
-              if (criteria === 'medium') return bibleClassPercentage >= 50 && bibleClassPercentage < 75;
-              if (criteria === 'low') return bibleClassPercentage < 50;
-            }
+            const { worshipPercentage } = calculateAttendance(data, `${record.LastName}, ${record.FirstName}`);
+            if (criteria === 'high') return worshipPercentage >= 75;
+            if (criteria === 'medium') return worshipPercentage >= 50 && worshipPercentage < 75;
+            if (criteria === 'low') return worshipPercentage < 50;
             return true; // 'all' criteria
           });
         };
   
-        const renderTable = (selectedMembers, worshipFilterCriteria = 'all', bibleClassFilterCriteria = 'all') => {
+        const renderTable = (selectedMembers, worshipFilterCriteria = 'all') => {
           attendanceTable.innerHTML = '';
-          let filteredData = filterDataByAttendance(data, worshipFilterCriteria, 'worship');
-          filteredData = filterDataByAttendance(filteredData, bibleClassFilterCriteria, 'bibleClass');
+          let filteredData = filterDataByAttendance(data, worshipFilterCriteria);
   
           const fragment = document.createDocumentFragment();
           let altBg = true;
@@ -113,28 +105,21 @@ document.addEventListener('DOMContentLoaded', () => {
           attendanceTable.appendChild(fragment);
         };
   
-        renderTable([], 'all', 'all');
+        renderTable([], 'all');
   
         attendanceFilter.addEventListener('change', () => {
           const worshipCriteria = attendanceFilter.value;
-          const bibleClassCriteria = bibleClassFilter.value;
-          renderTable(Array.from(memberSelect.selectedOptions).map(option => option.value), worshipCriteria, bibleClassCriteria);
-        });
-  
-        bibleClassFilter.addEventListener('change', () => {
-          const worshipCriteria = attendanceFilter.value;
-          const bibleClassCriteria = bibleClassFilter.value;
-          renderTable(Array.from(memberSelect.selectedOptions).map(option => option.value), worshipCriteria, bibleClassCriteria);
+          renderTable(Array.from(memberSelect.selectedOptions).map(option => option.value), worshipCriteria);
         });
   
         memberSelect.addEventListener('change', () => {
           const selectedOptions = Array.from(memberSelect.selectedOptions).map(option => option.value);
-          renderTable(selectedOptions, attendanceFilter.value, bibleClassFilter.value);
+          renderTable(selectedOptions, attendanceFilter.value);
         });
   
         clearSelectionButton.addEventListener('click', () => {
           memberSelect.selectedIndex = -1;
-          renderTable([], attendanceFilter.value, bibleClassFilter.value);
+          renderTable([], attendanceFilter.value);
         });
   
         infoBlock.innerHTML = `<p><strong>Legend:</strong></p><p><span class="checkmark">✓</span> Attended <span class="cross">✗</span> Not Attended <span class="no-data">∅</span> Attendance not recorded</p>`;
@@ -150,31 +135,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 fill: false,
-                            tension: 0.1
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Weeks'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Attendance'
-                            }
-                        }
-                    }
+                tension: 0.1
+              },
+              {
+                label: 'Bible Class Attendance',
+                data: uniqueDates.map(date => data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length),
+                borderColor: 'rgba(255, 99, 132, 1)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                fill: false,
+                tension: 0.1
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: 'Weeks'
                 }
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching attendance data:', error);
-            spinner.style.display = 'none';
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: 'Attendance'
+                }
+              }
+            }
+          }
         });
-});
+      })
+      .catch(error => {
+        console.error('Error fetching attendance data:', error);
+        spinner.style.display = 'none';
+      });
+  });
+  
