@@ -18,7 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             spinner.style.display = 'none';
 
+            // Extract the attendancePercentages array from the data object
             const attendanceData = data.attendancePercentages;
+
+            // Check if attendanceData is an array
+            if (!Array.isArray(attendanceData)) {
+                throw new TypeError('Expected attendanceData to be an array');
+            }
 
             attendanceData.sort((a, b) => a.LastName.localeCompare(b.LastName));
 
