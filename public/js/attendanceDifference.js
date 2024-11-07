@@ -162,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => {
             console.error('Error fetching attendance data:', error);
+            console.error(err.stack); // Log the stack trace for debugging
             spinner.style.display = 'none';
         });
 });
