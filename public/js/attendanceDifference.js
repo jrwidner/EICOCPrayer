@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 memberSelect.selectedIndex = -1;
                 renderTable([]);
             });
-            infoBlock.innerHTML = `<p>Total Number of Possible Worship Services: ${totalWeeks}</p><p><strong>Legend:</strong></p><p><span class="checkmark">✓</span> Attended <span class="cross">✗</span> Not Attended <span class="no-data">∅</span> Attendance not recorded</p>`;
+            infoBlock.innerHTML = `<p><strong>Legend:</strong></p><p><span class="checkmark">✓</span> Attended <span class="cross">✗</span> Not Attended <span class="no-data">∅</span> Attendance not recorded</p>`;
             const ctx = document.getElementById('attendanceChart').getContext('2d');
             const attendanceChart = new Chart(ctx, {
                 type: 'line',
