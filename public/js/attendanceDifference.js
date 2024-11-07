@@ -7,6 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const infoBlock = document.getElementById('info-block');
     const ctx = document.getElementById('attendanceChart')?.getContext('2d');
 
+    if (!spinner) console.error('Spinner element is missing in the DOM.');
+    if (!attendanceTable) console.error('Attendance table element is missing in the DOM.');
+    if (!memberSelect) console.error('Member select element is missing in the DOM.');
+    if (!clearSelectionButton) console.error('Clear selection button is missing in the DOM.');
+    if (!hideVisitorsCheckbox) console.error('Hide visitors checkbox is missing in the DOM.');
+    if (!infoBlock) console.error('Info block element is missing in the DOM.');
+    if (!ctx) console.error('Attendance chart context is missing in the DOM.');
+
     if (!spinner || !attendanceTable || !memberSelect || !clearSelectionButton || !hideVisitorsCheckbox || !infoBlock || !ctx) {
         console.error('One or more elements are missing in the DOM.');
         return;
