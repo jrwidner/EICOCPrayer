@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Add total attendance counts below each date
                 const totalAttendanceRow = document.createElement('tr');
-                totalAttendanceRow.innerHTML = `<td></td><td></td>`;
+                totalAttendanceRow.innerHTML = `<td></td>`; // Only one initial empty cell
                 uniqueDates.forEach(date => {
                     const totalWorshipAttendees = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length;
                     const totalBibleClassAttendees = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length;
