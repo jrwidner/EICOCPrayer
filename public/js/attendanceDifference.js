@@ -5,6 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearSelectionButton = document.getElementById('clear-selection');
     const hideVisitorsCheckbox = document.getElementById('hide-visitors-checkbox');
     const infoBlock = document.getElementById('info-block');
+    const ctx = document.getElementById('attendanceChart')?.getContext('2d');
+
+    if (!spinner || !attendanceTable || !memberSelect || !clearSelectionButton || !hideVisitorsCheckbox || !infoBlock || !ctx) {
+        console.error('One or more elements are missing in the DOM.');
+        return;
+    }
+
     spinner.style.display = 'block';
     fetch('/api/attendance-difference')
         .then(response => response.json())
@@ -100,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderTable(selectedOptions);
             });
             infoBlock.innerHTML = `<p><strong>Legend:</strong></p><p><span class="checkmark">✓</span> Attended <span class="cross">✗</span> Not Attended <span class="no-data">∅</span> Attendance not recorded</p>`;
-            const ctx = document.getElementById('attendanceChart').getContext('2d');
             const attendanceChart = new Chart(ctx, {
                 type: 'line',
                 data: {
