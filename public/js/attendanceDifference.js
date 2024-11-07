@@ -55,6 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
           attendanceTable.innerHTML = '';
           let filteredData = filterDataByAttendance(data, worshipFilterCriteria);
   
+          const filteredNames = [...new Set(filteredData.map(record => `${record.LastName}, ${record.FirstName}`))];
+  
           const fragment = document.createDocumentFragment();
           let altBg = true;
           const dateHeaderRow = document.createElement('tr');
@@ -79,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
           fragment.appendChild(totalAttendanceRow);
   
-          uniqueNames.forEach((name, index) => {
+          filteredNames.forEach((name, index) => {
             const { worshipPercentage, bibleClassPercentage, worshipCount, bibleClassCount } = calculateAttendance(filteredData, name);
             let worshipColor = 'red';
             if (worshipPercentage >= 75) worshipColor = 'green';
