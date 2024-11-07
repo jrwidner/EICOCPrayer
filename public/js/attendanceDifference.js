@@ -13,21 +13,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     spinner.style.display = 'block';
+
     fetch('/api/attendance-difference')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             spinner.style.display = 'none';
+            console.log('Data received from API:', data); // Debug logging
 
             // Extract the attendancePercentages array from the data object
             const attendanceData = data.attendancePercentages;
+            console.log('attendanceData:', attendanceData); // Debug logging
 
             // Check if attendanceData is an array
             if (!Array.isArray(attendanceData)) {
                 throw new TypeError('Expected attendanceData to be an array');
             }
-
             attendanceData.sort((a, b) => a.LastName.localeCompare(b.LastName));
-
             const uniqueNames = [...new Set(attendanceData.map(record => `${record.LastName}, ${record.FirstName}`))];
             const fragment = document.createDocumentFragment();
             uniqueNames.forEach(name => {
@@ -37,10 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 fragment.appendChild(option);
             });
             memberSelect.appendChild(fragment);
-
             const uniqueDates = [...new Set(attendanceData.map(record => new Date(record.Date).toLocaleDateString()))];
             const totalWeeks = uniqueDates.length;
-
             const filterDataByAttendance = (data, criteria) => {
                 return data.filter(record => {
                     if (criteria === 'high') return record.WorshipAttendancePercentage >= 75;
@@ -49,13 +53,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     return true; // 'all' criteria
                 });
             };
-
             const renderTable = (selectedMembers, worshipFilterCriteria = 'all') => {
                 attendanceTable.innerHTML = '';
                 let filteredData = filterDataByAttendance(attendanceData, worshipFilterCriteria);
-
                 const filteredNames = [...new Set(filteredData.map(record => `${record.LastName}, ${record.FirstName}`))];
-
                 const fragment = document.createDocumentFragment();
                 let altBg = true;
                 const dateHeaderRow = document.createElement('tr');
@@ -70,7 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 fragment.appendChild(dateHeaderRow);
                 fragment.appendChild(serviceHeaderRow);
-
                 const totalAttendanceRow = document.createElement('tr');
                 totalAttendanceRow.innerHTML = `<td></td>`;
                 uniqueDates.forEach(date => {
@@ -79,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     totalAttendanceRow.innerHTML += `<td class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${totalWorshipAttendees}</td><td class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${totalBibleClassAttendees}</td>`;
                 });
                 fragment.appendChild(totalAttendanceRow);
-
                 filteredNames.forEach((name, index) => {
                     const memberRecord = filteredData.find(record => `${record.LastName}, ${record.FirstName}` === name);
                     if (memberRecord) {
@@ -107,26 +106,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 attendanceTable.appendChild(fragment);
             };
-
             renderTable([], 'all');
-
             attendanceFilter.addEventListener('change', () => {
                 const worshipCriteria = attendanceFilter.value;
                 renderTable(Array.from(memberSelect.selectedOptions).map(option => option.value), worshipCriteria);
             });
-
             memberSelect.addEventListener('change', () => {
                 const selectedOptions = Array.from(memberSelect.selectedOptions).map(option => option.value);
                 renderTable(selectedOptions, attendanceFilter.value);
             });
-
             clearSelectionButton.addEventListener('click', () => {
                 memberSelect.selectedIndex = -1;
                 renderTable([], attendanceFilter.value);
             });
-
             infoBlock.innerHTML = `<p><strong>Legend:</strong></p><p><span class="checkmark">✓</span> Attended <span class="cross">✗</span> Not Attended <span class="no-data">∅</span> Attendance not recorded</p>`;
-
             const attendanceChart = new Chart(ctx, {
                 type: 'line',
                 data: {
