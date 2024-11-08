@@ -41,6 +41,7 @@ function extractNamesFromExcel(sheet, date, serviceType) {
     return records;
 }
 
+
 // Route to get all prayer requests
 router.get('/prayer-requests', async (req, res) => {
     try {
@@ -107,7 +108,6 @@ router.post('/upload', upload.array('files'), async (req, res) => {
         res.send(response.data);
     } catch (error) {
         console.error(`Error uploading attendance: ${error.message}`);
-        console.error(error.stack); // Log the stack trace for debugging
         res.status(500).json({ error: `${error.message} - URL: UPLOAD_ATTENDANCE` });
     }
 });
@@ -118,10 +118,6 @@ router.get('/attendance-difference', async (req, res) => {
         const response = await axios.get('GET_ATTENDANCE');
         const attendanceRecords = response.data;
 
-        // Debug logging to check the type and content of attendanceRecords
-        console.log('Type of attendanceRecords:', typeof attendanceRecords);
-        console.log('Content of attendanceRecords:', attendanceRecords);
-
         // Combine records by name and date
         const combinedRecords = attendanceRecords.reduce((acc, record) => {
             const key = `${record.FirstName}-${record.LastName}-${record.Date}`;
@@ -131,27 +127,21 @@ router.get('/attendance-difference', async (req, res) => {
                     FirstName: record.FirstName,
                     LastName: record.LastName,
                     WorshipService: false,
-                    BibleClass: false,
-                    WorshipAttendancePercentage: 0,
-                    BibleClassAttendancePercentage: 0
+                    BibleClass: false
                 };
             }
-            if (record.ServiceType && record.ServiceType.includes('Worship')) {
+            if (record.ServiceType.includes('Worship')) {
                 acc[key].WorshipService = true;
-                acc[key].WorshipAttendancePercentage = record.WorshipAttendancePercentage;
             }
-            if (record.ServiceType && record.ServiceType.includes('Bible')) {
+            if (record.ServiceType.includes('Bible')) {
                 acc[key].BibleClass = true;
-                acc[key].BibleClassAttendancePercentage = record.BibleClassAttendancePercentage;
             }
             return acc;
         }, {});
 
-        // Return all combined records
         res.json(Object.values(combinedRecords));
     } catch (err) {
-        console.error('Error fetching attendance data:', err.message);
-        console.error(err.stack); // Log the stack trace for debugging
+        console.error('Error fetching attendance data:', err);
         res.status(500).json({ error: `Error fetching attendance data: ${err.message}` });
     }
 });
