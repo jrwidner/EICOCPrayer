@@ -146,4 +146,15 @@ router.get('/attendance-difference', async (req, res) => {
     }
 });
 
+// Route to get Attendance percentage
+router.get('/attendance_percent', async (req, res) => {
+    try {
+        const response = await axios.get('GETATTENDENCEPERCENT_ADDRESS');
+        res.json(response.data);
+    } catch (error) {
+        console.error(`Error fetching attendance_percent: ${error.message}`);
+        res.status(500).json({ error: `${error.message} - URL: GETATTENDENCEPERCENT_ADDRESS` });
+    }
+});
+
 module.exports = router;

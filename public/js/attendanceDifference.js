@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const totalWeeks = uniqueDates.size;
+            const sortedDates = Array.from(uniqueDates).sort((a, b) => new Date(b) - new Date(a));
 
             const fragment = document.createDocumentFragment();
             uniqueNames.forEach(name => {
@@ -73,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const serviceHeaderRow = document.createElement('tr');
                 dateHeaderRow.innerHTML = `<th>Name</th>`;
                 serviceHeaderRow.innerHTML = `<th></th>`;
-                const sortedDates = Array.from(uniqueDates).sort((a, b) => new Date(b) - new Date(a));
                 sortedDates.forEach(date => {
                     altBg = !altBg;
                     dateHeaderRow.innerHTML += `<th colspan="2" class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${date}</th>`;
