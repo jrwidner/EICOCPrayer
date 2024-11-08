@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const attendanceChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: sortedDates.reverse(),
+                    labels: sortedDates,
                     datasets: [
                         {
                             label: 'Worship Attendance',
