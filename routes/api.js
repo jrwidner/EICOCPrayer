@@ -67,11 +67,11 @@ router.post('/create-prayer-request', async (req, res) => {
 // Route to update an existing prayer request
 router.put('/update-prayer-request/:id', async (req, res) => {
     try {
-        const response = await axios.put(`UPDATEPRAYER_ADDRESS`, req.body);
+        const response = await axios.put(`https://eicocelderprayerfunc.azurewebsites.net/api/UpdatePrayerRequest`, req.body);
         res.status(response.status).json(response.data);
     } catch (error) {
         console.error(`Error updating prayer request: ${error.message}`);
-        res.status(500).json({ error: `${error.message} - URL: UPDATEPRAYER_ADDRESS` });
+        res.status(500).json({ error: `${error.message} - URL: https://eicocelderprayerfunc.azurewebsites.net/api/UpdatePrayerRequest` });
     }
 });
 
