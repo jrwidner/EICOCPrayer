@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = Object.fromEntries(formData.entries());
             const dateOfUpdate = new Date().toISOString().split('T')[0];
 
-            fetch(`/api/update-prayer-request/${data.updateId}`, {
+            fetch(`/api/update-prayer-request`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

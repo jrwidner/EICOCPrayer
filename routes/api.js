@@ -65,7 +65,7 @@ router.post('/create-prayer-request', async (req, res) => {
 });
 
 // Route to update an existing prayer request
-router.put('/update-prayer-request/:id', async (req, res) => {
+router.put('/update-prayer-request', async (req, res) => {
     const requestId = req.params.id;
     const requestBody = req.body;
 
