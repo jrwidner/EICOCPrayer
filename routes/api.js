@@ -65,41 +65,15 @@ router.post('/create-prayer-request', async (req, res) => {
 });
 
 
-
 // Route to update an existing prayer request
 router.put('/update-prayer-request/:id', async (req, res) => {
-    const requestId = req.params.id;
-    const requestBody = req.body;
-
-    console.log(`Updating prayer request with ID: ${requestId}`);
-    console.log('Request body:', requestBody);
-
     try {
-        // Call the UpdatePrayerRequest function
-        const context = {
-            log: console.log,
-            res: {}
-        };
-        const req = {
-            body: JSON.stringify({ ...requestBody, Id: requestId })
-        };
-
-        await updatePrayerRequest(context, req);
-
-        console.log('Response status:', context.res.status);
-        console.log('Response body:', context.res.body);
-        res.status(context.res.status).json(context.res.body);
+        const response = await axios.post(`https://eicocelderprayerfunc.azurewebsites.net/api/UpdatePrayerRequest`, req.body);
+        res.status(response.status).json(response.data);
     } catch (error) {
-        console.error(`Error updating prayer request: ${error.message}`);
-        if (error.response) {
-            console.error('Error response status:', error.response.status);
-            console.error('Error response data:', error.response.data);
-        }
-        res.status(500).json({ error: `${error.message} - URL: https://eicocelderprayerfunc.azurewebsites.net/api/UpdatePrayerRequest?id=${requestId}` });
+        res.status(500).json({ error: error.message });
     }
 });
-
-module.exports = router;
 
 // Route to handle multiple file uploads, convert Excel to JSON, and send to Azure Function
 router.post('/upload', upload.array('files'), async (req, res) => {
