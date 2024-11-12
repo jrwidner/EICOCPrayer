@@ -70,10 +70,10 @@ router.put('/update-prayer-request/:id', async (req, res) => {
     const requestBody = req.body;
 
     console.log(`Updating prayer request with ID: ${requestId}`);
-    console.log('Request body:', requestBody);
+    console.log('Request body:', req.body);
 
     try {
-        const response = await axios.put(`https://eicocelderprayerfunc.azurewebsites.net/api/UpdatePrayerRequest`, requestBody);
+        const response = await axios.put(`https://eicocelderprayerfunc.azurewebsites.net/api/UpdatePrayerRequest`, req.body);
         console.log('Response status:', response.status);
         console.log('Response data:', response.data);
         res.status(response.status).json(response.data);
