@@ -9,10 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    const requestsTableBody = requestsTable.querySelector('tbody');
+    let requestsTableBody = requestsTable.querySelector('tbody');
     if (!requestsTableBody) {
-        console.error('The tbody element is missing in the requests table.');
-        return;
+        console.warn('The tbody element is missing in the requests table. Creating a new tbody element.');
+        requestsTableBody = document.createElement('tbody');
+        requestsTable.appendChild(requestsTableBody);
     }
 
     // Function to capitalize the first letter of each word
