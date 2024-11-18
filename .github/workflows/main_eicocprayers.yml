@@ -82,17 +82,11 @@ jobs:
       - name: Display api.js contents
         run: cat ./routes/api.js
 
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A70AF8D4AA0D4D99BB64C9A399592BD5 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_48802C9470D0418A8CDBFB27B4E63667 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_5FA691B3879046CA87C1656DF9660040 }}
-
-      - name: Deploy to Azure Web App
+      - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'EicocPrayers'
+          app-name: 'EicocElderPrayers'
           slot-name: 'Production'
           package: .
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4CE3F9E63F594B7D92B4945364B062B2 }}
