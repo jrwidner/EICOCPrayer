@@ -67,6 +67,7 @@ jobs:
           sed -i 's|UPDATEPRAYER_ADDRESS|https://eicocelderprayerfunc.azurewebsites.net/api/UpdatePrayerRequest|g' ./routes/api.js
           sed -i 's|UPLOAD_ATTENDANCE|https://eicocelderprayerfunc.azurewebsites.net/api/UploadAttendance|g' ./routes/api.js
           sed -i 's|GET_ATTENDANCE|https://eicocelderprayerfunc.azurewebsites.net/api/GetAttendanceRecords|g' ./routes/api.js
+          sed -i 's|GETMISSED4WEEKS_ADDRESS|https://eicocelderprayerfunc.azurewebsites.net/api/GetAttendanceMissed4Weeks|g' ./routes/api.js
 
       - name: Replace placeholders in api.js for production
         if: github.ref == 'refs/heads/main'
@@ -76,6 +77,7 @@ jobs:
           sed -i 's|UPDATEPRAYER_ADDRESS|https://eicocelderprayerfunc.azurewebsites.net/api/UpdatePrayerRequest|g' ./routes/api.js
           sed -i 's|UPLOAD_ATTENDANCE|https://eicocelderprayerfunc.azurewebsites.net/api/UploadAttendance|g' ./routes/api.js
           sed -i 's|GET_ATTENDANCE|https://eicocelderprayerfunc.azurewebsites.net/api/GetAttendanceRecords|g' ./routes/api.js
+          sed -i 's|GETMISSED4WEEKS_ADDRESS|https://eicocelderprayerfunc.azurewebsites.net/api/GetAttendanceMissed4Weeks|g' ./routes/api.js
 
       - name: Display api.js contents
         run: cat ./routes/api.js

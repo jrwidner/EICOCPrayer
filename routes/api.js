@@ -157,4 +157,15 @@ router.get('/attendance_percent', async (req, res) => {
     }
 });
 
+// Route to get members who have missed the last 4 Sundays and have been present 4 times or less in the last 52 weeks
+router.get('/missed-last-four-sundays', async (req, res) => {
+    try {
+        const response = await axios.get('GETMISSED4WEEKS_ADDRESS');
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error(`Error fetching members: ${error.message}`);
+        res.status(500).json({ error: `${error.message} - URL: GETMISSED4WEEKS_ADDRESS` });
+    }
+});
+
 module.exports = router;
