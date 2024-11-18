@@ -26,9 +26,35 @@
         #file-list {
             margin-top: 10px;
         }
+        .nav-tabs {
+            display: flex;
+            justify-content: space-around;
+            background-color: #333;
+            padding: 10px;
+        }
+        .nav-tabs a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        .nav-tabs a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .nav-tabs a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    <div class="nav-tabs">
+        <a href="https://eicocelderprayers.azurewebsites.net/" >Prayer Requests</a>
+        <a href="https://eicocelderprayers.azurewebsites.net/attendance.html" >Attendance - Last 52 Weeks</a>
+        <a href="https://eicocelderprayers.azurewebsites.net/attendanceReports.html">Attendance Missed Last 4 Weeks</a>
+        <a href="https://eicocelderprayers.azurewebsites.net/attendance_upload.html"class="active">Upload Attendance Records</a>
     <h1>Upload Attendance Files</h1>
     <div id="drop-area">
         <form class="my-form" action="/api/upload" method="post" enctype="multipart/form-data">
