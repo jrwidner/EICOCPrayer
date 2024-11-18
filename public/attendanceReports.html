@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            font-size: 13px; /* Decreased font size */
+            font-size: 12px; /* Decreased font size */
             background-color: #f4f4f4;
             color: #333;
         }
@@ -24,7 +24,7 @@
             color: #444;
         }
         table {
-            width: 100%; /* Set table width to 25% */
+            width: 100%; /* Set table width to 100% */
             border-collapse: collapse;
             margin: 20px auto; /* Center the table */
         }
@@ -76,14 +76,16 @@
                     }
                     const data = await response.json();
                     attendanceTable.innerHTML = ''; // Clear existing data
-                    data.sort((a, b) => a.LastName.localeCompare(b.LastName));
-                    data.forEach(member => {
-                        const row = document.createElement('tr');
-                        const nameCell = document.createElement('td');
-                        nameCell.textContent = `${member.LastName} ${member.FirstName}`;
-                        row.appendChild(nameCell);
-                        attendanceTable.appendChild(row);
-                    });
+                    data
+                        .filter(member => !member.IgnoreReason) // Filter out records with IgnoreReason
+                        .sort((a, b) => a.LastName.localeCompare(b.LastName))
+                        .forEach(member => {
+                            const row = document.createElement('tr');
+                            const nameCell = document.createElement('td');
+                            nameCell.textContent = `${member.LastName} ${member.FirstName}`;
+                            row.appendChild(nameCell);
+                            attendanceTable.appendChild(row);
+                        });
                 } catch (error) {
                     console.error('Error fetching members:', error);
                 }
