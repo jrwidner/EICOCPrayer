@@ -24,9 +24,9 @@
             color: #444;
         }
         table {
-            width: 100%;
+            width: 25%; /* Set table width to 25% */
             border-collapse: collapse;
-            margin-top: 20px;
+            margin: 20px auto; /* Center the table */
         }
         th, td {
             padding: 8px; /* Reduced padding */
@@ -47,11 +47,11 @@
 <body>
     <div class="container">
         <h1>Attendance Reports</h1>
+        <h2>Missed Last 4 Weeks</h2>
         <table id="attendance-table" border="0">
             <thead>
                 <tr>
-                    <th>Last Name</th>
-                    <th>First Name</th>
+                    <th>Name</th>
                 </tr>
             </thead>
             <tbody>
@@ -79,12 +79,9 @@
                     data.sort((a, b) => a.LastName.localeCompare(b.LastName));
                     data.forEach(member => {
                         const row = document.createElement('tr');
-                        const lastNameCell = document.createElement('td');
-                        lastNameCell.textContent = member.LastName;
-                        const firstNameCell = document.createElement('td');
-                        firstNameCell.textContent = member.FirstName;
-                        row.appendChild(lastNameCell);
-                        row.appendChild(firstNameCell);
+                        const nameCell = document.createElement('td');
+                        nameCell.textContent = `${member.LastName} ${member.FirstName}`;
+                        row.appendChild(nameCell);
                         attendanceTable.appendChild(row);
                     });
                 } catch (error) {
