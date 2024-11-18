@@ -37,12 +37,18 @@ module.exports = async function (context, req) {
             )
             SELECT DISTINCT fa.LastName, fa.FirstName
             FROM FilteredAttendance fa
-            LEFT JOIN MembersPresentFourOrLessTimesLastFiftyTwoWeeks mp52
-            ON fa.LastName = mp52.LastName AND fa.FirstName = mp52.FirstName
-            LEFT JOIN MembersPresentLastFourSundays mp4
-            ON fa.LastName = mp4.LastName AND fa.FirstName = mp4.FirstName
-            WHERE mp52.LastName IS NULL AND mp52.FirstName IS NULL
-            AND mp4.LastName IS NULL AND mp4.FirstName IS NULL
+            JOIN AttendanceRecords ar ON fa.LastName = ar.LastName AND fa.FirstName = ar.FirstName
+            WHERE ar.IgnoreReason IS NULL
+            AND NOT EXISTS (
+                SELECT 1
+                FROM MembersPresentFourOrLessTimesLastFiftyTwoWeeks mp52
+                WHERE fa.LastName = mp52.LastName AND fa.FirstName = mp52.FirstName
+            )
+            AND NOT EXISTS (
+                SELECT 1
+                FROM MembersPresentLastFourSundays mp4
+                WHERE fa.LastName = mp4.LastName AND fa.FirstName = mp4.FirstName
+            )
         `;
 
         context.res = {

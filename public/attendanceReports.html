@@ -4,16 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attendance Report</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px; /* Decreased font size */
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            width: 25%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #444;
+        }
+        table {
+            width: 100%; /* Set table width to 100% */
+            border-collapse: collapse;
+            margin: 20px auto; /* Center the table */
+        }
+        th, td {
+            padding: 8px; /* Reduced padding */
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Attendance Reports</h1>
+        <h2>Missed Last 4 Weeks</h2>
         <table id="attendance-table" border="0">
             <thead>
                 <tr>
-                    <th>Last Name</th>
-                    <th>First Name</th>
+                    <th>Name</th>
                 </tr>
             </thead>
             <tbody>
@@ -38,17 +76,16 @@
                     }
                     const data = await response.json();
                     attendanceTable.innerHTML = ''; // Clear existing data
-                    data.sort((a, b) => a.LastName.localeCompare(b.LastName));
-                    data.forEach(member => {
-                        const row = document.createElement('tr');
-                        const lastNameCell = document.createElement('td');
-                        lastNameCell.textContent = member.LastName;
-                        const firstNameCell = document.createElement('td');
-                        firstNameCell.textContent = member.FirstName;
-                        row.appendChild(lastNameCell);
-                        row.appendChild(firstNameCell);
-                        attendanceTable.appendChild(row);
-                    });
+                    data
+                        .filter(member => !member.IgnoreReason) // Filter out records with IgnoreReason
+                        .sort((a, b) => a.LastName.localeCompare(b.LastName))
+                        .forEach(member => {
+                            const row = document.createElement('tr');
+                            const nameCell = document.createElement('td');
+                            nameCell.textContent = `${member.LastName} ${member.FirstName}`;
+                            row.appendChild(nameCell);
+                            attendanceTable.appendChild(row);
+                        });
                 } catch (error) {
                     console.error('Error fetching members:', error);
                 }
