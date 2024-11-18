@@ -9,67 +9,54 @@
 <body>
     <div class="container">
         <h1>Attendance Reports</h1>
-        <table>
-            <tr>
-                <td>
-                    <label for="attendance-type">Attendance Type:</label>
-                    <select id="attendance-type">
-                        <option value="all">All</option>
-                        <option value="members">Members</option>
-                        <option value="visitors">Visitors</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td><button id="clear-selection">Clear Selection</button></td>
-                <td></td>
-                <td></td>
-            </tr>
+        <table id="attendance-table" border="0">
+            <thead>
+                <tr>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be inserted here by JavaScript -->
+            </tbody>
         </table>
-       
-        <div class="chart-container">
-            <canvas id="attendanceChart" width="1024" height="180"></canvas>
-        </div>
     </div>
-    <table id="attendance-table" border="0">
-        <thead>
-            <tr>
-                <th>Last Name</th>
-                <th>First Name</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Data will be inserted here by JavaScript -->
-        </tbody>
-    </table>
-    <script src="js/attendanceDifference.js"></script>
     <script>
-        async function fetchReport() {
-            try {
-                const response = await fetch('/missed-last-four-sundays');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                const tbody = document.querySelector('#attendance-table tbody');
-                tbody.innerHTML = ''; // Clear existing data
-                data.forEach(member => {
-                    const row = document.createElement('tr');
-                    const lastNameCell = document.createElement('td');
-                    lastNameCell.textContent = member.LastName;
-                    const firstNameCell = document.createElement('td');
-                    firstNameCell.textContent = member.FirstName;
-                    row.appendChild(lastNameCell);
-                    row.appendChild(firstNameCell);
-                    tbody.appendChild(row);
-                });
-            } catch (error) {
-                console.error('Error fetching members:', error);
-            }
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const attendanceTable = document.getElementById('attendance-table').querySelector('tbody');
 
-        // Fetch the report when the page loads
-        window.onload = fetchReport;
+            if (!attendanceTable) {
+                console.error('Attendance table element is missing in the DOM.');
+                return;
+            }
+
+            async function fetchReport() {
+                try {
+                    const response = await fetch('/missed-last-four-sundays');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    attendanceTable.innerHTML = ''; // Clear existing data
+                    data.sort((a, b) => a.LastName.localeCompare(b.LastName));
+                    data.forEach(member => {
+                        const row = document.createElement('tr');
+                        const lastNameCell = document.createElement('td');
+                        lastNameCell.textContent = member.LastName;
+                        const firstNameCell = document.createElement('td');
+                        firstNameCell.textContent = member.FirstName;
+                        row.appendChild(lastNameCell);
+                        row.appendChild(firstNameCell);
+                        attendanceTable.appendChild(row);
+                    });
+                } catch (error) {
+                    console.error('Error fetching members:', error);
+                }
+            }
+
+            // Fetch the report when the page loads
+            fetchReport();
+        });
     </script>
 </body>
 </html>
