@@ -86,28 +86,47 @@
         </table>
     </div>
     <script>
-        // Example data, replace with actual data fetching logic
-        const data = [
-            { lastName: 'Doe', firstName: 'John', lastSeenDate: '2022-12-31' },
-            { lastName: 'Smith', firstName: 'Jane', lastSeenDate: '2022-11-30' }
-        ];
+        document.addEventListener('DOMContentLoaded', () => {
+            const attendanceTable = document.getElementById('attendance-table').querySelector('tbody');
 
-        const tbody = document.querySelector('#attendance-table tbody');
+            if (!attendanceTable) {
+                console.error('Attendance table element is missing in the DOM.');
+                return;
+            }
 
-        data.forEach(member => {
-            const tr = document.createElement('tr');
-            const lastNameTd = document.createElement('td');
-            const firstNameTd = document.createElement('td');
-            const lastSeenDateTd = document.createElement('td');
+            async function fetchReport() {
+                try {
+                    const response = await fetch('https://eicocelderprayerfunc.azurewebsites.net/api/GetAttendanceMissed4Weeks');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    attendanceTable.innerHTML = ''; // Clear existing data
+                    data
+                        .filter(member => !member.IgnoreReason) // Filter out records with IgnoreReason
+                        .sort((a, b) => a.LastName.localeCompare(b.LastName))
+                        .forEach(member => {
+                            const row = document.createElement('tr');
+                            const lastNameCell = document.createElement('td');
+                            const firstNameCell = document.createElement('td');
+                            const lastSeenDateCell = document.createElement('td');
 
-            lastNameTd.textContent = member.lastName;
-            firstNameTd.textContent = member.firstName;
-            lastSeenDateTd.textContent = new Date(member.lastSeenDate).toLocaleDateString('en-US');
+                            lastNameCell.textContent = member.LastName;
+                            firstNameCell.textContent = member.FirstName;
+                            lastSeenDateCell.textContent = new Date(member.LastSeenDate).toLocaleDateString('en-US');
 
-            tr.appendChild(lastNameTd);
-            tr.appendChild(firstNameTd);
-            tr.appendChild(lastSeenDateTd);
-            tbody.appendChild(tr);
+                            row.appendChild(lastNameCell);
+                            row.appendChild(firstNameCell);
+                            row.appendChild(lastSeenDateCell);
+                            attendanceTable.appendChild(row);
+                        });
+                } catch (error) {
+                    console.error('Error fetching members:', error);
+                }
+            }
+
+            // Fetch the report when the page loads
+            fetchReport();
         });
     </script>
 </body>
