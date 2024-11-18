@@ -1,15 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const spinner = document.getElementById('spinner');
     const attendanceTable = document.getElementById('attendance-table').querySelector('tbody');
-    const clearSelectionButton = document.getElementById('clear-selection');
-    const ctx = document.getElementById('attendanceChart').getContext('2d');
 
-    if (!spinner || !attendanceTable || !clearSelectionButton || !ctx) {
-        console.error('One or more elements are missing in the DOM.');
+    if (!attendanceTable) {
+        console.error('Attendance table element is missing in the DOM.');
         return;
     }
-
-    spinner.style.display = 'block';
 
     async function fetchReport() {
         try {
@@ -18,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            spinner.style.display = 'none';
             attendanceTable.innerHTML = ''; // Clear existing data
             data.sort((a, b) => a.LastName.localeCompare(b.LastName));
             data.forEach(member => {
@@ -33,14 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         } catch (error) {
             console.error('Error fetching members:', error);
-            spinner.style.display = 'none';
         }
     }
 
     // Fetch the report when the page loads
     fetchReport();
-
-    clearSelectionButton.addEventListener('click', () => {
-        attendanceTable.innerHTML = ''; // Clear the table
-    });
 });
