@@ -26,8 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
             data.forEach(record => {
                 const name = `${record.LastName}, ${record.FirstName}`;
                 uniqueNames.add(name);
-                //uniqueDates.add(new Date(record.Date).toLocaleDateString());
-                uniqueDates.add(new Date(record.Date).toDateString());
+                uniqueDates.add(new Date(record.Date).toLocaleDateString('en-US', { timeZone: 'UTC' }));
 
                 if (!memberRecordsMap.has(name)) {
                     memberRecordsMap.set(name, []);
@@ -36,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const totalWeeks = uniqueDates.size;
-            const sortedDates = Array.from(uniqueDates).sort((a, b) => new Date(b) - new Date(a));
+            const sortedDates = Array.from(uniqueDates).sort((a, b) => new Date(a) - new Date(b));
 
             const fragment = document.createDocumentFragment();
             uniqueNames.forEach(name => {
@@ -86,8 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const totalAttendanceRow = document.createElement('tr');
                 totalAttendanceRow.innerHTML = `<td></td>`;
                 sortedDates.forEach(date => {
-                    const totalWorshipAttendees = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length;
-                    const totalBibleClassAttendees = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length;
+                    const totalWorshipAttendees = data.filter(record => new Date(record.Date).toLocaleDateString('en-US', { timeZone: 'UTC' }) === date && record.WorshipService).length;
+                    const totalBibleClassAttendees = data.filter(record => new Date(record.Date).toLocaleDateString('en-US', { timeZone: 'UTC' }) === date && record.BibleClass).length;
                     totalAttendanceRow.innerHTML += `<td class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${totalWorshipAttendees}</td><td class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${totalBibleClassAttendees}</td>`;
                 });
                 fragment.appendChild(totalAttendanceRow);
@@ -106,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         nameRow.classList.add(index % 2 === 0 ? 'row-bg-1' : 'row-bg-2');
                         nameRow.innerHTML = `<td class="nowrap"><span class="name">${name}</span><br>${worshipCount} Worships <span style="color:${worshipColor}">${worshipPercentage}%</span> - ${bibleClassCount} Bible Classes <span style="color:${bibleClassColor}">${bibleClassPercentage}%</span></td>`;
                         sortedDates.forEach(date => {
-                            const record = records.find(record => new Date(record.Date).toLocaleDateString() === date);
+                            const record = records.find(record => new Date(record.Date).toLocaleDateString('en-US', { timeZone: 'UTC' }) === date);
                             if (record) {
                                 nameRow.innerHTML += `<td class="nowrap">${record.WorshipService ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td><td class="nowrap">${record.BibleClass ? '<span class="checkmark">✓</span>' : '<span class="cross">✗</span>'}</td>`;
                             } else {
@@ -145,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     datasets: [
                         {
                             label: 'Worship Attendance',
-                            data: sortedDates.map(date => data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length),
+                            data: sortedDates.map(date => data.filter(record => new Date(record.Date).toLocaleDateString('en-US', { timeZone: 'UTC' }) === date && record.WorshipService).length),
                             borderColor: 'rgba(75, 192, 192, 1)',
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
                             fill: false,
@@ -153,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         {
                             label: 'Bible Class Attendance',
-                            data: sortedDates.map(date => data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length),
+                            data: sortedDates.map(date => data.filter(record => new Date(record.Date).toLocaleDateString('en-US', { timeZone: 'UTC' }) === date && record.BibleClass).length),
                             borderColor: 'rgba(255, 99, 132, 1)',
                             backgroundColor: 'rgba(255, 99, 132, 0.2)',
                             fill: false,
