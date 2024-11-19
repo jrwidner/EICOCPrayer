@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     datasets: [
                         {
                             label: 'Worship Attendance',
-                            data: sortedDates.map(date => data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length),
+                            data: sortedDates.map(date => data.filter(record => new Date(record.Date + "T00:00:00Z").toLocaleDateString('en-US', { timeZone: 'UTC' }) === date && record.WorshipService).length),
                             borderColor: 'rgba(75, 192, 192, 1)',
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
                             fill: false,
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         {
                             label: 'Bible Class Attendance',
-                            data: sortedDates.map(date => data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length),
+                            data: sortedDates.map(date => data.filter(record => new Date(record.Date + "T00:00:00Z").toLocaleDateString('en-US', { timeZone: 'UTC' }) === date && record.BibleClass).length),
                             borderColor: 'rgba(255, 99, 132, 1)',
                             backgroundColor: 'rgba(255, 99, 132, 0.2)',
                             fill: false,
