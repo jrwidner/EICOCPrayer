@@ -26,7 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
             data.forEach(record => {
                 const name = `${record.LastName}, ${record.FirstName}`;
                 uniqueNames.add(name);
-                uniqueDates.add(new Date(record.Date).toLocaleDateString());
+                //uniqueDates.add(new Date(record.Date).toLocaleDateString());
+                uniqueDates.add(new Date(record.Date));
 
                 if (!memberRecordsMap.has(name)) {
                     memberRecordsMap.set(name, []);
