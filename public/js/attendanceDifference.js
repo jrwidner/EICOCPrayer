@@ -26,7 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
             data.forEach(record => {
                 const name = `${record.LastName}, ${record.FirstName}`;
                 uniqueNames.add(name);
-                uniqueDates.add(new Date(record.Date).toLocaleDateString());
+                //uniqueDates.add(new Date(record.Date).toLocaleDateString());
+                uniqueDates.add(new Date(record.Date + "T00:00:00Z").toLocaleDateString('en-US', { timeZone: 'UTC' }));
+
 
                 if (!memberRecordsMap.has(name)) {
                     memberRecordsMap.set(name, []);
@@ -85,8 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const totalAttendanceRow = document.createElement('tr');
                 totalAttendanceRow.innerHTML = `<td></td>`;
                 sortedDates.forEach(date => {
-                    const totalWorshipAttendees = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length;
-                    const totalBibleClassAttendees = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length;
+                    //const totalWorshipAttendees = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.WorshipService).length;
+                    //const totalBibleClassAttendees = data.filter(record => new Date(record.Date).toLocaleDateString() === date && record.BibleClass).length;
+                    const totalWorshipAttendees = data.filter(record => new Date(record.Date + "T00:00:00Z").toLocaleDateString('en-US', { timeZone: 'UTC' }) === date && record.WorshipService).length;
+                    const totalBibleClassAttendees = data.filter(record => new Date(record.Date + "T00:00:00Z").toLocaleDateString('en-US', { timeZone: 'UTC' }) === date && record.BibleClass).length;
                     totalAttendanceRow.innerHTML += `<td class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${totalWorshipAttendees}</td><td class="date-header ${altBg ? 'alt-bg-1' : 'alt-bg-2'}">${totalBibleClassAttendees}</td>`;
                 });
                 fragment.appendChild(totalAttendanceRow);
