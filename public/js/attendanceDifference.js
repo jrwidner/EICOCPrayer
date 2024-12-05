@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
             data.sort((a, b) => a.LastName.localeCompare(b.LastName));
 
             const uniqueNames = new Set();
-            const uniqueDates = new Set();
             const rawDates = new Set();
             const memberRecordsMap = new Map();
 
@@ -35,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const name = `${record.LastName}, ${record.FirstName}`;
                 uniqueNames.add(name);
                 rawDates.add(record.Date);
-                uniqueDates.add(formatDateToMMDDYYYY(record.Date));
 
                 if (!memberRecordsMap.has(name)) {
                     memberRecordsMap.set(name, []);
@@ -43,9 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 memberRecordsMap.get(name).push(record);
             });
 
-            const totalWeeks = rawDates.size;
+            // Sort dates newest to oldest
             const sortedRawDates = Array.from(rawDates).sort((a, b) => new Date(b) - new Date(a));
-            const sortedFormattedDates = Array.from(uniqueDates).sort((a, b) => new Date(a) - new Date(b));
+            const sortedFormattedDates = sortedRawDates.map(date => formatDateToMMDDYYYY(date));
 
             const fragment = document.createDocumentFragment();
             uniqueNames.forEach(name => {
@@ -59,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const calculateAttendance = (records) => {
                 const worshipCount = records.filter(record => record.WorshipService).length;
                 const bibleClassCount = records.filter(record => record.BibleClass).length;
-                const worshipPercentage = totalWeeks ? (worshipCount / totalWeeks * 100).toFixed(2) : 0;
+                const worshipPercentage = sortedRawDates.length ? (worshipCount / sortedRawDates.length * 100).toFixed(2) : 0;
                 const bibleClassPercentage = worshipCount ? (bibleClassCount / worshipCount * 100).toFixed(2) : 0;
                 return { worshipPercentage, bibleClassPercentage, worshipCount, bibleClassCount, totalRecords: records.length };
             };
