@@ -1,24 +1,20 @@
-/* General body styling */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
 }
 
-/* Container styling */
 .container {
     width: 100%;
     padding: 15px;
 }
 
-/* Header styling */
 header {
     background-color: #f8f9fa;
     padding: 1rem;
     text-align: center;
 }
 
-/* Main content styling */
 main {
     display: flex;
     flex-wrap: wrap;
@@ -27,13 +23,11 @@ main {
     align-items: flex-start;
 }
 
-/* Section styling */
 section {
     flex: 1;
     margin-right: 1rem;
 }
 
-/* Sidebar styling */
 aside {
     width: 300px;
     padding: 1rem;
@@ -41,7 +35,6 @@ aside {
     border-radius: 8px;
 }
 
-/* Responsive styles for smaller screens */
 @media (max-width: 600px) {
     main {
         flex-direction: column;
@@ -57,24 +50,24 @@ aside {
     }
 }
 
-/* Spinner styling */
+/* Spinner styles */
 .spinner {
     display: none;
-    border: 2vw solid #f3f3f3;
-    border-top: 2vw solid #3498db;
+    border: 2vw solid #f3f3f3; /* Use viewport width for scaling */
+    border-top: 2vw solid #3498db; /* Use viewport width for scaling */
     border-radius: 50%;
-    width: 10vw;
-    height: 10vw;
+    width: 10vw; /* Use viewport width for scaling */
+    height: 10vw; /* Use viewport width for scaling */
     animation: spin 2s linear infinite;
     margin: auto;
 }
 
 @media (max-width: 600px) {
     .spinner {
-        border: 4vh solid #f3f3f3;
-        border-top: 4vh solid #3498db;
-        width: 20vh;
-        height: 20vh;
+        border: 4vh solid #f3f3f3; /* Adjust for smaller screens */
+        border-top: 4vh solid #3498db; /* Adjust for smaller screens */
+        width: 20vh; /* Adjust for smaller screens */
+        height: 20vh; /* Adjust for smaller screens */
     }
 }
 
@@ -83,20 +76,22 @@ aside {
     100% { transform: rotate(360deg); }
 }
 
-/* Sticky headers for the table */
-#requests-table thead th {
-    position: sticky;
-    top: 0;
-    background-color: #f8f9fa;
-    z-index: 2;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 0.75rem;
+
+/* Date styling */
+.date-header {
+    color: darkblue;
+    font-weight: bold;
 }
 
-#requests-table thead tr:nth-child(2) th {
-    top: 34px;
-    background-color: #f8f9fa;
-    z-index: 1;
+/* type styling */
+.request-type {
+    color: #006400; /* Dark Green */
+    margin-left: 5px;
+    white-space: nowrap;
+    text-align: left; /* Left justify text */
+    vertical-align: top; /* Top justify text */
+    font-size: smaller;
+    font-weight: bold; /* Makes the text bold */
 }
 
 /* Table styling */
@@ -105,62 +100,45 @@ aside {
     border-collapse: collapse;
 }
 
-#requests-table td, #requests-table th {
-    padding: 0.5rem;
-    text-align: left;
-    border: 1px solid #ddd;
+#requests-table td {
+    padding: 0;
+    border: none;
+    vertical-align: top; /* Ensure top alignment */
 }
 
-/* Define alternating row colors */
+/* Define the alternating row colors */
 .request-row:nth-child(even) {
+    display: flex;
+    align-items: left;
     background-color: #f9f9f9; /* Light grey */
 }
 
 .request-row:nth-child(odd) {
+    display: flex;
+    align-items: left;
     background-color: #ffffff; /* White */
 }
 
-/* Date header styling */
-.date-header {
-    color: darkblue;
-    font-weight: bold;
-}
-
-/* Request type styling */
-.request-type {
-    color: #006400; /* Dark Green */
-    margin-left: 5px;
-    white-space: nowrap;
-    text-align: left;
-    vertical-align: top;
-    font-size: smaller;
-    font-weight: bold;
-}
-
-/* Request text styling */
 .request-text {
     flex-grow: 1;
-    margin-left: 5px;
-    text-align: left;
-    vertical-align: top;
+    margin-left: 5px; /* Space between checkbox and text */
+    text-align: left; /* Left justify text */
+    vertical-align: top; /* Top justify text */
 }
-
-/* Highlighted date styling */
 .highlighted-date {
-    color: #4507ee;
-    font-size: smaller;
+    color: #4507ee; /* You can choose any color you prefer */
+    font-size: smaller; /* This makes the font one size smaller */
 }
 
-/* Checkbox styling */
 .update-checkbox {
-    margin-right: 0px;
+    margin-right: 0px; /* Reduced margin for tighter spacing */
     margin-left: 5px;
 }
 
 /* Update form styling */
 .update-form {
     display: none;
-    margin-top: 5px;
+    margin-top: 5px; /* Space between record and update form */
 }
 
 form div {
@@ -208,36 +186,33 @@ button:hover {
     background-color: #0056b3;
 }
 
-/* Print-specific styles */
 @media print {
+    /* Hide the form and its heading */
     #newRequestForm, #new-request-heading {
         display: none;
     }
-
+    /* Hide the checkboxes */
     input[type="checkbox"] {
         display: none;
     }
-
+    /* Optionally, adjust the layout for printing */
     body {
         margin: 0;
         padding: 0;
     }
-
     header, main, aside {
         padding: 1rem;
     }
-
     table {
         width: 100%;
         border-collapse: collapse;
     }
-
     th, td {
         padding: 0.5rem;
         text-align: left;
         border: 1px solid #000;
     }
-
+    /* Hide the print button itself */
     #printButton {
         display: none;
     }
