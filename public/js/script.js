@@ -23,15 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to update the prayer types dropdown
     function updatePrayerTypes(types) {
-        const fragment = document.createDocumentFragment(); // Use DocumentFragment to batch updates
+        const fragment = document.createDocumentFragment();
         types.forEach(type => {
             const option = document.createElement('option');
             option.value = capitalizeWords(type);
             option.textContent = capitalizeWords(type);
             fragment.appendChild(option);
         });
-        typeOfRequestSelect.innerHTML = ''; // Clear existing options
-        typeOfRequestSelect.appendChild(fragment); // Append all options at once
+        typeOfRequestSelect.innerHTML = '';
+        typeOfRequestSelect.appendChild(fragment);
     }
 
     // Show spinner before fetching data
@@ -69,9 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let currentDate = '';
             let currentType = '';
-            const fragment = document.createDocumentFragment(); // Use DocumentFragment to batch updates
+            const fragment = document.createDocumentFragment();
             data.forEach(request => {
-                const requestDate = new Date(request.DateOfUpdate || request.DateOfRequest).toLocaleDateString();
+                const requestDate = (request.DateOfUpdate || request.DateOfRequest).split('T')[0];
                 if (requestDate !== currentDate) {
                     currentDate = requestDate;
                     currentType = ''; // Reset current type when date changes
@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     dateHeader.innerHTML = `<td colspan="3" valign="top"><b class="date-header">${currentDate}</b></td>`;
                     fragment.appendChild(dateHeader);
                 }
+
                 const capitalizedType = capitalizeWords(request.TypeOfRequest);
                 if (capitalizedType !== currentType) {
                     currentType = capitalizedType;
@@ -87,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 requestRow.classList.add('request-row');
                 let updateText = '';
                 if (request.UpdateToRequest) {
-                    const updateDate = new Date(request.DateOfUpdate).toLocaleDateString();
+                    const updateDate = request.DateOfUpdate.split('T')[0];
                     updateText = `<span class="highlighted-date"> - Updated:${updateDate}</span> ${request.UpdateToRequest}`;
                 }
                 requestRow.innerHTML = `
@@ -111,8 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
                 fragment.appendChild(updateFormRow);
             });
-            requestsTableBody.innerHTML = ''; // Clear existing rows
-            requestsTableBody.appendChild(fragment); // Append all rows at once
+            requestsTableBody.innerHTML = '';
+            requestsTableBody.appendChild(fragment);
 
             // Add event listeners to checkboxes using event delegation
             requestsTableBody.addEventListener('change', (event) => {
@@ -144,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle form submission for creating a new request
     const submitButton = document.getElementById('createNewRequest');
     submitButton.addEventListener('click', (event) => {
-        event.preventDefault(); // Prevent the default form submission
+        event.preventDefault();
 
         const form = document.getElementById('newRequestForm');
         const formData = new FormData(form);
@@ -159,9 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(response => response.json())
         .then(newRequest => {
-            // Clear the form
             form.reset();
-            // Reload the page to display the new record
             location.reload();
         })
         .catch(error => console.error('Error adding new prayer request:', error));
@@ -170,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle form submission for updating a request using event delegation
     document.addEventListener('submit', (event) => {
         if (event.target.classList.contains('update-form')) {
-            event.preventDefault(); // Prevent the default form submission
+            event.preventDefault();
 
             const form = event.target;
             const formData = new FormData(form);
@@ -195,9 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return response.json();
             })
             .then(updatedRequest => {
-                // Clear the form
                 form.reset();
-                // Reload the page to display the updated record
                 location.reload();
             })
             .catch(error => console.error('Error updating prayer request:', error));
@@ -223,7 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         rows.forEach(row => {
             const newRow = row.cloneNode(true);
-            // Remove checkboxes and update form elements
             newRow.querySelectorAll('input[type="checkbox"], form').forEach(element => element.remove());
             tableHTML += newRow.outerHTML;
         });
@@ -247,22 +243,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     th {
                         background-color: #f2f2f2;
                     }
-                    /* Remove borders */
                     table, th, td {
                         border: none;
                     }
                     .request-type {
-                        color: #006400; /* Dark Green */
+                        color: #006400;
                         margin-left: 5px;
                         white-space: nowrap;
-                        text-align: left; /* Left justify text */
-                        vertical-align: top; /* Top justify text */
+                        text-align: left;
+                        vertical-align: top;
                         font-size: smaller;
-                        font-weight: bold; /* Makes the text bold */
+                        font-weight: bold;
                     }
                     .highlighted-date {
-                        color: #4507ee; /* You can choose any color you prefer */
-                        font-size: smaller; /* This makes the font one size smaller */
+                        color: #4507ee;
+                        font-size: smaller;
                     }
                 </style>
             </head>
