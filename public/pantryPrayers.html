@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prayer Requests</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <style>
+    .nav-tabs {
+        display: flex;
+        justify-content: space-around;
+        background-color: #333;
+        padding: 10px;
+    }
+    .nav-tabs a {
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+    }
+    .nav-tabs a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+    .nav-tabs a.active {
+        background-color: #4CAF50;
+        color: white;
+    }
+</style>
+</head>
+<body>
+     <header>
+        <h1>Pantry Family Prayer Requests</h1>
+        <p>To update a prayer request, select the checkbox to the left of the request</p>
+    </header>
+    <main>
+        <section aria-labelledby="requests-heading">
+            <div id="spinner" class="spinner" role="status" aria-live="polite">Loading...</div>
+            <table id="button"><tr><td colspan="3" align="left"><button id="printButton" class="button">Print Prayer Records</button></td></tr></table>
+            <table id="requests-table" role="presentation"><thead>                
+                <!-- Records will be dynamically inserted here -->
+            </thead></table>
+        </section>
+        <aside aria-labelledby="new-request-heading">
+            <h2 id="new-request-heading">Submit a New Prayer Request</h2>
+            <form id="newRequestForm" aria-describedby="form-instructions">
+                <p id="form-instructions">Please fill out the form below to submit a new prayer request.</p>
+                <div>
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" placeholder="First Name" required aria-required="true">
+                </div>
+                <div>
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" placeholder="Last Name" required aria-required="true">
+                </div>
+                <div>
+                    <label for="dateOfRequest">Date of Request</label>
+                    <input type="date" id="dateOfRequest" name="dateOfRequest" required aria-required="true">
+                </div>
+                <div>
+                    <label for="typeOfRequest">Type of Request</label>
+                    <select id="typeOfRequest" name="typeOfRequest" required aria-required="true">
+                        <!-- Options will be dynamically populated -->
+                    </select>
+                </div>
+                <div>
+                    <label for="initialRequest">Initial Request</label>
+                    <textarea id="initialRequest" name="initialRequest" placeholder="Initial Request" required aria-required="true"></textarea>
+                </div>
+                <button type="submit" id="createNewRequest">Submit</button>
+            </form>
+        </aside>
+    </main>
+    <script src="js/pantryPrayers.js"></script>
+</body>
+</html>
