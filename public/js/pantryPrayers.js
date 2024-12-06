@@ -1,4 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const passwordPrompt = prompt('Please enter the password:');
+    const correctPassword = 'EIC0CPantry!';
+    
+    if (passwordPrompt !== correctPassword) {
+        alert('Incorrect password. Access denied.');
+        return; // Stop further script execution
+    }
     const spinner = document.getElementById('spinner');
     const requestsTable = document.getElementById('requests-table');
     const typeOfRequestSelect = document.getElementById('typeOfRequest');
