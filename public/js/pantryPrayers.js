@@ -149,4 +149,141 @@ document.addEventListener('DOMContentLoaded', () => {
             // Hide spinner in case of error
             spinner.style.display = 'none';
         });
-    });
+  // Handle form submission for creating a new request
+  const submitButton = document.getElementById('createNewRequest');
+  submitButton.addEventListener('click', (event) => {
+      event.preventDefault(); // Prevent the default form submission
+
+      const form = document.getElementById('newRequestForm');
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      fetch('/api/create-prayer-request', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(newRequest => {
+          // Clear the form
+          form.reset();
+          // Reload the page to display the new record
+          location.reload();
+      })
+      .catch(error => console.error('Error adding new prayer request:', error));
+  });
+
+  // Handle form submission for updating a request using event delegation
+  document.addEventListener('submit', (event) => {
+      if (event.target.classList.contains('update-form')) {
+          event.preventDefault(); // Prevent the default form submission
+
+          const form = event.target;
+          const formData = new FormData(form);
+          const data = Object.fromEntries(formData.entries());
+          const dateOfUpdate = new Date().toISOString().split('T')[0];
+
+          fetch(`/api/update-prayer-request/${data.updateId}`, {
+              method: 'PUT',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                  Id: data.updateId,
+                  UpdateToRequest: data.updateToRequest,
+                  DateOfUpdate: dateOfUpdate
+              })
+          })
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error(`Request failed with status code ${response.status}`);
+              }
+              return response.json();
+          })
+          .then(updatedRequest => {
+              // Clear the form
+              form.reset();
+              // Reload the page to display the updated record
+              location.reload();
+          })
+          .catch(error => console.error('Error updating prayer request:', error));
+      }
+  });
+
+  // Function to print prayer records
+  function printPrayerRecords() {
+      const table = document.getElementById('requests-table');
+      if (!table) {
+          console.error('Table with ID "requests-table" not found.');
+          return;
+      }
+
+      const thead = table.querySelector('thead');
+      if (!thead) {
+          console.error('Table with ID "requests-table" does not have a <thead> element.');
+          return;
+      }
+
+      const rows = table.querySelectorAll('tr');
+      let tableHTML = '<table><thead>' + thead.innerHTML + '</thead><tbody>';
+
+      rows.forEach(row => {
+          const newRow = row.cloneNode(true);
+          // Remove checkboxes and update form elements
+          newRow.querySelectorAll('input[type="checkbox"], form').forEach(element => element.remove());
+          tableHTML += newRow.outerHTML;
+      });
+
+      tableHTML += '</tbody></table>';
+
+      const newWindow = window.open('', '', 'width=800,height=600');
+      newWindow.document.write(`
+          <html>
+          <head>
+              <title>Prayer Requests</title>
+              <style>
+                  table {
+                      width: 100%;
+                      border-collapse: collapse;
+                  }
+                  th, td {
+                      padding: 8px;
+                      text-align: left;
+                  }
+                  th {
+                      background-color: #f2f2f2;
+                  }
+                  /* Remove borders */
+                  table, th, td {
+                      border: none;
+                  }
+                  .request-type {
+                      color: #006400; /* Dark Green */
+                      margin-left: 5px;
+                      white-space: nowrap;
+                      text-align: left; /* Left justify text */
+                      vertical-align: top; /* Top justify text */
+                      font-size: smaller;
+                      font-weight: bold; /* Makes the text bold */
+                  }
+                  .highlighted-date {
+                      color: #4507ee; /* You can choose any color you prefer */
+                      font-size: smaller; /* This makes the font one size smaller */
+                  }
+              </style>
+          </head>
+          <body>
+              ${tableHTML}
+          </body>
+          </html>
+      `);
+      newWindow.document.close();
+      newWindow.print();
+      newWindow.close();
+  }
+
+  // Add event listener to the print button
+  printButton.addEventListener('click', printPrayerRecords);
+});
