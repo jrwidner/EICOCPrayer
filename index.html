@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prayer Requests – EICO Elder</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<body>
+
+<!-- Skip navigation link: lets screen reader users jump straight to content -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<nav aria-label="Main navigation">
+    <ul class="nav-tabs" role="list">
+        <li><a href="/" class="active" aria-current="page">Prayer Requests</a></li>
+        <li><a href="/attendance.html">Attendance – Last 52 Weeks</a></li>
+        <li><a href="/attendanceReports.html">Attendance Missed Last 4 Weeks</a></li>
+        <li><a href="/attendance_upload.html">Upload Attendance Records</a></li>
+    </ul>
+</nav>
+
+<header>
+    <h1>Prayer Requests</h1>
+    <p>To update a prayer request, check the checkbox to the left of the request, then fill in the update form that appears.</p>
+</header>
+
+<main id="main-content">
+
+    <!-- Status region: screen readers announce changes here automatically -->
+    <div id="status-message" role="status" aria-live="polite" aria-atomic="true" class="status-message visually-hidden"></div>
+
+    <section aria-labelledby="requests-heading">
+        <h2 id="requests-heading" class="visually-hidden">Current Prayer Requests</h2>
+
+        <div id="spinner" class="spinner" role="status" aria-live="polite" aria-label="Loading prayer requests">
+            <span aria-hidden="true">⏳</span> Loading…
+        </div>
+
+        <div class="toolbar">
+            <button id="printButton" class="button" type="button">Print Prayer Records</button>
+        </div>
+
+        <!-- role="presentation" removed — the table IS data, so it needs proper semantics -->
+        <table id="requests-table" aria-labelledby="requests-heading" aria-describedby="table-instructions">
+            <caption id="table-instructions" class="visually-hidden">
+                Prayer requests listed by most recent date first. Check the checkbox in the first column to open the update form for that request.
+            </caption>
+            <thead>
+                <!-- Header row injected by script.js — see comments there -->
+            </thead>
+            <tbody>
+                <!-- Records dynamically inserted by script.js -->
+            </tbody>
+        </table>
+    </section>
+
+    <aside aria-labelledby="new-request-heading">
+        <h2 id="new-request-heading">Submit a New Prayer Request</h2>
+        <form id="newRequestForm" aria-describedby="form-instructions" novalidate>
+            <p id="form-instructions">All fields are required. Fill out the form below and press Submit.</p>
+
+            <div class="form-group">
+                <label for="firstName">First Name <span aria-hidden="true">*</span></label>
+                <input type="text" id="firstName" name="firstName"
+                       autocomplete="given-name"
+                       required aria-required="true"
+                       aria-describedby="firstName-error">
+                <span id="firstName-error" class="field-error" role="alert" aria-live="assertive"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last Name <span aria-hidden="true">*</span></label>
+                <input type="text" id="lastName" name="lastName"
+                       autocomplete="family-name"
+                       required aria-required="true"
+                       aria-describedby="lastName-error">
+                <span id="lastName-error" class="field-error" role="alert" aria-live="assertive"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="dateOfRequest">Date of Request <span aria-hidden="true">*</span></label>
+                <input type="date" id="dateOfRequest" name="dateOfRequest"
+                       required aria-required="true"
+                       aria-describedby="dateOfRequest-error">
+                <span id="dateOfRequest-error" class="field-error" role="alert" aria-live="assertive"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="typeOfRequest">Type of Request <span aria-hidden="true">*</span></label>
+                <select id="typeOfRequest" name="typeOfRequest"
+                        required aria-required="true"
+                        aria-describedby="typeOfRequest-error">
+                    <!-- Options dynamically populated by script.js -->
+                </select>
+                <span id="typeOfRequest-error" class="field-error" role="alert" aria-live="assertive"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="initialRequest">Initial Request <span aria-hidden="true">*</span></label>
+                <textarea id="initialRequest" name="initialRequest"
+                          rows="4"
+                          required aria-required="true"
+                          aria-describedby="initialRequest-error"
+                          placeholder="Describe the prayer request…"></textarea>
+                <span id="initialRequest-error" class="field-error" role="alert" aria-live="assertive"></span>
+            </div>
+
+            <button type="submit" id="createNewRequest">Submit Prayer Request</button>
+        </form>
+    </aside>
+
+</main>
+
+<script src="js/script.js"></script>
+</body>
+</html>

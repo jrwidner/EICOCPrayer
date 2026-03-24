@@ -1,0 +1,299 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   EICO Elder – Shared Stylesheet
+   Covers: nav, forms, tables, accessibility utilities, print
+───────────────────────────────────────────────────────────────────────────── */
+
+/* ── Accessibility utilities ─────────────────────────────────────────────── */
+
+/*
+ * visually-hidden: hides content from sighted users while keeping it
+ * fully available to screen readers. Use on labels, captions, and
+ * announcements that don't need to be visible.
+ */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/*
+ * skip-link: lets keyboard/screen-reader users jump past the nav directly
+ * to the main content. Visible only when focused.
+ */
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    background: #333;
+    color: #fff;
+    padding: 8px 16px;
+    font-size: 1rem;
+    z-index: 9999;
+    text-decoration: none;
+    border-radius: 0 0 4px 0;
+}
+.skip-link:focus {
+    top: 0;
+}
+
+/* ── Status / live-region message ────────────────────────────────────────── */
+
+.status-message {
+    padding: 0.6rem 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+.status-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+.status-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* ── Field validation errors ─────────────────────────────────────────────── */
+
+.field-error {
+    display: block;
+    color: #721c24;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    min-height: 1.2em; /* prevents layout shift when error appears */
+}
+
+/* ── Navigation ──────────────────────────────────────────────────────────── */
+
+.nav-tabs {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;        /* wraps gracefully on small screens */
+    gap: 4px;
+    background-color: #333;
+    padding: 10px;
+    list-style: none;
+    margin: 0;
+}
+
+.nav-tabs a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.nav-tabs a:hover,
+.nav-tabs a:focus {
+    background-color: #ddd;
+    color: black;
+    outline: 3px solid #fff;   /* visible focus ring against dark background */
+    outline-offset: 2px;
+}
+
+.nav-tabs a.active,
+.nav-tabs a[aria-current="page"] {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* ── Layout ──────────────────────────────────────────────────────────────── */
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    padding: 1rem 1.5rem 0.5rem;
+}
+
+main {
+    padding: 0 1.5rem 2rem;
+}
+
+.toolbar {
+    margin-bottom: 0.75rem;
+}
+
+/* ── Focus styles ────────────────────────────────────────────────────────── */
+/*
+ * High-contrast focus outline for all interactive elements.
+ * This is critical for keyboard and screen-reader users.
+ */
+:focus-visible {
+    outline: 3px solid #005fcc;
+    outline-offset: 2px;
+}
+
+/* ── Prayer requests table ───────────────────────────────────────────────── */
+
+#requests-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.5rem;
+}
+
+#requests-table th {
+    background-color: #f2f2f2;
+    padding: 0.5rem;
+    text-align: left;
+    border-bottom: 2px solid #ccc;
+}
+
+#requests-table td {
+    padding: 0.4rem 0.5rem;
+    vertical-align: top;
+}
+
+.date-header {
+    color: #444;
+    font-size: 1rem;
+}
+
+.request-type {
+    color: #006400;
+    white-space: nowrap;
+    font-size: smaller;
+    font-weight: bold;
+}
+
+.highlighted-date {
+    color: #4507ee;
+    font-size: smaller;
+}
+
+.request-row:focus-within {
+    background-color: #eef4ff;   /* subtle highlight when row is keyboard-focused */
+}
+
+/* ── Update form (inside table) ──────────────────────────────────────────── */
+
+.update-form {
+    display: none;
+    margin-top: 5px;
+    padding: 0.75rem;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* ── Sidebar form ────────────────────────────────────────────────────────── */
+
+aside {
+    margin-top: 2rem;
+    padding: 1rem 1.5rem;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-width: 480px;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+
+button,
+.button {
+    padding: 0.65rem 1.25rem;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    min-width: 180px;
+}
+
+button:hover,
+.button:hover {
+    background-color: #0056b3;
+}
+
+button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+/* ── Spinner ─────────────────────────────────────────────────────────────── */
+
+.spinner {
+    display: none;
+    padding: 1rem;
+    font-style: italic;
+    color: #555;
+}
+
+/* ── Print styles ────────────────────────────────────────────────────────── */
+
+@media print {
+    .skip-link,
+    nav,
+    .nav-tabs,
+    .toolbar,
+    #newRequestForm,
+    #new-request-heading,
+    aside,
+    .update-form,
+    input[type="checkbox"],
+    #printButton,
+    .spinner,
+    .status-message {
+        display: none !important;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background: white;
+        color: black;
+    }
+
+    #requests-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    #requests-table th,
+    #requests-table td {
+        padding: 0.4rem;
+        text-align: left;
+        border: none;
+    }
+}
